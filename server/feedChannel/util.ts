@@ -44,7 +44,6 @@ const constructFreetResponse = (freet: HydratedDocument<Freet>): FreetResponse =
     dateCreated: formatDate(freet.dateCreated),
     dateModified: formatDate(freet.dateModified),
     freetType: freetCopy.freetType,
-    // Defaults to empty string if the post type does not have this property.
     sourceLink: freetCopy.freetType === 'News' ? freetCopy.sourceLink : '',
     emoji: freetCopy.freetType === 'Fibe' ? freetCopy.emoji : ''
   };

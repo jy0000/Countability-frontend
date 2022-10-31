@@ -49,9 +49,16 @@ const store = new Vuex.Store({
       /**
        * Request the server for the currently available freets.
        */
-      const url = state.filter ? `/api/users/${state.filter}/freets` : '/api/freets';
-      const res = await fetch(url).then(async r => r.json());
-      state.freets = res;
+      // START Primitive check if the filter name is News or Fibe
+      if (state.filter === 'News' || state.filter === 'Fibe') {
+        const feedChannelURL = `/api/feedChannel?freetType=${state.filter}`;
+        const res = await fetch(feedChannelURL).then(async r => r.json());
+        state.freets = res;
+      } else {
+        const url = state.filter ? `/api/users/${state.filter}/freets` : '/api/freets';
+        const res = await fetch(url).then(async r => r.json());
+        state.freets = res;
+      }
     }
   },
   // Store data across page refreshes, only discard on browser close

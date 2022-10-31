@@ -31,6 +31,16 @@
             </span>
           </h2>
         </div>
+        <!-- Added freet feed channel selection-->
+        <div>
+          <SelectFeedChannel
+            ref="selectFeedChannel"
+            value="freetType"
+            placeholder="🔍 Type 'News' / 'Fibe' for selected feed channel freets (optional)"
+            button="🔄 Get freets"
+          />
+        </div>
+        <!-- End of Added freet feed channel selection-->
         <div class="right">
           <GetFreetsForm
             ref="getFreetsForm"
@@ -59,15 +69,22 @@
 </template>
 
 <script>
+// Components
 import FreetComponent from '@/components/Freet/FreetComponent.vue';
 import CreateFreetForm from '@/components/Freet/CreateFreetForm.vue';
 import GetFreetsForm from '@/components/Freet/GetFreetsForm.vue';
+import SelectFeedChannel from '@/components/FeedChannel/SelectFeedChannel.vue';
 
 export default {
   name: 'FreetPage',
-  components: {FreetComponent, GetFreetsForm, CreateFreetForm},
+  components: {FreetComponent, GetFreetsForm, CreateFreetForm, SelectFeedChannel},
   mounted() {
-    this.$refs.getFreetsForm.submit();
+    // Primitive fix
+    if (this.$refs.selectFeedChannel) {
+      this.$refs.selectFeedChannel.submit(); // Added this for feed channel filtering
+    } else {
+      this.$refs.getFreetsForm.submit();
+    }
   }
 };
 </script>

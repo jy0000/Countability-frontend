@@ -6,9 +6,11 @@
     class="freet"
   >
     <header>
+      <!-- Header and features (endorse, for example)-->
       <h3 class="author">
         @{{ freet.author }}
       </h3>
+      <!-- If the user signs in, they get to see this-->
       <div
         v-if="$store.state.username === freet.author"
         class="actions"
@@ -35,7 +37,9 @@
           🗑️ Delete
         </button>
       </div>
+      <!-- If the user signs in, they get to see above-->
     </header>
+    <!-- Content starts here, if editing, else show content -->
     <textarea
       v-if="editing"
       class="content"
@@ -48,6 +52,15 @@
     >
       {{ freet.content }}
     </p>
+    <!-- Added descriptive freet -->
+    <p class="info">
+      <i v-if="freet.freetType == 'News'"> Source: {{ freet.sourceLink }}</i>
+      <i v-else-if="freet.freetType == 'Fibe'">  @{{ freet.author }} is feeling {{ freet.emoji }}</i>
+    </p>
+    <p class="info">
+      <b>Freet type: A {{ freet.freetType }} post.</b>
+    </p>
+    <!-- End of Added descriptive freet -->
     <p class="info">
       Posted at {{ freet.dateModified }}
       <i v-if="freet.edited">(edited)</i>

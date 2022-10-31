@@ -3,11 +3,36 @@ import {Types} from 'mongoose';
 import FreetCollection from '../freet/collection';
 
 /**
+ * Checks if a freet has the resource needed for its freet type
+ */
+const isFreetPropertyComplete = async (req: Request, res: Response, next: NextFunction) => {
+  const isNewsFreet = req.body.freetType === 'News';
+  const isFibeFreet = req.body.freetType === 'Fibe';
+  if (isNewsFreet && !req.body.sourceLink) {
+    res.status(412).json({
+      error: 'News freet needs a source link.'
+    });
+    return;
+  }
+
+  if (isFibeFreet && !req.body.emoji) {
+    res.status(412).json({
+      error: 'News freet needs a source link.'
+    });
+    return;
+  }
+
+  next();
+};
+
+/**
  * Checks if a freet with freetId is req.params exists
  */
 const isFreetExists = async (req: Request, res: Response, next: NextFunction) => {
-  const validFormat = Types.ObjectId.isValid(req.params.freetId);
-  const freet = validFormat ? await FreetCollection.findOne(req.params.freetId) : '';
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const freetId = req.body ? req.body.freetId : req.params.freetId;
+  const validFormat = Types.ObjectId.isValid(freetId);
+  const freet = validFormat ? await FreetCollection.findOne(freetId) : '';
   if (!freet) {
     res.status(404).json({
       error: `Freet with freet ID ${req.params.freetId} does not exist.`
@@ -23,7 +48,7 @@ const isFreetExists = async (req: Request, res: Response, next: NextFunction) =>
  * spaces and not more than 140 characters
  */
 const isValidFreetContent = (req: Request, res: Response, next: NextFunction) => {
-  const {content} = req.body as {content: string};
+  const {content} = req.body as {content: string}; // Changed
   if (!content.trim()) {
     res.status(400).json({
       error: 'Freet content must be at least one character long.'
@@ -58,6 +83,7 @@ const isValidFreetModifier = async (req: Request, res: Response, next: NextFunct
 };
 
 export {
+  isFreetPropertyComplete,
   isValidFreetContent,
   isFreetExists,
   isValidFreetModifier

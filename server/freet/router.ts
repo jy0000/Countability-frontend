@@ -15,20 +15,21 @@ const router = express.Router();
  * @return {FreetResponse[]} - A list of all the freets sorted in descending
  *                      order by date modified
  */
+
 /**
  * Get freets by author.
  *
- * @name GET /api/freets?author=username
+ * @name GET /api/freets?authorId=id
  *
- * @return {FreetResponse[]} - An array of freets created by user with username, author
- * @throws {400} - If author is not given
- * @throws {404} - If no user has given author
+ * @return {FreetResponse[]} - An array of freets created by user with id, authorId
+ * @throws {400} - If authorId is not given
+ * @throws {404} - If no user has given authorId
  *
  */
 router.get(
   '/',
   async (req: Request, res: Response, next: NextFunction) => {
-    // Check if author query parameter was supplied
+    // Check if authorId query parameter was supplied
     if (req.query.author !== undefined) {
       next();
       return;
@@ -49,6 +50,28 @@ router.get(
 );
 
 /**
+ * Get freets from trusted users.
+ *
+ * @name GET /api/freets/trusted
+ *
+ * @return {FreetResponse[]} - An array of freets created by user with id, authorId
+ *
+ */
+router.get(
+  '/trusted',
+  [
+    userValidator.isUserLoggedIn
+  ],
+  async (req: Request, res: Response, next: NextFunction) => {
+    // Check if authorId query parameter was supplied
+    const currentUserId = req.session.userId as string;
+    const trustedUsersFreets = await FreetCollection.findAllByTrustedUsers(currentUserId);
+    const response = trustedUsersFreets.map(util.constructFreetResponse);
+    res.status(200).json(response);
+  }
+);
+
+/**
  * Create a new freet.
  *
  * @name POST /api/freets
@@ -63,11 +86,12 @@ router.post(
   '/',
   [
     userValidator.isUserLoggedIn,
-    freetValidator.isValidFreetContent
+    freetValidator.isValidFreetContent,
+    freetValidator.isFreetPropertyComplete
   ],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    const freet = await FreetCollection.addOne(userId, req.body.content);
+    const freet = await FreetCollection.addOne(userId, req.body.content, req.body.freetType, req.body.sourceLink, req.body.emoji);
 
     res.status(201).json({
       message: 'Your freet was created successfully.',

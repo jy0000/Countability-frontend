@@ -1,6 +1,7 @@
 import type {HydratedDocument, Types} from 'mongoose';
 import type {User} from './model';
 import UserModel from './model';
+import LevelCollection from '../level/collection';
 
 /**
  * This file contains a class with functionality to interact with users stored
@@ -20,8 +21,8 @@ class UserCollection {
    */
   static async addOne(username: string, password: string): Promise<HydratedDocument<User>> {
     const dateJoined = new Date();
-
-    const user = new UserModel({username, password, dateJoined});
+    const level = await LevelCollection.addOne(username);
+    const user = new UserModel({username, password, dateJoined, level});
     await user.save(); // Saves user to MongoDB
     return user;
   }
@@ -33,7 +34,7 @@ class UserCollection {
    * @return {Promise<HydratedDocument<User>> | Promise<null>} - The user with the given username, if any
    */
   static async findOneByUserId(userId: Types.ObjectId | string): Promise<HydratedDocument<User>> {
-    return UserModel.findOne({_id: userId});
+    return UserModel.findOne({_id: userId}).populate('level');
   }
 
   /**
@@ -43,7 +44,7 @@ class UserCollection {
    * @return {Promise<HydratedDocument<User>> | Promise<null>} - The user with the given username, if any
    */
   static async findOneByUsername(username: string): Promise<HydratedDocument<User>> {
-    return UserModel.findOne({username: new RegExp(`^${username.trim()}$`, 'i')});
+    return UserModel.findOne({username: new RegExp(`^${username.trim()}$`, 'i')}).populate('level');
   }
 
   /**
@@ -57,7 +58,7 @@ class UserCollection {
     return UserModel.findOne({
       username: new RegExp(`^${username.trim()}$`, 'i'),
       password
-    });
+    }).populate('level');
   }
 
   /**
@@ -68,7 +69,7 @@ class UserCollection {
    * @return {Promise<HydratedDocument<User>>} - The updated user
    */
   static async updateOne(userId: Types.ObjectId | string, userDetails: {password?: string; username?: string}): Promise<HydratedDocument<User>> {
-    const user = await UserModel.findOne({_id: userId});
+    const user = await UserModel.findOne({_id: userId}).populate('level');
     if (userDetails.password) {
       user.password = userDetails.password;
     }
@@ -88,7 +89,7 @@ class UserCollection {
    * @return {Promise<Boolean>} - true if the user has been deleted, false otherwise
    */
   static async deleteOne(userId: Types.ObjectId | string): Promise<boolean> {
-    const user = await UserModel.deleteOne({_id: userId});
+    const user = await UserModel.deleteOne({_id: userId}).populate('level');
     return user !== null;
   }
 }

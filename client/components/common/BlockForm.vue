@@ -12,6 +12,7 @@
         :key="field.id"
       >
         <label :for="field.id">{{ field.label }}:</label>
+        <!-- Input type (text box, input) -->
         <textarea
           v-if="field.id === 'content'"
           :name="field.id"

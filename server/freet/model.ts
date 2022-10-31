@@ -1,37 +1,37 @@
-import type {Types} from 'mongoose';
+import type {Types, PopulatedDoc, Document} from 'mongoose';
 import {Schema, model} from 'mongoose';
 import type {User} from '../user/model';
 
 /**
  * This file defines the properties stored in a Freet
- * DO NOT implement operations here ---> use collection file
  */
 
-// Type definition for Freet on the backend
 export type Freet = {
-  _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
+  _id: Types.ObjectId;
   authorId: Types.ObjectId;
   dateCreated: Date;
   content: string;
   dateModified: Date;
+  freetType: string;
+  sourceLink: string; // News post property
+  emoji: string; // Fibe post property
 };
 
 export type PopulatedFreet = {
-  _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
+  _id: Types.ObjectId;
   authorId: User;
   dateCreated: Date;
   content: string;
   dateModified: Date;
+  freetType: string;
+  sourceLink: string; // News post property
+  emoji: string; // Fibe post property
 };
 
-// Mongoose schema definition for interfacing with a MongoDB table
-// Freets stored in this table will have these fields, with the
-// type given by the type property, inside MongoDB
 const FreetSchema = new Schema<Freet>({
   // The author userId
   authorId: {
-    // Use Types.ObjectId outside of the schema
-    type: Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId, // Use Types.ObjectId outside of the schema
     required: true,
     ref: 'User'
   },
@@ -49,6 +49,21 @@ const FreetSchema = new Schema<Freet>({
   dateModified: {
     type: Date,
     required: true
+  },
+  // The type of the freet
+  freetType: {
+    type: String,
+    required: true
+  },
+  // News freet property
+  sourceLink: {
+    type: String,
+    required: false // Required for all, but default value is empty string for Fibe post
+  },
+  // Fibe freet property
+  emoji: {
+    type: String,
+    required: false // Required for all, but default value is empty string for Fibe post
   }
 });
 
