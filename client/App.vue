@@ -40,6 +40,7 @@ body {
   padding: 0;
   margin: 0;
   font-size: 1.2em;
+  font-family: Neucha, sans-serif;
 }
 
 main {
