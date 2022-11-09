@@ -20,7 +20,7 @@
       <button
         class="button-55"
       >
-        <router-link to="/:view?">
+        <router-link to="/trust">
           People you trust
         </router-link>
       </button>

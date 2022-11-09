@@ -22,6 +22,26 @@
           :value="field.value"
           @input="field.value = $event.target.value"
         />
+        <div
+          v-else-if="field.id === 'freetType'"
+          :name="field.id"
+          :value="field.choices.value"
+          @input="field.value = $event.target.value"
+        >
+          <div
+            v-for="(choice, index) in field.choices"
+            :key="choice.value"
+          >
+            <input
+              :id="`gf_${index}_${field.id}`"
+              type="radio"
+              :name="`input_${field.id}`"
+              :value="choice.value"
+              :checked="choice.isSelected"
+            >
+            <label :for="`gf_${index}_${field.id}`">{{ choice.text }}</label>
+          </div>
+        </div>
         <input
           v-else
           :type="field.id === 'password' ? 'password' : 'text'"
@@ -64,6 +84,7 @@ export default {
       method: 'GET', // Form request method
       hasBody: false, // Whether or not form request has a body
       setUsername: false, // Whether or not stored username should be updated after form submission
+      setLevel: false,
       refreshFreets: false, // Whether or not stored freets should be updated after form submission
       alerts: {}, // Displays success/error messages encountered during form submission
       callback: null // Function to run after successful form submission
@@ -81,8 +102,22 @@ export default {
       };
       if (this.hasBody) {
         options.body = JSON.stringify(Object.fromEntries(
+          // Go over each field, checkbox value is not extracted
           this.fields.map(field => {
-            const {id, value} = field;
+            let {id, value} = field;
+            // Return which is selected and return that value 
+            if (field.type === 'radio') {
+              console.log('isradio')
+              for (const c of field.choices) {
+                console.log('c', c)
+                if (c.isSelected) {
+                  console.log('c', c.value, c.isSelected)
+                  value = c.value;
+                  field.value = '';
+                }
+              }
+            }
+            console.log('A', id, value)
             field.value = '';
             return [id, value];
           })
@@ -98,13 +133,30 @@ export default {
         }
 
         if (this.setUsername) {
+          // Different response totally
           const text = await r.text();
           const res = text ? JSON.parse(text) : {user: null};
           this.$store.commit('setUsername', res.user ? res.user.username : null);
+          if (this.setLevel) {
+            // construct a call url
+            options.method = 'GET';
+            this.$store.commit('setLevel', res.user ? res.user.username : null);
+          }
         }
 
         if (this.refreshFreets) {
-          this.$store.commit('refreshFreets');
+          // Also update the level (backend fetch)
+          options.method = 'GET';
+          options.body = null; // GET request MUST not have body, so muyst clear
+          const r = await fetch('/api/level/', options); // secondary call, don't change this.url
+          const res = await r.json();
+          if (!r.ok) {
+            // If response is not okay, we throw an error and enter the catch block
+            throw new Error(res.error);
+          } else {
+            this.$store.commit('setLevel', res.currentLevel ? res.currentLevel : null); // frontend update 
+          }
+          this.$store.commit('refreshFreets'); // frontend update
         }
 
         if (this.callback) {

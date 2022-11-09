@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import FreetsPage from './components/Freet/FreetsPage.vue';
 import AccountPage from './components/Account/AccountPage.vue';
 import LoginPage from './components/Login/LoginPage.vue';
+import TrustPage from './components/Trust/TrustPage.vue';
 import NotFound from './NotFound.vue';
 
 Vue.use(VueRouter);
@@ -11,7 +12,8 @@ const routes = [
   {path: '/', name: 'Home', component: FreetsPage},
   {path: '/account', name: 'Account', component: AccountPage},
   {path: '/login', name: 'Login', component: LoginPage},
-  {path: '*', name: 'Not Found', component: NotFound}
+  {path: '*', name: 'Not Found', component: NotFound},
+  {path: '/trust', name: 'Trust', component: TrustPage},
 ];
 
 const router = new VueRouter({routes});
@@ -31,7 +33,7 @@ router.beforeEach((to, from, next) => {
       return;
     }
 
-    if (to.name === 'ViewTrust' && !router.app.$store.state.username) {
+    if (to.name === 'Trust' && !router.app.$store.state.username) {
       next({name: 'Login'}); // Go to Login page if user navigates to Account and are not signed in
       return;
     }

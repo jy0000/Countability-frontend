@@ -4,7 +4,7 @@
   <main>
     <section v-if="$store.state.username">
       <header>
-        <h2 class="box">Welcome @{{ $store.state.username }}</h2>
+        <h2>Find people you trust @{{ $store.state.username }}</h2>
       </header>
       <CreateFreetForm />
     </section>
@@ -24,8 +24,8 @@
     <section>
       <header>
         <div class="left">
-          <h2 class="box">
-            📙 My feeds
+          <h2>
+            📙 People I trust
             <span v-if="$store.state.filter">
               by @{{ $store.state.filter }}
             </span>
@@ -109,19 +109,5 @@ section .scrollbox {
   flex: 1 0 50vh;
   padding: 3%;
   overflow-y: scroll;
-}
-.box {
-  background-color: #c2fbd7;
-  border-radius: 5px;
-  box-shadow: rgba(44, 187, 99, .2) 0 -25px 18px -14px inset,rgba(44, 187, 99, .15) 0 1px 2px,rgba(44, 187, 99, .15) 0 2px 4px,rgba(44, 187, 99, .15) 0 4px 8px,rgba(44, 187, 99, .15) 0 8px 16px,rgba(44, 187, 99, .15) 0 16px 32px;
-  color: green;
-  display: inline-block;
-  font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
-  padding: 7px 20px;
-  text-align: center;
-  text-decoration: none;
-  border: 0;
-  font-size: 30px;
-  margin-bottom: 10px;
 }
 </style>
