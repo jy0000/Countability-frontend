@@ -41,6 +41,7 @@ body {
   margin: 0;
   font-size: 1.2em;
   font-family: Neucha, sans-serif;
+  background-color: azure;
 }
 
 main {

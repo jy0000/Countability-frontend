@@ -54,8 +54,14 @@
     </p>
     <!-- Added descriptive freet -->
     <p class="info">
-      <i v-if="freet.freetType == 'News'"> Source: {{ freet.sourceLink }}</i>
-      <i v-else-if="freet.freetType == 'Fibe'">  @{{ freet.author }} is feeling {{ freet.emoji }}</i>
+      <i
+        v-if="freet.freetType == 'News'"
+        class="newsFreet"
+      > Source: {{ freet.sourceLink }}</i>
+      <i
+        v-else-if="freet.freetType == 'Fibe'"
+        class="fibeFreet"
+      >  @{{ freet.author }} is feeling {{ freet.emoji }}</i>
     </p>
     <p class="info">
       <b>Freet type: A {{ freet.freetType }} post.</b>
@@ -180,9 +186,40 @@ export default {
 </script>
 
 <style scoped>
+/* CSS */
 .freet {
-    border: 1px solid #111;
-    padding: 20px;
-    position: relative;
+  font-size: 16px;
+  letter-spacing: 2px;
+  text-decoration: none;
+  color: #000;
+  cursor: pointer;
+  box-shadow: rgb(85, 91, 255) 0px 0px 0px 3px, rgb(31, 193, 27) 0px 0px 0px 6px, rgb(255, 217, 19) 0px 0px 0px 9px, rgb(255, 156, 85) 0px 0px 0px 12px;
+  padding: 0.25em 0.5em;
+  margin-bottom: 15px;
 }
+
+.newsFreet{
+  font-size: 16px;
+  letter-spacing: 2px;
+  text-decoration: none;
+  color: #000;
+  cursor: pointer;
+  background-color: #3c97f8;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  padding: 0.25em 0.5em;
+  margin-bottom: 15px;
+}
+
+.fibeFreet{
+  font-size: 16px;
+  letter-spacing: 2px;
+  text-decoration: none;
+  color: #000;
+  cursor: pointer;
+  background-color:  #FFDD00;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  padding: 0.25em 0.5em;
+  margin-bottom: 15px;
+}
+
 </style>

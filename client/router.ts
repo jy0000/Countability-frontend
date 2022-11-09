@@ -30,6 +30,11 @@ router.beforeEach((to, from, next) => {
       next({name: 'Login'}); // Go to Login page if user navigates to Account and are not signed in
       return;
     }
+
+    if (to.name === 'ViewTrust' && !router.app.$store.state.username) {
+      next({name: 'Login'}); // Go to Login page if user navigates to Account and are not signed in
+      return;
+    }
   }
 
   next();

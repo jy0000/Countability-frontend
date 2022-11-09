@@ -12,10 +12,16 @@
     <div class="right">
       <button
         class="button-55"
-        role="button"
       >
         <router-link to="/">
           Feeds
+        </router-link>
+      </button>
+      <button
+        class="button-55"
+      >
+        <router-link to="/:view?">
+          People you trust
         </router-link>
       </button>
       <button

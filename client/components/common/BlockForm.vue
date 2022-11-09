@@ -171,8 +171,5 @@ textarea {
   font-size: 16px;
 
   border: 0;
-
-  user-select: none;
-  -webkit-user-select: none;
 }
 </style>

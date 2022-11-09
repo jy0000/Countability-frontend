@@ -17,7 +17,7 @@ const isFreetPropertyComplete = async (req: Request, res: Response, next: NextFu
 
   if (isFibeFreet && !req.body.emoji) {
     res.status(412).json({
-      error: 'News freet needs a source link.'
+      error: 'Fibe freet needs an emoji.' // Added this for error
     });
     return;
   }
@@ -29,9 +29,12 @@ const isFreetPropertyComplete = async (req: Request, res: Response, next: NextFu
  * Checks if a freet with freetId is req.params exists
  */
 const isFreetExists = async (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.body, req.body === '{}');
+  console.log(req.params);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const freetId = req.body ? req.body.freetId : req.params.freetId;
+  const freetId = req.body.freetId === undefined ? req.params.freetId : req.body.freetId;
   const validFormat = Types.ObjectId.isValid(freetId);
+  console.log(freetId);
   const freet = validFormat ? await FreetCollection.findOne(freetId) : '';
   if (!freet) {
     res.status(404).json({
