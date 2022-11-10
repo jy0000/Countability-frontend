@@ -22,26 +22,13 @@
           :value="field.value"
           @input="field.value = $event.target.value"
         />
-        <div
+        <input
           v-else-if="field.id === 'freetType'"
           :name="field.id"
-          :value="field.choices.value"
+          :value="field.value"
+          :placeholder="field.placeholder"
           @input="field.value = $event.target.value"
         >
-          <div
-            v-for="(choice, index) in field.choices"
-            :key="choice.value"
-          >
-            <input
-              :id="`gf_${index}_${field.id}`"
-              type="radio"
-              :name="`input_${field.id}`"
-              :value="choice.value"
-              :checked="choice.isSelected"
-            >
-            <label :for="`gf_${index}_${field.id}`">{{ choice.text }}</label>
-          </div>
-        </div>
         <input
           v-else
           :type="field.id === 'password' ? 'password' : 'text'"
@@ -109,7 +96,6 @@ export default {
             if (field.type === 'radio') {
               console.log('isradio')
               for (const c of field.choices) {
-                console.log('c', c)
                 if (c.isSelected) {
                   console.log('c', c.value, c.isSelected)
                   value = c.value;
