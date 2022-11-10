@@ -1,23 +1,23 @@
 <!-- Form for creating freets (block style) -->
 
 <script>
-import InlineForm from '@/components/common/InlineForm.vue';
+import BlockForm from '@/components/common/BlockForm.vue';
 
 export default {
   name: 'CreateTrustForm',
-  mixins: [InlineForm],
+  mixins: [BlockForm],
   data() {
     return {
-      url: '/api/trust',
+      url: '/api/trust/',
       method: 'POST',
       hasBody: true,
       fields: [
         {id: 'username', label: 'Enter the Fritter ID of the person to trust.', value: ''},
       ],
       title: 'Create a trust',
-      refreshFreets: true,
+      refreshTrust: true,
       callback: () => {
-        const message = 'Successfully created a trust!';
+        const message = 'Successfully created trust between you to!';
         this.$set(this.alerts, message, 'success');
         // Delete this success message after 3 seconds
         setTimeout(() => this.$delete(this.alerts, message), 3000);

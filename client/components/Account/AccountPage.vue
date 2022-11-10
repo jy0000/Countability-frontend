@@ -8,9 +8,7 @@
       <header>
         <h2 class="box">Hi, @{{ $store.state.username }}!</h2>
       </header>
-      <LevelComponent
-        :level="$store.state.level"
-      />
+      <LevelComponent />
       <ChangeUsernameForm />
       <ChangePasswordForm />
     </section>
@@ -59,6 +57,7 @@ export default {
   border: 0;
   font-size: 30px;
   margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 </style>

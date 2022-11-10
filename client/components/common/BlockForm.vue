@@ -72,6 +72,7 @@ export default {
       hasBody: false, // Whether or not form request has a body
       setUsername: false, // Whether or not stored username should be updated after form submission
       setLevel: false,
+      refreshTrust: false,
       refreshFreets: false, // Whether or not stored freets should be updated after form submission
       alerts: {}, // Displays success/error messages encountered during form submission
       callback: null // Function to run after successful form submission
@@ -103,7 +104,7 @@ export default {
                 }
               }
             }
-            console.log('A', id, value)
+            console.log('What', id, value)
             field.value = '';
             return [id, value];
           })
@@ -113,6 +114,7 @@ export default {
       try {
         const r = await fetch(this.url, options);
         if (!r.ok) {
+          console.log('here')
           // If response is not okay, we throw an error and enter the catch block
           const res = await r.json();
           throw new Error(res.error);
@@ -123,14 +125,30 @@ export default {
           const text = await r.text();
           const res = text ? JSON.parse(text) : {user: null};
           this.$store.commit('setUsername', res.user ? res.user.username : null);
-          if (this.setLevel) {
+          // if (this.setLevel) {
             // construct a call url
             options.method = 'GET';
-            this.$store.commit('setLevel', res.user ? res.user.username : null);
+            this.$store.commit('setLevel', res.currentLevel);
+          // }
+        }
+
+        if (this.setLevel) {
+          console.log('set level');
+          // Also update the level (backend fetch)
+          options.method = 'GET';
+          options.body = null; // GET request MUST not have body, so muyst clear
+          const r = await fetch('/api/level', options); // secondary call, don't change this.url
+          const res = await r.json();
+          if (!r.ok) {
+            // If response is not okay, we throw an error and enter the catch block
+            throw new Error(res.error);
+          } else {
+            this.$store.commit('setLevel', res.requestResponse.currentLevel); // frontend update 
           }
         }
 
         if (this.refreshFreets) {
+          console.log('refresh');
           // Also update the level (backend fetch)
           options.method = 'GET';
           options.body = null; // GET request MUST not have body, so muyst clear
@@ -140,9 +158,29 @@ export default {
             // If response is not okay, we throw an error and enter the catch block
             throw new Error(res.error);
           } else {
-            this.$store.commit('setLevel', res.currentLevel ? res.currentLevel : null); // frontend update 
+            console.log(res, res.requestResponse.currentLevel)
+            this.$store.commit('setLevel', res.requestResponse.currentLevel); // frontend update 
           }
           this.$store.commit('refreshFreets'); // frontend update
+        }
+
+        if (this.refreshTrust) {
+          console.log('trust refresh');
+          // Also update the level (backend fetch)
+          options.method = 'GET';
+          options.query.view
+          options.body = null; // GET request MUST not have body, so muyst clear
+          const r = await fetch('/api/trust/?view', options); // secondary call, don't change this.url
+          const res = await r.json();
+          if (!r.ok) {
+            // If response is not okay, we throw an error and enter the catch block
+            console.log('HI');
+            throw new Error(res.error);
+          } else {
+            console.log('HI', res, res.requestResponse)
+            this.$store.commit('setTrust', res.requestResponse); // frontend update 
+          }
+          this.$store.commit('refreshTrust'); // frontend update
         }
 
         if (this.callback) {

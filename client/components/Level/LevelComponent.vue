@@ -8,21 +8,25 @@
     <section>
       <!-- Header and features (endorse, for example)-->
       <!-- If the user signs in, they get to see this-->
-      <h1>Wtf</h1>
+      <header><h2  class="box">Current engagement level</h2></header>
       <div
         v-if="$store.state.username"
       >
-        <h3 class="info">
-          Your Fritter level: {{ 5 }}
+        <h3 class="button-55">
+          Your Fritter level: {{ $store.state.level }}
         </h3>
-        <p class="info">
-          <i
-            v-if="5== 1"
-          > Source: LEVEL 1</i>
-          <i
-            v-else-if="5 == 2"
-          >  Level 2 </i>
-        </p>
+        <div
+          v-if="$store.state.level >= 0"
+          class="button-55"
+        >
+          Priviledge unlocked at Level 0:  Make News and Freet Post
+        </div>
+        <div
+          v-if="$store.state.level >= 2"
+          class="button-55"
+        >
+          Priviledge unlocked at above Level 2:  Endorse any post.
+        </div>
       </div>
       <!-- If the user signs in, they get to see above-->
     </section>
@@ -30,85 +34,70 @@
 </template>
 
 <script>
+import BlockForm from '@/components/common/BlockForm.vue';
+
 export default {
   name: 'LevelComponent',
-  props: {
-    // Data from the stored level
-    level: {
-      type: Object,
-      required: true
-    }
-  },
+  mixins: [BlockForm],
   data() {
     return {
-      alerts: {} // Displays success/error messages encountered during freet modification
+      url: '/api/level',
+      method: 'GET',
+      hasBody: false,
+      refreshFreets: true,
     };
-  },
-  methods: {
-    getLevelAndPriviledge() {
-      this.request();
-    },
-
-    async request() {
-      /**
-       * Submits a request to the freet's endpoint
-       * @param params - Options for the request
-       * @param params.body - Body for the request, if it exists
-       * @param params.callback - Function to run if the the request succeeds
-       */
-      const url = '/api/level';
-      try {
-        const r = await fetch(url);
-        const res = await r.json();
-        if (!r.ok) {
-          throw new Error(res.error);
-        }
-        this.$store.commit('updateLevel', this.value);
-        // this.$store.commit('updateFreets', res);
-        } catch (e) {
-        this.$set(this.alerts, e, 'error');
-        setTimeout(() => this.$delete(this.alerts, e), 3000);
-      }
-    }
   }
 };
+
 </script>
 
 <style scoped>
 /* CSS */
-.freet {
-  font-size: 16px;
-  letter-spacing: 2px;
+.box {
+  background-color: #c2fbd7;
+  border-radius: 5px;
+  box-shadow: rgba(44, 187, 99, .2) 0 -25px 18px -14px inset,rgba(44, 187, 99, .15) 0 1px 2px,rgba(44, 187, 99, .15) 0 2px 4px,rgba(44, 187, 99, .15) 0 4px 8px,rgba(44, 187, 99, .15) 0 8px 16px,rgba(44, 187, 99, .15) 0 16px 32px;
+  color: green;
+  display: inline-block;
+  font-family: CerebriSans-Regular,-apple-system,system-ui,Roboto,sans-serif;
+  padding: 7px 20px;
+  text-align: center;
   text-decoration: none;
-  color: #000;
-  cursor: pointer;
-  box-shadow: rgb(85, 91, 255) 0px 0px 0px 3px, rgb(31, 193, 27) 0px 0px 0px 6px, rgb(255, 217, 19) 0px 0px 0px 9px, rgb(255, 156, 85) 0px 0px 0px 12px;
-  padding: 0.25em 0.5em;
-  margin-bottom: 15px;
+  border: 0;
+  font-size: 30px;
+  margin-bottom: 10px;
 }
 
-.newsFreet{
-  font-size: 16px;
-  letter-spacing: 2px;
+.button-55 {
+  align-self: center;
+  background-color: #fff;
+  background-image: none;
+  background-position: 0 90%;
+  background-repeat: repeat no-repeat;
+  background-size: 4px 3px;
+  border-radius: 15px 225px 255px 15px 15px 255px 225px 15px;
+  border-style: solid;
+  border-width: 2px;
+  box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
+  box-sizing: border-box;
+  color: #41403e;
+  display: inline-block;
+  font-family: Neucha, sans-serif;
+  font-size: 1.5rem;
+  line-height: 23px;
+  outline: none;
+  padding: .75rem;
   text-decoration: none;
-  color: #000;
-  cursor: pointer;
-  background-color: #3c97f8;
-  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-  padding: 0.25em 0.5em;
-  margin-bottom: 15px;
+  transition: all 235ms ease-in-out;
+  border-bottom-left-radius: 15px 255px;
+  border-bottom-right-radius: 225px 15px;
+  border-top-left-radius: 255px 15px;
+  border-top-right-radius: 15px 225px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  margin-bottom: 20px;
 }
 
-.fibeFreet{
-  font-size: 16px;
-  letter-spacing: 2px;
-  text-decoration: none;
-  color: #000;
-  cursor: pointer;
-  background-color:  #FFDD00;
-  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-  padding: 0.25em 0.5em;
-  margin-bottom: 15px;
-}
 
 </style>

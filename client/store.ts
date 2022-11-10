@@ -10,7 +10,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     filter: null, // Username to filter shown freets by (null = show all)
-    trustFilter: null, // Condition to filter shown trusts by
+    trustFilter: 'User you trust', // Condition to filter shown trusts by
     freets: [], // All freets created in the app
     trusts: [], // All trusts created in the app
     username: null, // Username of the logged in user
@@ -89,9 +89,9 @@ const store = new Vuex.Store({
       /**
        * Request the server for the currently available trusts.
        */
-      const feedChannelURL = `/api/trust?view=${state.trustFilter}`;
-      const res = await fetch(feedChannelURL).then(async r => r.json());
-      state.freets = res;
+      const url = state.trustFilter ? `/api/trust?view=${state.trustFilter}` : '/api/trust?view=Users you trust';
+      const res = await fetch(url).then(async r => r.json());
+      state.trusts = res;
     }
   },
   // Store data across page refreshes, only discard on browser close

@@ -28,9 +28,7 @@ const isTrustAlreadyExist = async (req: Request, res: Response, next: NextFuncti
   const trust = await TrustCollection.findOne(req.session.userId, trustReceiver._id);
   if (trust) {
     res.status(409).json({
-      error: {
-        message: 'You have trusted this user already.'
-      }
+      error: 'You have trusted this user already.'
     });
     return;
   }
@@ -45,9 +43,7 @@ const isTrustSelf = async (req: Request, res: Response, next: NextFunction) => {
   const user = await UserCollection.findOneByUserId(req.session.userId);
   if (user.username === req.body.username) {
     res.status(405).json({
-      error: {
-        message: 'Cannot trust yourself.'
-      }
+      error: 'Cannot trust yourself.'
     });
     return;
   }
@@ -63,9 +59,7 @@ const isTrustReceiverExist = async (req: Request, res: Response, next: NextFunct
   const trustReceiver = await UserCollection.findOneByUsername(username);
   if (!trustReceiver) {
     res.status(404).json({
-      error: {
-        message: 'User does not exist.'
-      }
+      error: 'User does not exist.'
     });
     return;
   }

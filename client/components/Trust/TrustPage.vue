@@ -6,7 +6,7 @@
       <header>
         <h2>Find people you trust @{{ $store.state.username }}</h2>
       </header>
-      <CreateFreetForm />
+      <CreateTrustForm />
     </section>
     <section v-else>
       <header>
@@ -17,52 +17,24 @@
           <router-link to="/login">
             Sign in
           </router-link>
-          to create, edit, and delete freets.
+          to add or remove trust.
         </h3>
       </article>
     </section>
     <section>
-      <header>
-        <div class="left">
-          <h2>
-            📙 People I trust
-            <span v-if="$store.state.filter">
-              by @{{ $store.state.filter }}
-            </span>
-          </h2>
-        </div>
-        <!-- Added freet feed channel selection-->
-        <div>
-          <SelectFeedChannel
-            ref="selectFeedChannel"
-            value="freetType"
-            placeholder="🔍 Type 'News' / 'Fibe' for selected feed channel freets (optional)"
-            button="🔄 Get freets"
-          />
-        </div>
-        <!-- End of Added freet feed channel selection-->
-        <div class="right">
-          <GetFreetsForm
-            ref="getFreetsForm"
-            value="author"
-            placeholder="🔍 Filter by author (optional)"
-            button="🔄 Get freets"
-          />
-        </div>
-      </header>
       <section
-        v-if="$store.state.freets.length"
+        v-if="$store.state.trusts.length"
       >
-        <FreetComponent
-          v-for="freet in $store.state.freets"
-          :key="freet.id"
-          :freet="freet"
+        <TrustComponent
+          v-for="trust in $store.state.trusts"
+          :key="trust.id"
+          :trust="trust"
         />
       </section>
       <article
         v-else
       >
-        <h3>No freets found.</h3>
+        <!-- <h3>No trust found.</h3> -->
       </article>
     </section>
   </main>
@@ -70,21 +42,13 @@
 
 <script>
 // Components
-import FreetComponent from '@/components/Freet/FreetComponent.vue';
-import CreateFreetForm from '@/components/Freet/CreateFreetForm.vue';
-import GetFreetsForm from '@/components/Freet/GetFreetsForm.vue';
-import SelectFeedChannel from '@/components/FeedChannel/SelectFeedChannel.vue';
+import TrustComponent from '@/components/Trust/TrustComponent.vue';
+import CreateTrustForm from '@/components/Trust/CreateTrustForm.vue';
 
 export default {
   name: 'FreetPage',
-  components: {FreetComponent, GetFreetsForm, CreateFreetForm, SelectFeedChannel},
+  components: {TrustComponent, CreateTrustForm},
   mounted() {
-    // Primitive fix
-    if (this.$refs.selectFeedChannel) {
-      this.$refs.selectFeedChannel.submit(); // Added this for feed channel filtering
-    } else {
-      this.$refs.getFreetsForm.submit();
-    }
   }
 };
 </script>
