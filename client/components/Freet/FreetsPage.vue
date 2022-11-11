@@ -4,17 +4,24 @@
   <main>
     <section v-if="$store.state.username">
       <header>
-        <h2 class="box">Welcome @{{ $store.state.username }}</h2>
+        <h2 class="box">
+          Welcome @{{ $store.state.username }}
+        </h2>
       </header>
       <CreateFreetForm />
     </section>
     <section v-else>
       <header>
-        <h2>Welcome to Fritter!</h2>
+        <h2 class="box">
+          Welcome to Fritter!
+        </h2>
       </header>
       <article>
         <h3>
-          <router-link to="/login">
+          <router-link
+            class="button-sign-in"
+            to="/login"
+          >
             Sign in
           </router-link>
           to create, edit, and delete freets.
@@ -32,9 +39,12 @@
           </h2>
         </div>
         <!-- Added freet feed channel selection-->
-        <div>
+        <div
+          class="right"
+        >
           <SelectFeedChannel
             ref="selectFeedChannel"
+            class="button-55"
             value="freetType"
             placeholder="🔍 Type 'News' / 'Fibe' for selected feed channel freets (optional)"
             button="🔄 Get freets"
@@ -44,6 +54,7 @@
         <div class="right">
           <GetFreetsForm
             ref="getFreetsForm"
+            class="button-55"
             value="author"
             placeholder="🔍 Filter by author (optional)"
             button="🔄 Get freets"
@@ -123,5 +134,76 @@ section .scrollbox {
   border: 0;
   font-size: 30px;
   margin-bottom: 10px;
+}
+
+/** Cross box */
+.button-89 {
+  --b: 3px;   /* border thickness */
+  --s: .45em; /* size of the corner */
+  --color: #373B44;
+  
+  padding: calc(.5em + var(--s)) calc(.9em + var(--s));
+  color: var(--color);
+  --_p: var(--s);
+  background:
+    conic-gradient(from 90deg at var(--b) var(--b),#0000 90deg,var(--color) 0)
+    var(--_p) var(--_p)/calc(100% - var(--b) - 2*var(--_p)) calc(100% - var(--b) - 2*var(--_p));
+  transition: .3s linear, color 0s, background-color 0s;
+  outline: var(--b) solid #0000;
+  outline-offset: .6em;
+  font-size: 16px;
+
+  border: 0;
+  background-color: rgb(199, 193, 193, 0.45)
+}
+.button-sign-in {
+  align-self: center;
+  background-color: #fff;
+  background-image: none;
+  background-position: 0 90%;
+  background-repeat: repeat no-repeat;
+  background-size: 4px 3px;
+  border-radius: 15px 225px 255px 15px 15px 255px 225px 15px;
+  border-style: solid;
+  border-width: 2px;
+  box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
+  box-sizing: border-box;
+  color: #41403e;
+  display: inline-block;
+  font-family: Neucha, sans-serif;
+  font-size: 1.5rem;
+  line-height: 23px;
+  outline: none;
+  padding: .75rem;
+  text-decoration: none;
+  border-bottom-left-radius: 15px 255px;
+  border-bottom-right-radius: 225px 15px;
+  border-top-left-radius: 255px 15px;
+  border-top-right-radius: 15px 225px;
+}
+.button-55 {
+  align-self: center;
+  background-color: rgb(199, 193, 193, 0.45);
+  background-image: none;
+  background-position: 0 90%;
+  background-repeat: repeat no-repeat;
+  background-size: 4px 3px;
+  border-radius: 15px 225px 255px 15px 15px 255px 225px 15px;
+  border-style: solid;
+  border-width: 2px;
+  box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
+  box-sizing: border-box;
+  color: #41403e;
+  display: inline-block;
+  font-family: Neucha, sans-serif;
+  font-size: 1.5rem;
+  line-height: 23px;
+  outline: none;
+  padding: .75rem;
+  text-decoration: none;
+  border-bottom-left-radius: 15px 255px;
+  border-bottom-right-radius: 225px 15px;
+  border-top-left-radius: 255px 15px;
+  border-top-right-radius: 15px 225px;
 }
 </style>

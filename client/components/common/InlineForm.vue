@@ -2,7 +2,7 @@
 <!-- This is just an example; feel free to define any reusable components you want! -->
 
 <template>
-  <form @submit.prevent="submit" >
+  <form @submit.prevent="submit">
     <input
       v-model="value"
       type="text"

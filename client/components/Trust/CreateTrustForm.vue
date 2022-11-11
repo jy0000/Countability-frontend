@@ -12,7 +12,7 @@ export default {
       method: 'POST',
       hasBody: true,
       fields: [
-        {id: 'username', label: 'Enter the Fritter ID of the person to trust.', value: ''},
+        {id: 'username', label: 'Enter the Fritter handle of the person to trust', value: ''},
       ],
       title: 'Create a trust',
       refreshTrust: true,

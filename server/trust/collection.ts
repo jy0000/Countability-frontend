@@ -57,6 +57,15 @@ class TrustCollection {
    *
    * @return {Promise<HydratedDocument<Trust>[]>} - An array of all of trusts
    */
+  static async deleteEverything(): Promise<Array<HydratedDocument<Trust>>> {
+    return TrustModel.remove();
+  }
+
+  /**
+   * Fetch all trust relationships in the database.
+   *
+   * @return {Promise<HydratedDocument<Trust>[]>} - An array of all of trusts
+   */
   static async findAll(): Promise<Array<HydratedDocument<Trust>>> {
     return TrustModel.find({}).sort({dateTrusted: -1});
   }
@@ -75,13 +84,14 @@ class TrustCollection {
   }
 
   /**
-   * Untrust everyone user has trusted before.
+   * Delete all trust associating the user (either the user giving trust or receiving trust)
    *
    * @param {string} userId the user who is untrusting all users they trusted.
    * @return {Promise<Boolean>} True if the user has untrusted everyone, false otherwise
    */
   static async untrustAllById(userId: Types.ObjectId | string): Promise<void> {
     await TrustModel.deleteMany({trustGiverId: userId}); // Multiply entires deletion
+    await TrustModel.deleteMany({trustReceiverId: userId}); // Multiply entires deletion
   }
 
   /**

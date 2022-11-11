@@ -8,7 +8,7 @@
     <header>
       <!-- Header and features (endorse, for example)-->
       <h3 class="author">
-        @{{ trust.trustGiverId.username }}
+        @{{ trust.trustReceiver }}
       </h3>
       <!-- If the user signs in, they get to see this-->
       <div
@@ -24,7 +24,7 @@
     <!-- Content starts here, if editing, else show content -->
     <!-- Added descriptive freet -->
     <p class="info">
-      Trusted user: {{ trust.trustReceiverId.username }}
+      Trusted by you: @{{ trust.trustGiver }}
     </p>
     <!-- End of Added descriptive freet -->
     <p class="info">
@@ -54,91 +54,51 @@ export default {
   },
   data() {
     return {
+      // trustReceiver: this.trust.trustReceiver, // Potentially-new content for this freet
       alerts: {} // Displays success/error messages encountered during freet modification
     };
   },
   methods: {
-    deleteTrust() {
+    async deleteTrust() {
       /**
        * Deletes this trust.
        */
-      const params = {
-        method: 'DELETE',
-        callback: () => {
-          this.$store.commit('alert', {
-            message: 'Successfully deleted freet!', status: 'success'
-          });
-        }
-      };
-      this.request(params);
-    },
-    async request(params) {
-      /**
-       * Submits a request to the freet's endpoint
-       * @param params - Options for the requxest
-       * @param params.body - Body for the request, if it exists
-       * @param params.callback - Function to run if the the request succeeds
-       */
       const options = {
-        method: params.method, headers: {'Content-Type': 'application/json'}
+        method: 'DELETE', headers: {'Content-Type': 'application/json'}
       };
-      if (params.body) {
-        options.body = params.body;
-      }
-
       try {
-        const r = await fetch(`/api/trust/${this.trust._id}`, options);
-        if (!r.ok) {
+      const r = await fetch(`/api/trust/${this.trust.trustReceiver}`, options);
+      if (!r.ok) {
           const res = await r.json();
           throw new Error(res.error);
         }
-        this.$store.commit('refreshTrust');
+        this.$store.commit('refreshTrusts');
 
-        params.callback();
+        this.$store.commit('alert', {
+          message: 'Successfully deleted trust!', status: 'success'
+        });
       } catch (e) {
         this.$set(this.alerts, e, 'error');
         setTimeout(() => this.$delete(this.alerts, e), 3000);
-      }
+      } 
     }
-  }
-};
+}};
 </script>
 
 <style scoped>
-/* CSS */
-.freet {
+.trust {
+  background-color: #13aa52;
+  border: 1px solid #13aa52;
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, .1) 0 2px 4px 0;
+  box-sizing: border-box;
+  color: #fff;
+  font-family: "Akzidenz Grotesk BQ Medium", -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 16px;
-  letter-spacing: 2px;
-  text-decoration: none;
-  color: #000;
-  cursor: pointer;
-  box-shadow: rgb(85, 91, 255) 0px 0px 0px 3px, rgb(31, 193, 27) 0px 0px 0px 6px, rgb(255, 217, 19) 0px 0px 0px 9px, rgb(255, 156, 85) 0px 0px 0px 12px;
-  padding: 0.25em 0.5em;
-  margin-bottom: 15px;
-}
-
-.newsFreet{
-  font-size: 16px;
-  letter-spacing: 2px;
-  text-decoration: none;
-  color: #000;
-  cursor: pointer;
-  background-color: #3c97f8;
-  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-  padding: 0.25em 0.5em;
-  margin-bottom: 15px;
-}
-
-.fibeFreet{
-  font-size: 16px;
-  letter-spacing: 2px;
-  text-decoration: none;
-  color: #000;
-  cursor: pointer;
-  background-color:  #FFDD00;
-  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-  padding: 0.25em 0.5em;
-  margin-bottom: 15px;
+  font-weight: 400;
+  outline: none;
+  outline: 0;
+  padding: 10px 25px;
 }
 
 </style>

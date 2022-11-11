@@ -203,11 +203,11 @@ export default {
   letter-spacing: 2px;
   text-decoration: none;
   color: #000;
-  cursor: pointer;
   box-shadow: rgb(85, 91, 255) 0px 0px 0px 3px, rgb(31, 193, 27) 0px 0px 0px 6px, rgb(255, 217, 19) 0px 0px 0px 9px, rgb(255, 156, 85) 0px 0px 0px 12px;
   padding: 0.25em 0.5em;
   margin-bottom: 5px;
   margin-top: 15px;
+  background-color: rgb(199, 193, 193, 0.35)
 }
 
 .newsFreet{

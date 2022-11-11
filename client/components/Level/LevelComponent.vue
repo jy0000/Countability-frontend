@@ -8,12 +8,16 @@
     <section>
       <!-- Header and features (endorse, for example)-->
       <!-- If the user signs in, they get to see this-->
-      <header><h2  class="box">Current engagement level</h2></header>
+      <header>
+        <h2 class="box">
+          Current engagement level
+        </h2>
+      </header>
       <div
         v-if="$store.state.username"
       >
         <h3 class="button-55">
-          Your Fritter level: {{ $store.state.level }}
+          Your engagement level: {{ $store.state.level }}
         </h3>
         <div
           v-if="$store.state.level >= 0"

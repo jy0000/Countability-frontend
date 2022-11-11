@@ -51,6 +51,11 @@ class LevelCollection {
     return LevelModel.findOne({_id: levelId});
   }
 
+  static async deleteEverything(
+  ): Promise<HydratedDocument<Level>> {
+    return LevelModel.remove();
+  }
+
   /**
    * Update user's level
    *

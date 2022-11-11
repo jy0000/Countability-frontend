@@ -9,13 +9,13 @@
         <h2 class="box">Hi, @{{ $store.state.username }}!</h2>
       </header>
       <LevelComponent />
-      <ChangeUsernameForm />
-      <ChangePasswordForm />
     </section>
     <section>
       <header>
         <h2 class="box">Account management</h2>
       </header>
+      <ChangeUsernameForm />
+      <ChangePasswordForm />
       <LogoutForm />
       <DeleteAccountForm />
     </section>
@@ -56,8 +56,8 @@ export default {
   text-decoration: none;
   border: 0;
   font-size: 30px;
+  margin-top: 30px;
   margin-bottom: 10px;
-  margin-top: 10px;
 }
 
 </style>

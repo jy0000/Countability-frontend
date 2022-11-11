@@ -6,7 +6,9 @@ import UserCollection from '../user/collection';
  * Checks if a trust not exists. (for delete request, trust removal)
  */
 const isTrustNotExist = async (req: Request, res: Response, next: NextFunction) => {
-  const trustReceiver = await UserCollection.findOneByUsername(req.params.username);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const trustUsername = req.body.username ? req.body.username : req.params.username;
+  const trustReceiver = await UserCollection.findOneByUsername(trustUsername);
   const trust = await TrustCollection.findOne(req.session.userId, trustReceiver._id);
   if (!trust) {
     res.status(409).json({
@@ -56,6 +58,7 @@ const isTrustSelf = async (req: Request, res: Response, next: NextFunction) => {
  */
 const isTrustReceiverExist = async (req: Request, res: Response, next: NextFunction) => {
   const username = (req.body.username === undefined) ? req.params.username : req.body.username as string;
+
   const trustReceiver = await UserCollection.findOneByUsername(username);
   if (!trustReceiver) {
     res.status(404).json({

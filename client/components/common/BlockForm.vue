@@ -95,16 +95,13 @@ export default {
             let {id, value} = field;
             // Return which is selected and return that value 
             if (field.type === 'radio') {
-              console.log('isradio')
               for (const c of field.choices) {
                 if (c.isSelected) {
-                  console.log('c', c.value, c.isSelected)
                   value = c.value;
                   field.value = '';
                 }
               }
             }
-            console.log('What', id, value)
             field.value = '';
             return [id, value];
           })
@@ -114,7 +111,6 @@ export default {
       try {
         const r = await fetch(this.url, options);
         if (!r.ok) {
-          console.log('here')
           // If response is not okay, we throw an error and enter the catch block
           const res = await r.json();
           throw new Error(res.error);
@@ -124,16 +120,13 @@ export default {
           // Different response totally
           const text = await r.text();
           const res = text ? JSON.parse(text) : {user: null};
+          this.$store.commit('refreshTrusts');
           this.$store.commit('setUsername', res.user ? res.user.username : null);
-          // if (this.setLevel) {
-            // construct a call url
-            options.method = 'GET';
-            this.$store.commit('setLevel', res.currentLevel);
+          this.$store.commit('setLevel', 0);
           // }
         }
 
         if (this.setLevel) {
-          console.log('set level');
           // Also update the level (backend fetch)
           options.method = 'GET';
           options.body = null; // GET request MUST not have body, so muyst clear
@@ -148,7 +141,6 @@ export default {
         }
 
         if (this.refreshFreets) {
-          console.log('refresh');
           // Also update the level (backend fetch)
           options.method = 'GET';
           options.body = null; // GET request MUST not have body, so muyst clear
@@ -158,29 +150,14 @@ export default {
             // If response is not okay, we throw an error and enter the catch block
             throw new Error(res.error);
           } else {
-            console.log(res, res.requestResponse.currentLevel)
             this.$store.commit('setLevel', res.requestResponse.currentLevel); // frontend update 
           }
           this.$store.commit('refreshFreets'); // frontend update
         }
 
         if (this.refreshTrust) {
-          console.log('trust refresh');
           // Also update the level (backend fetch)
-          options.method = 'GET';
-          options.query.view
-          options.body = null; // GET request MUST not have body, so muyst clear
-          const r = await fetch('/api/trust/?view', options); // secondary call, don't change this.url
-          const res = await r.json();
-          if (!r.ok) {
-            // If response is not okay, we throw an error and enter the catch block
-            console.log('HI');
-            throw new Error(res.error);
-          } else {
-            console.log('HI', res, res.requestResponse)
-            this.$store.commit('setTrust', res.requestResponse); // frontend update 
-          }
-          this.$store.commit('refreshTrust'); // frontend update
+          this.$store.commit('refreshTrusts'); // frontend update
         }
 
         if (this.callback) {
@@ -247,5 +224,6 @@ textarea {
   font-size: 16px;
 
   border: 0;
+  background-color: rgb(199, 193, 193, 0.45)
 }
 </style>

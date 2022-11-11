@@ -6,6 +6,7 @@ import TrustCollection from './collection';
 import * as userValidator from '../user/middleware';
 import * as trustValidator from '../trust/middleware';
 import * as util from './util';
+import LevelCollection from '..//level/collection';
 
 const router = express.Router();
 
@@ -63,6 +64,8 @@ router.post(
       message: 'Hooray, you added this user as your trusted friend.',
       trust: util.constructTrustResponse(newTrust)
     });
+    // DELETE EVERYTHING ADDED because there was a bug about dangling removed object
+    // await TrustCollection.deleteEverything();
   }
 );
 
@@ -74,6 +77,7 @@ router.post(
  * @return {string} - A success message
  * @throws {400} - Trust doesn't already exist
  * @throws {403} - Not logged in
+ * @throws {404} - User does not exist
  */
 
 router.delete(
@@ -90,6 +94,7 @@ router.delete(
     res.status(201).json({
       message: 'You removed your trust for the user.'
     });
+    await LevelCollection.deleteEverything();
   }
 );
 

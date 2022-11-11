@@ -5,16 +5,16 @@ import createPersistedState from 'vuex-persistedstate';
 Vue.use(Vuex);
 
 /**
- * Storage for data that needs to be accessed from various compoentns.
+ * Storage for data that needs to be accessed from various components
  */
 const store = new Vuex.Store({
   state: {
     filter: null, // Username to filter shown freets by (null = show all)
-    trustFilter: 'User you trust', // Condition to filter shown trusts by
+    trustFilter: 'Users you trust', // Condition to filter shown trusts by
     freets: [], // All freets created in the app
     trusts: [], // All trusts created in the app
     username: null, // Username of the logged in user
-    level: null, // Level of the logged in user
+    level: 0, // Level of the logged in user
     alerts: {} // global success/error messages encountered during submissions to non-visible forms
   },
   mutations: {
@@ -48,6 +48,13 @@ const store = new Vuex.Store({
        */
       state.filter = filter;
     },
+    updateTrustFilter(state, filter) {
+      /**
+       * Update the stored freets filter to the specified one.
+       * @param filter - Username of the user to fitler freets by
+       */
+      state.trustFilter = filter;
+    },
     updateFreets(state, freets) {
       /**
        * Update the stored freets to the provided freets.
@@ -55,13 +62,13 @@ const store = new Vuex.Store({
        */
       state.freets = freets;
     },
-    updateTrusts(state, trusts) {
-      /**
-       * Update the stored trusts to the provided freets.
-       * @param freets - Freets to store
-       */
-      state.trusts = trusts;
-    },
+    // updateTrusts(state, trusts) {
+    //   /**
+    //    * Update the stored trusts to the provided freets.
+    //    * @param freets - Freets to store
+    //    */
+    //   state.trusts = trusts;
+    // },
     /** Added this level */
     updateLevel(state, level) {
       /**
@@ -91,7 +98,8 @@ const store = new Vuex.Store({
        */
       const url = state.trustFilter ? `/api/trust?view=${state.trustFilter}` : '/api/trust?view=Users you trust';
       const res = await fetch(url).then(async r => r.json());
-      state.trusts = res;
+      console.log('present', res, res.trustedUsers);
+      state.trusts = res.trustedUsers;
     }
   },
   // Store data across page refreshes, only discard on browser close
