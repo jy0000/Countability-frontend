@@ -5,23 +5,34 @@
   <nav>
     <div class="left">
       <img src="../../public/beaver.png"> <!--Logo credit: https://emojiterra.com/beaver/ -->
-      <span class="title">
-        Fritter
-      </span>
+      
+      
+      <router-link to="/">
+        <span class="title">
+        CountAbility
+        </span>
+      </router-link>
     </div>
     <div class="right">
       <button
         class="button-55"
       >
-        <router-link to="/">
-          Feeds
+        <router-link to="/session"> <!-- TODO session-->
+          Session
         </router-link>
       </button>
       <button
         class="button-55"
       >
-        <router-link to="/trust">
-          People you trust
+        <router-link to="/draw"> <!-- TODO link-->
+          Draw!
+        </router-link>
+      </button>
+      <button
+        class="button-55"
+      >
+        <router-link to="/trust"> <!-- TODO link-->
+          Friend
         </router-link>
       </button>
       <button
