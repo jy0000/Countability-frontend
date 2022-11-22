@@ -9,9 +9,9 @@ Vue.use(Vuex);
  */
 const store = new Vuex.Store({
   state: {
-    filter: null, // Username to filter shown freets by (null = show all)
+    filter: null, // Username to filter shown posts by (null = show all)
     trustFilter: 'Users you trust', // Condition to filter shown trusts by
-    freets: [], // All freets created in the app
+    posts: [], // All posts created in the app
     trusts: [], // All trusts created in the app
     username: null, // Username of the logged in user
     level: 0, // Level of the logged in user
@@ -43,53 +43,53 @@ const store = new Vuex.Store({
     },
     updateFilter(state, filter) {
       /**
-       * Update the stored freets filter to the specified one.
-       * @param filter - Username of the user to fitler freets by
+       * Update the stored posts filter to the specified one.
+       * @param filter - Username of the user to fitler posts by
        */
       state.filter = filter;
     },
     updateTrustFilter(state, filter) {
       /**
-       * Update the stored freets filter to the specified one.
-       * @param filter - Username of the user to fitler freets by
+       * Update the stored posts filter to the specified one.
+       * @param filter - Username of the user to fitler posts by
        */
       state.trustFilter = filter;
     },
-    updateFreets(state, freets) {
+    updatePosts(state, posts) {
       /**
-       * Update the stored freets to the provided freets.
-       * @param freets - Freets to store
+       * Update the stored posts to the provided posts.
+       * @param posts - Posts to store
        */
-      state.freets = freets;
+      state.posts = posts;
     },
     // updateTrusts(state, trusts) {
     //   /**
-    //    * Update the stored trusts to the provided freets.
-    //    * @param freets - Freets to store
+    //    * Update the stored trusts to the provided posts.
+    //    * @param posts - Posts to store
     //    */
     //   state.trusts = trusts;
     // },
     /** Added this level */
     updateLevel(state, level) {
       /**
-       * Update the stored freets filter to the specified one.
-       * @param filter - Username of the user to fitler freets by
+       * Update the stored posts filter to the specified one.
+       * @param filter - Username of the user to fitler posts by
        */
       state.level = level;
     },
     /** End of Added this level (frontend, call after made post request)*/
-    async refreshFreets(state) {
+    async refreshPosts(state) {
       /**
-       * Request the server for the currently available freets.
+       * Request the server for the currently available posts.
        */
       if (state.filter === 'News' || state.filter === 'Fibe') {
-        const feedChannelURL = `/api/feedChannel?freetType=${state.filter}`;
+        const feedChannelURL = `/api/feedChannel?postType=${state.filter}`;
         const res = await fetch(feedChannelURL).then(async r => r.json());
-        state.freets = res;
+        state.posts = res;
       } else {
-        const url = state.filter ? `/api/users/${state.filter}/freets` : '/api/freets';
+        const url = state.filter ? `/api/users/${state.filter}/posts` : '/api/posts';
         const res = await fetch(url).then(async r => r.json());
-        state.freets = res;
+        state.posts = res;
       }
     },
     async refreshTrusts(state) {

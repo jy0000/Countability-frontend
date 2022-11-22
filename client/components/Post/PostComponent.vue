@@ -1,18 +1,18 @@
-<!-- Reusable component representing a single freet and its actions -->
+<!-- Reusable component representing a single post and its actions -->
 <!-- We've tagged some elements with classes; consider writing CSS using those classes to style them... -->
 
 <template>
   <article
-    class="freet"
+    class="post"
   >
     <header>
       <!-- Header and features (endorse, for example)-->
       <h3 class="author">
-        @{{ freet.author }}
+        @{{ post.author }}
       </h3>
       <!-- If the user signs in, they get to see this-->
       <div
-        v-if="$store.state.username === freet.author"
+        v-if="$store.state.username === post.author"
         class="actions"
       >
         <button
@@ -33,7 +33,7 @@
         >
           ✏️ Edit
         </button>
-        <button @click="deleteFreet">
+        <button @click="deletePost">
           🗑️ Delete
         </button>
       </div>
@@ -50,26 +50,26 @@
       v-else
       class="content"
     >
-      {{ freet.content }}
+      {{ post.content }}
     </p>
-    <!-- Added descriptive freet -->
+    <!-- Added descriptive post -->
     <p class="info">
       <i
-        v-if="freet.freetType == 'News'"
-        class="newsFreet"
-      > Source: {{ freet.sourceLink }}</i>
+        v-if="post.postType == 'News'"
+        class="newsPost"
+      > Source: {{ post.sourceLink }}</i>
       <i
-        v-else-if="freet.freetType == 'Fibe'"
-        class="fibeFreet"
-      >  @{{ freet.author }} is feeling {{ freet.emoji }}</i>
+        v-else-if="post.postType == 'Fibe'"
+        class="fibePost"
+      >  @{{ post.author }} is feeling {{ post.emoji }}</i>
     </p>
     <p class="info">
-      <b>Freet type: A {{ freet.freetType }} post.</b>
+      <b>Post type: A {{ post.postType }} post.</b>
     </p>
-    <!-- End of Added descriptive freet -->
+    <!-- End of Added descriptive post -->
     <p class="info">
-      Posted at {{ freet.dateModified }}
-      <i v-if="freet.edited">(edited)</i>
+      Posted at {{ post.dateModified }}
+      <i v-if="post.edited">(edited)</i>
     </p>
     <section class="alerts">
       <article
@@ -85,45 +85,45 @@
 
 <script>
 export default {
-  name: 'FreetComponent',
+  name: 'PostComponent',
   props: {
-    // Data from the stored freet
-    freet: {
+    // Data from the stored post
+    post: {
       type: Object,
       required: true
     }
   },
   data() {
     return {
-      editing: false, // Whether or not this freet is in edit mode
-      draft: this.freet.content, // Potentially-new content for this freet
-      alerts: {} // Displays success/error messages encountered during freet modification
+      editing: false, // Whether or not this post is in edit mode
+      draft: this.post.content, // Potentially-new content for this post
+      alerts: {} // Displays success/error messages encountered during post modification
     };
   },
   methods: {
     startEditing() {
       /**
-       * Enables edit mode on this freet.
+       * Enables edit mode on this post.
        */
-      this.editing = true; // Keeps track of if a freet is being edited
-      this.draft = this.freet.content; // The content of our current "draft" while being edited
+      this.editing = true; // Keeps track of if a post is being edited
+      this.draft = this.post.content; // The content of our current "draft" while being edited
     },
     stopEditing() {
       /**
-       * Disables edit mode on this freet.
+       * Disables edit mode on this post.
        */
       this.editing = false;
-      this.draft = this.freet.content;
+      this.draft = this.post.content;
     },
-    deleteFreet() {
+    deletePost() {
       /**
-       * Deletes this freet.
+       * Deletes this post.
        */
       const params = {
         method: 'DELETE',
         callback: () => {
           this.$store.commit('alert', {
-            message: 'Successfully deleted freet!', status: 'success'
+            message: 'Successfully deleted post!', status: 'success'
           });
         }
       };
@@ -131,10 +131,10 @@ export default {
     },
     submitEdit() {
       /**
-       * Updates freet to have the submitted draft content.
+       * Updates post to have the submitted draft content.
        */
-      if (this.freet.content === this.draft) {
-        const error = 'Error: Edited freet content should be different than current freet content.';
+      if (this.post.content === this.draft) {
+        const error = 'Error: Edited post content should be different than current post content.';
         this.$set(this.alerts, error, 'error'); // Set an alert to be the error text, timeout of 3000 ms
         setTimeout(() => this.$delete(this.alerts, error), 3000);
         return;
@@ -142,7 +142,7 @@ export default {
 
       const params = {
         method: 'PATCH',
-        message: 'Successfully edited freet!',
+        message: 'Successfully edited post!',
         body: JSON.stringify({content: this.draft}),
         callback: () => {
           this.$set(this.alerts, params.message, 'success');
@@ -153,7 +153,7 @@ export default {
     },
     async request(params) {
       /**
-       * Submits a request to the freet's endpoint
+       * Submits a request to the post's endpoint
        * @param params - Options for the requxest
        * @param params.body - Body for the request, if it exists
        * @param params.callback - Function to run if the the request succeeds
@@ -166,7 +166,7 @@ export default {
       }
 
       try {
-        let r = await fetch(`/api/freets/${this.freet._id}`, options);
+        let r = await fetch(`/api/posts/${this.post._id}`, options);
         if (!r.ok) {
           const res = await r.json();
           throw new Error(res.error);
@@ -184,7 +184,7 @@ export default {
           console.log(res, res.requestResponse.currentLevel)
           this.$store.commit('setLevel', res.requestResponse.currentLevel); // frontend update 
         }
-        this.$store.commit('refreshFreets');
+        this.$store.commit('refreshPosts');
 
         params.callback();
       } catch (e) {
@@ -198,7 +198,7 @@ export default {
 
 <style scoped>
 /* CSS */
-.freet {
+.post {
   font-size: 16px;
   letter-spacing: 2px;
   text-decoration: none;
@@ -210,7 +210,7 @@ export default {
   background-color: rgb(199, 193, 193, 0.35)
 }
 
-.newsFreet{
+.newsPost{
   font-size: 16px;
   letter-spacing: 2px;
   text-decoration: none;
@@ -222,7 +222,7 @@ export default {
   margin-bottom: 15px;
 }
 
-.fibeFreet{
+.fibePost{
   font-size: 16px;
   letter-spacing: 2px;
   text-decoration: none;

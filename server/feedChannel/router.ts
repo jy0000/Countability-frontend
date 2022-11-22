@@ -1,41 +1,41 @@
 import type {NextFunction, Request, Response} from 'express';
 import express from 'express';
-import FreetCollection from '../freet/collection';
+import PostCollection from '../post/collection';
 import * as feedChannelValidator from './middleware';
 import * as util from './util';
 
 const router = express.Router();
 
 /**
- * Get all the freets corresponding to the desired type.
+ * Get all the posts corresponding to the desired type.
  *
  * @name GET /api/feedChannel
  *
- * @return {FreetResponse[]} - A list of all the freets sorted in descending
+ * @return {PostResponse[]} - A list of all the posts sorted in descending
  *                      order by date modified
- * @throws {400} - If freetType is not given
- * @throws {404} - If freetType is not a valid freet type
+ * @throws {400} - If postType is not given
+ * @throws {404} - If postType is not a valid post type
  *
  */
 router.get(
   '/',
   async (req: Request, res: Response, next: NextFunction) => {
     // Check if authorId query parameter was supplied
-    if (req.query.freetType !== undefined) {
+    if (req.query.postType !== undefined) {
       next();
       return;
     }
 
-    const allFreets = await FreetCollection.findAllByFreetType(req.query.freetType as string);
-    const response = allFreets.map(util.constructFreetResponse);
+    const allPosts = await PostCollection.findAllByPostType(req.query.postType as string);
+    const response = allPosts.map(util.constructPostResponse);
     res.status(200).json(response);
   },
   [
-    feedChannelValidator.isValidFreetType
+    feedChannelValidator.isValidPostType
   ],
   async (req: Request, res: Response) => {
-    const targetFreets = await FreetCollection.findAllByFreetType(req.query.freetType as string);
-    const response = targetFreets.map(util.constructFreetResponse);
+    const targetPosts = await PostCollection.findAllByPostType(req.query.postType as string);
+    const response = targetPosts.map(util.constructPostResponse);
     res.status(200).json(response);
   }
 );

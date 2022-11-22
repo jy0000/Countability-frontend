@@ -4,10 +4,10 @@ import LevelCollection from '../level/collection';
 import UserCollection from '../user/collection';
 
 import * as userValidator from '../user/middleware';
-import * as freetValidator from '../freet/middleware';
+import * as postValidator from '../post/middleware';
 
 import * as util from './util';
-import FreetCollection from '../freet/collection';
+import PostCollection from '../post/collection';
 import EndorseCollection from './collection';
 import * as endorseValidator from './middleware';
 import TrustCollection from '../trust/collection';
@@ -27,7 +27,7 @@ router.get(
     userValidator.isUserLoggedIn
   ],
   async (req: Request, res: Response, next: NextFunction) => {
-    // Get endorser, freet to endorse
+    // Get endorser, post to endorse
     const currentUserId = req.session.userId as string;
     const currentUser = await UserCollection.findOneByUserId(currentUserId);
     const currentLevel = await LevelCollection.findOne(currentUser.level);
@@ -42,7 +42,7 @@ router.get(
 );
 
 /**
- * Check the user's endorsed freets
+ * Check the user's endorsed posts
  *
  * @name GET /api/endorse/isAllowed
  * @return {EndorseResponse} - endorsement response
@@ -54,13 +54,13 @@ router.get(
     userValidator.isUserLoggedIn
   ],
   async (req: Request, res: Response, next: NextFunction) => {
-    // Get endorser, freet to endorse
+    // Get endorser, post to endorse
     const currentUserId = req.session.userId as string;
     const currentUser = await UserCollection.findOneByUserId(currentUserId);
-    const allEndorsedFreets = await EndorseCollection.findAllByUsername(currentUser.username);
-    const response = allEndorsedFreets.map(util.constructEndorseResponse);
+    const allEndorsedPosts = await EndorseCollection.findAllByUsername(currentUser.username);
+    const response = allEndorsedPosts.map(util.constructEndorseResponse);
     res.status(200).json({
-      message: 'Freets you endorsed:',
+      message: 'Posts you endorsed:',
       response
     });
   }
@@ -79,13 +79,13 @@ router.get(
     userValidator.isUserLoggedIn
   ],
   async (req: Request, res: Response, next: NextFunction) => {
-    // Get endorser, freet to endorse
+    // Get endorser, post to endorse
     const currentUserId = req.session.userId as string;
     const currentUser = await UserCollection.findOneByUserId(currentUserId);
-    const allEndorsedFreets = await EndorseCollection.findAllByTrustedUsers(currentUserId);
-    const response = allEndorsedFreets.map(util.constructEndorseResponse);
+    const allEndorsedPosts = await EndorseCollection.findAllByTrustedUsers(currentUserId);
+    const response = allEndorsedPosts.map(util.constructEndorseResponse);
     res.status(200).json({
-      message: 'Freets your trusted friends endorsed:',
+      message: 'Posts your trusted friends endorsed:',
       response
     });
   }
@@ -103,31 +103,31 @@ router.post(
   '/',
   [
     userValidator.isUserLoggedIn,
-    freetValidator.isFreetExists,
+    postValidator.isPostExists,
     endorseValidator.isEndorseExist,
     endorseValidator.canUserEndorse,
     endorseValidator.isEndorseSelf
   ],
   async (req: Request, res: Response, next: NextFunction) => {
-    // Get endorser, freet to endorse
+    // Get endorser, post to endorse
     const currentUserId = req.session.userId as string;
-    const freetToEndorse = await FreetCollection.findOne(req.body.freetId);
-    const freetToEndorseAuthorId = freetToEndorse.authorId;
+    const postToEndorse = await PostCollection.findOne(req.body.postId);
+    const postToEndorseAuthorId = postToEndorse.authorId;
 
-    if (freetToEndorse.freetType !== 'News') {
+    if (postToEndorse.postType !== 'News') {
       res.status(409).json({
         error: {
-          message: 'Can only endorse News freets.'
+          message: 'Can only endorse News posts.'
         }
       });
       return;
     }
 
     // Make endorsement
-    const endorsement = await EndorseCollection.addOne(currentUserId, req.body.freetId, freetToEndorseAuthorId);
+    const endorsement = await EndorseCollection.addOne(currentUserId, req.body.postId, postToEndorseAuthorId);
     const response = util.constructEndorseResponse(endorsement);
     res.status(200).json({
-      message: `Awesome, you endorsed post ID: ${freetToEndorse._id.toString()}`,
+      message: `Awesome, you endorsed post ID: ${postToEndorse._id.toString()}`,
       requestResponse: response
     });
   }
@@ -150,9 +150,9 @@ router.delete(
     endorseValidator.isEndorseNotExist
   ],
   async (req: Request, res: Response) => {
-    await EndorseCollection.deleteOne(req.body.freetId, req.session.userId);
+    await EndorseCollection.deleteOne(req.body.postId, req.session.userId);
     res.status(201).json({
-      message: 'Success. You removed your endorsement for this freet.'
+      message: 'Success. You removed your endorsement for this post.'
     });
   }
 );

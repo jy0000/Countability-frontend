@@ -14,7 +14,7 @@ type LevelResponse = {
  * with all the information needed by the frontend
  *
  * @param {HydratedDocument<Level>} level - A level
- * @returns {LevelResponse} - The freet object formatted for the frontend
+ * @returns {LevelResponse} - The post object formatted for the frontend
  */
 const constructLevelResponse = (level: HydratedDocument<Level>): LevelResponse => {
   const levelCopy: Level = {

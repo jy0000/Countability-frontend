@@ -33,7 +33,7 @@ const TrustSchema = new Schema<Trust>({
     required: true,
     ref: 'User'
   },
-  // The date the freet was created
+  // The date the post was created
   dateTrusted: {
     type: Date,
     required: true

@@ -11,11 +11,11 @@ import TrustCollection from '../trust/collection';
  */
 class EndorseCollection {
   /**
-   * Endorse a freet.
+   * Endorse a post.
    *
    * @param {string} endorserId - The user endorsed user id.
-   * @param {string} endorsedFreetId - The endorsed freet id.
-   * @param {string} endorsedFreetAuthorId - The endorsed freet author id.
+   * @param {string} endorsedPostId - The endorsed post id.
+   * @param {string} endorsedPostAuthorId - The endorsed post author id.
    * @return {Promise<HydratedDocument<Trust>>} - The new trust.
    *
    * Operations:
@@ -26,31 +26,31 @@ class EndorseCollection {
    */
   static async addOne(
     currentId: Types.ObjectId | string,
-    currentFreetId: Types.ObjectId | string,
-    currentFreetAuthorId: Types.ObjectId | string
+    currentPostId: Types.ObjectId | string,
+    currentPostAuthorId: Types.ObjectId | string
   ): Promise<HydratedDocument<Endorse>> {
     const date = new Date();
     const trust = new EndorseModel({
       endorserId: currentId,
-      endorsedFreetId: currentFreetId,
-      endorsedFreetAuthorId: currentFreetAuthorId,
+      endorsedPostId: currentPostId,
+      endorsedPostAuthorId: currentPostAuthorId,
       dateEndorsed: date
     });
     await trust.save(); // Saves trust to MongoDB
-    return trust.populate(['endorserId', 'endorsedFreetId', 'endorsedFreetAuthorId', 'dateEndorsed']);
+    return trust.populate(['endorserId', 'endorsedPostId', 'endorsedPostAuthorId', 'dateEndorsed']);
   }
 
   /**
    * Find current Endorse object
    *
-   * @param {string} freetId - The Endorse id
-   * @return {Promise<HydratedDocument<Freet>> | Promise<null> } - The trust relation between the two users.
+   * @param {string} postId - The Endorse id
+   * @return {Promise<HydratedDocument<Post>> | Promise<null> } - The trust relation between the two users.
    */
   static async findOne(
-    freetId: Types.ObjectId | string,
+    postId: Types.ObjectId | string,
     userId: Types.ObjectId | string
   ): Promise<HydratedDocument<Endorse>> {
-    return EndorseModel.findOne({endorsedFreetId: freetId, endorserId: userId});
+    return EndorseModel.findOne({endorsedPostId: postId, endorserId: userId});
   }
 
   /**
@@ -60,17 +60,17 @@ class EndorseCollection {
    * @return {Promise<Boolean>} - The deleted Endorse
    */
   static async deleteOne(
-    freetId: Types.ObjectId | string,
+    postId: Types.ObjectId | string,
     userId: Types.ObjectId | string): Promise<boolean> {
-    const userEndorse = await EndorseModel.deleteOne({endorsedFreetId: freetId, endorserId: userId});
+    const userEndorse = await EndorseModel.deleteOne({endorsedPostId: postId, endorserId: userId});
     return userEndorse !== null;
   }
 
   /**
-   * Find all freets endorsed by username.
+   * Find all posts endorsed by username.
    *
-   * @param {string} username - The username of author of the freets
-   * @return {Promise<HydratedDocument<Freet>[]>} - An array of all of the freets
+   * @param {string} username - The username of author of the posts
+   * @return {Promise<HydratedDocument<Post>[]>} - An array of all of the posts
    */
   static async findAllByUsername(username: string): Promise<Array<HydratedDocument<Endorse>>> {
     const author = await UserCollection.findOneByUsername(username);
@@ -78,9 +78,9 @@ class EndorseCollection {
   }
 
   /**
-   * Find all freets endorsed by username.
+   * Find all posts endorsed by username.
    * @param {string} userId - The user who is trying to view all endorsed posts from their trusted useers.
-   * @return {Promise<HydratedDocument<Freet>[]>} - An array of all of the freets
+   * @return {Promise<HydratedDocument<Post>[]>} - An array of all of the posts
    */
   static async findAllByTrustedUsers(userId: Types.ObjectId | string): Promise<Array<HydratedDocument<Endorse>>> {
     const trustedUsers = await TrustCollection.findAllTrustGivenById(userId);

@@ -22,7 +22,7 @@ const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:
  * with all the information needed by the frontend
  *
  * @param {HydratedDocument<Trust>} trust - A trust
- * @returns {TrustResponse} - The freet object formatted for the frontend
+ * @returns {TrustResponse} - The post object formatted for the frontend
  */
 const constructTrustResponse = (trust: HydratedDocument<Trust>): TrustResponse => {
   const trustCopy: PopulatedTrust = {

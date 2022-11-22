@@ -1,4 +1,4 @@
-<!-- Default page that also displays freets -->
+<!-- Default page that also displays posts -->
 
 <template>
   <main>

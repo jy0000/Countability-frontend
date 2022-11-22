@@ -1,4 +1,4 @@
-<!-- Form for creating freets (block style) -->
+<!-- Form for creating posts (block style) -->
 
 <script>
 import BlockForm from '@/components/common/BlockForm.vue';

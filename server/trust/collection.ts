@@ -43,7 +43,7 @@ class TrustCollection {
    *
    * @param {string} giverId - The id of the trust giver
    * @param {string} receiverId - The id of the trust receiver
-   * @return {Promise<HydratedDocument<Freet>> | Promise<null> } - The trust relation between the two users.
+   * @return {Promise<HydratedDocument<Post>> | Promise<null> } - The trust relation between the two users.
    */
   static async findOne(
     giverId: Types.ObjectId | string,

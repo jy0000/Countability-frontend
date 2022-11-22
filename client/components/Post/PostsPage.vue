@@ -1,4 +1,4 @@
-<!-- Default page that also displays freets -->
+<!-- Default page that also displays posts -->
 
 <template>
   <main>
@@ -8,7 +8,7 @@
           Welcome @{{ $store.state.username }}
         </h2>
       </header>
-      <CreateFreetForm />
+      <CreatePostForm />
     </section>
     <section v-else>
       <header>
@@ -24,7 +24,7 @@
           >
             Sign in
           </router-link>
-          to create, edit, and delete freets.
+          to create, edit, and delete posts.
         </h3>
       </article>
     </section>
@@ -38,42 +38,42 @@
             </span>
           </h2>
         </div>
-        <!-- Added freet feed channel selection-->
+        <!-- Added post feed channel selection-->
         <div
           class="right"
         >
           <SelectFeedChannel
             ref="selectFeedChannel"
             class="button-55"
-            value="freetType"
-            placeholder="🔍 Type 'News' / 'Fibe' for selected feed channel freets (optional)"
-            button="🔄 Get freets"
+            value="postType"
+            placeholder="🔍 Type 'News' / 'Fibe' for selected feed channel posts (optional)"
+            button="🔄 Get posts"
           />
         </div>
-        <!-- End of Added freet feed channel selection-->
+        <!-- End of Added post feed channel selection-->
         <div class="right">
-          <GetFreetsForm
-            ref="getFreetsForm"
+          <GetPostsForm
+            ref="getPostsForm"
             class="button-55"
             value="author"
             placeholder="🔍 Filter by author (optional)"
-            button="🔄 Get freets"
+            button="🔄 Get posts"
           />
         </div>
       </header>
       <section
-        v-if="$store.state.freets.length"
+        v-if="$store.state.posts.length"
       >
-        <FreetComponent
-          v-for="freet in $store.state.freets"
-          :key="freet.id"
-          :freet="freet"
+        <PostComponent
+          v-for="post in $store.state.posts"
+          :key="post.id"
+          :post="post"
         />
       </section>
       <article
         v-else
       >
-        <h3>No freets found.</h3>
+        <h3>No posts found.</h3>
       </article>
     </section>
   </main>
@@ -81,20 +81,20 @@
 
 <script>
 // Components
-import FreetComponent from '@/components/Freet/FreetComponent.vue';
-import CreateFreetForm from '@/components/Freet/CreateFreetForm.vue';
-import GetFreetsForm from '@/components/Freet/GetFreetsForm.vue';
+import PostComponent from '@/components/Post/PostComponent.vue';
+import CreatePostForm from '@/components/Post/CreatePostForm.vue';
+import GetPostsForm from '@/components/Post/GetPostsForm.vue';
 import SelectFeedChannel from '@/components/FeedChannel/SelectFeedChannel.vue';
 
 export default {
-  name: 'FreetPage',
-  components: {FreetComponent, GetFreetsForm, CreateFreetForm, SelectFeedChannel},
+  name: 'PostPage',
+  components: {PostComponent, GetPostsForm, CreatePostForm, SelectFeedChannel},
   mounted() {
     // Primitive fix
     if (this.$refs.selectFeedChannel) {
       this.$refs.selectFeedChannel.submit(); // Added this for feed channel filtering
     } else {
-      this.$refs.getFreetsForm.submit();
+      this.$refs.getPostsForm.submit();
     }
   }
 };

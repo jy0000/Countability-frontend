@@ -1,6 +1,6 @@
 import type {HydratedDocument} from 'mongoose';
 import moment from 'moment';
-import type {Post, PopulatedPost} from '../post/model';
+import type {Post, PopulatedPost} from './model';
 
 // Update this if you add a property to the Post type!
 type PostResponse = {
@@ -44,6 +44,7 @@ const constructPostResponse = (post: HydratedDocument<Post>): PostResponse => {
     dateCreated: formatDate(post.dateCreated),
     dateModified: formatDate(post.dateModified),
     postType: postCopy.postType,
+    // Defaults to empty string if the post type does not have this property.
     sourceLink: postCopy.postType === 'News' ? postCopy.sourceLink : '',
     emoji: postCopy.postType === 'Fibe' ? postCopy.emoji : ''
   };

@@ -1,4 +1,4 @@
-<!-- Reusable component representing a single freet and its actions -->
+<!-- Reusable component representing a single post and its actions -->
 <!-- We've tagged some elements with classes; consider writing CSS using those classes to style them... -->
 
 <template>
@@ -22,11 +22,11 @@
       <!-- If the user signs in, they get to see above-->
     </header>
     <!-- Content starts here, if editing, else show content -->
-    <!-- Added descriptive freet -->
+    <!-- Added descriptive post -->
     <p class="info">
       Trusted by you: @{{ trust.trustGiver }}
     </p>
-    <!-- End of Added descriptive freet -->
+    <!-- End of Added descriptive post -->
     <p class="info">
       Trusted on: {{ trust.dateTrusted }}
     </p>
@@ -46,7 +46,7 @@
 export default {
   name: 'TrustComponent',
   props: {
-    // Data from the stored freet
+    // Data from the stored post
     trust: {
       type: Object,
       required: true
@@ -54,8 +54,8 @@ export default {
   },
   data() {
     return {
-      // trustReceiver: this.trust.trustReceiver, // Potentially-new content for this freet
-      alerts: {} // Displays success/error messages encountered during freet modification
+      // trustReceiver: this.trust.trustReceiver, // Potentially-new content for this post
+      alerts: {} // Displays success/error messages encountered during post modification
     };
   },
   methods: {

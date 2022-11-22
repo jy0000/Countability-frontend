@@ -1,9 +1,9 @@
 import type {HydratedDocument, Types} from 'mongoose';
 import type {Level} from './model';
-import type {Freet} from '../freet/model';
+import type {Post} from '../post/model';
 import LevelModel from './model';
 import UserCollection from '../user/collection';
-import FreetCollection from '../freet/collection';
+import PostCollection from '../post/collection';
 
 /**
  * This files contains a class that has the functionality to explore trust
@@ -43,7 +43,7 @@ class LevelCollection {
    * Find current level object
    *
    * @param {string} levelId - The level id
-   * @return {Promise<HydratedDocument<Freet>> | Promise<null> } - The trust relation between the two users.
+   * @return {Promise<HydratedDocument<Post>> | Promise<null> } - The trust relation between the two users.
    */
   static async findOne(
     levelId: Types.ObjectId | string
@@ -60,17 +60,17 @@ class LevelCollection {
    * Update user's level
    *
    * @param {Types.ObjectId | string} levelId - The levelId of the user to update
-   * @param {string} userFreets - All existing freets of the user, used to determine level.
+   * @param {string} userPosts - All existing posts of the user, used to determine level.
    * @return {Promise<HydratedDocument<User>>} - The updated user
    */
-  static async updateOne(levelId: Types.ObjectId | string, userFreets: Freet[]): Promise<HydratedDocument<Level>> {
+  static async updateOne(levelId: Types.ObjectId | string, userPosts: Post[]): Promise<HydratedDocument<Level>> {
     const userLevel = await LevelModel.findOne({_id: levelId});
-    const currentNumFreets = userFreets.length;
+    const currentNumPosts = userPosts.length;
     const allowedPriviledges = new Map<string, boolean>();
-    allowedPriviledges.set('canUpvote', currentNumFreets >= 1);
-    allowedPriviledges.set('canEndorse', currentNumFreets >= 2);
+    allowedPriviledges.set('canUpvote', currentNumPosts >= 1);
+    allowedPriviledges.set('canEndorse', currentNumPosts >= 2);
 
-    userLevel.level = currentNumFreets;
+    userLevel.level = currentNumPosts;
     userLevel.privileges = allowedPriviledges;
 
     await userLevel.save();

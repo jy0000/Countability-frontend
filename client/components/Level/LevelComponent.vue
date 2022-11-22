@@ -1,4 +1,4 @@
-<!-- Reusable component representing a single freet and its actions -->
+<!-- Reusable component representing a single post and its actions -->
 <!-- We've tagged some elements with classes; consider writing CSS using those classes to style them... -->
 
 <template>
@@ -23,7 +23,7 @@
           v-if="$store.state.level >= 0"
           class="button-55"
         >
-          Priviledge unlocked at Level 0:  Make News and Freet Post
+          Priviledge unlocked at Level 0:  Make News and Post Post
         </div>
         <div
           v-if="$store.state.level >= 2"
@@ -48,7 +48,7 @@ export default {
       url: '/api/level',
       method: 'GET',
       hasBody: false,
-      refreshFreets: true,
+      refreshPosts: true,
     };
   }
 };

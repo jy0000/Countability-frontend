@@ -1,6 +1,6 @@
 import type {Request, Response, NextFunction} from 'express';
 import {Types} from 'mongoose';
-import FreetCollection from '../freet/collection';
+import PostCollection from '../post/collection';
 
 /**
  * Middleware are validation methods
@@ -8,22 +8,22 @@ import FreetCollection from '../freet/collection';
 const VALID_FREET_TYPES = new Set(['News', 'Fibe']);
 
 /**
- * Checks if the given freet type is non-empty and is one of the allowed freet types.
+ * Checks if the given post type is non-empty and is one of the allowed post types.
  */
-const isValidFreetType = async (req: Request, res: Response, next: NextFunction) => {
-  if (!req.query.freetType) {
+const isValidPostType = async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.query.postType) {
     res.status(400).json({
-      error: 'Provided freet type must be nonempty.'
+      error: 'Provided post type must be nonempty.'
     });
     return;
   }
 
-  const {freetType} = req.query as {freetType: string};
+  const {postType} = req.query as {postType: string};
 
-  if (!VALID_FREET_TYPES.has(freetType)) {
+  if (!VALID_FREET_TYPES.has(postType)) {
     res.status(404).json({
       error: {
-        freetNotFound: `Freet type ${freetType} does not exist. Try 'News' or 'Fibe' types.`
+        postNotFound: `Post type ${postType} does not exist. Try 'News' or 'Fibe' types.`
       }
     });
     return;
@@ -33,5 +33,5 @@ const isValidFreetType = async (req: Request, res: Response, next: NextFunction)
 };
 
 export {
-  isValidFreetType
+  isValidPostType
 };

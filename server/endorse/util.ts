@@ -5,8 +5,8 @@ import moment from 'moment';
 type EndorseResponse = {
   _id: string;
   endorserUsername: string;
-  endorsedFreetId: string;
-  endorsedFreetAuthorName: string;
+  endorsedPostId: string;
+  endorsedPostAuthorName: string;
   dateEndorsed: string;
 };
 
@@ -23,7 +23,7 @@ const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:
  * with all the information needed by the frontend
  *
  * @param {HydratedDocument<Endorse>} Endorse - A Endorse
- * @returns {EndorseResponse} - The freet object formatted for the frontend
+ * @returns {EndorseResponse} - The post object formatted for the frontend
  */
 const constructEndorseResponse = (Endorse: HydratedDocument<Endorse>): EndorseResponse => {
   const EndorseCopy: PopulatedEndorse = {
@@ -35,8 +35,8 @@ const constructEndorseResponse = (Endorse: HydratedDocument<Endorse>): EndorseRe
   return {
     _id: EndorseCopy._id.toString(),
     endorserUsername: EndorseCopy.endorserId.username,
-    endorsedFreetId: EndorseCopy.endorsedFreetId._id.toString(),
-    endorsedFreetAuthorName: EndorseCopy.endorsedFreetAuthorId.username,
+    endorsedPostId: EndorseCopy.endorsedPostId._id.toString(),
+    endorsedPostAuthorName: EndorseCopy.endorsedPostAuthorId.username,
     dateEndorsed: formatDate(Endorse.dateEndorsed)
   };
 };

@@ -1,4 +1,4 @@
-import type{Freet} from '../freet/model';
+import type{Post} from '../post/model';
 import type {Types} from 'mongoose';
 import {Schema, model} from 'mongoose';
 import type {User} from '../user/model';
@@ -9,16 +9,16 @@ import type {User} from '../user/model';
 export type Endorse = {
   _id: Types.ObjectId; // Id of this endorsement.
   endorserId: Types.ObjectId; // Different than endorsement ID
-  endorsedFreetId: Types.ObjectId;
-  endorsedFreetAuthorId: Types.ObjectId;
+  endorsedPostId: Types.ObjectId;
+  endorsedPostAuthorId: Types.ObjectId;
   dateEndorsed: Date;
 };
 
 export type PopulatedEndorse = {
   _id: Types.ObjectId; // Id of this endorsement.
   endorserId: User;
-  endorsedFreetId: Freet;
-  endorsedFreetAuthorId: User;
+  endorsedPostId: Post;
+  endorsedPostAuthorId: User;
   dateEndorsed: Date;
 };
 
@@ -28,12 +28,12 @@ const EndorseSchema = new Schema({
     required: true,
     ref: 'User'
   },
-  endorsedFreetId: {
+  endorsedPostId: {
     type: Schema.Types.ObjectId, // Use Types.ObjectId outside of the schema
     required: true,
-    ref: 'Freet'
+    ref: 'Post'
   },
-  endorsedFreetAuthorId: {
+  endorsedPostAuthorId: {
     type: Schema.Types.ObjectId, // Use Types.ObjectId outside of the schema
     required: true,
     ref: 'User'

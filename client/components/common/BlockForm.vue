@@ -23,7 +23,7 @@
           @input="field.value = $event.target.value"
         />
         <input
-          v-else-if="field.id === 'freetType'"
+          v-else-if="field.id === 'postType'"
           :name="field.id"
           :value="field.value"
           :placeholder="field.placeholder"
@@ -73,7 +73,7 @@ export default {
       setUsername: false, // Whether or not stored username should be updated after form submission
       setLevel: false,
       refreshTrust: false,
-      refreshFreets: false, // Whether or not stored freets should be updated after form submission
+      refreshPosts: false, // Whether or not stored posts should be updated after form submission
       alerts: {}, // Displays success/error messages encountered during form submission
       callback: null // Function to run after successful form submission
     };
@@ -140,7 +140,7 @@ export default {
           }
         }
 
-        if (this.refreshFreets) {
+        if (this.refreshPosts) {
           // Also update the level (backend fetch)
           options.method = 'GET';
           options.body = null; // GET request MUST not have body, so muyst clear
@@ -152,7 +152,7 @@ export default {
           } else {
             this.$store.commit('setLevel', res.requestResponse.currentLevel); // frontend update 
           }
-          this.$store.commit('refreshFreets'); // frontend update
+          this.$store.commit('refreshPosts'); // frontend update
         }
 
         if (this.refreshTrust) {
