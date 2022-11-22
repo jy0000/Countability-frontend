@@ -8,8 +8,14 @@
           Welcome @{{ $store.state.username }}
         </h2>
       </header>
+      <CreatePostForm />
     </section>
     <section v-else>
+      <header>
+        <h2 class="box">
+          Welcome to Fritter!
+        </h2>
+      </header>
       <article>
         <h3>
           <router-link
@@ -22,7 +28,7 @@
         </h3>
       </article>
     </section>
-    <section v-if="$store.state.username">
+    <section>
       <header>
         <div class="left">
           <h2 class="box">
@@ -56,7 +62,7 @@
         </div>
       </header>
       <section
-        v-if="$store.state.posts.length" && "$store.state.username"
+        v-if="$store.state.posts.length"
       >
         <PostComponent
           v-for="post in $store.state.posts"

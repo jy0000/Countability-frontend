@@ -4,37 +4,31 @@
 <template>
   <nav>
     <div class="left">
-      <img src="../../public/beaver.png"> <!--Logo credit: https://emojiterra.com/beaver/ -->
+      <img src="../../public/stopwatch.png"> <!--Logo credit: https://emojiterra.com/beaver/ -->
       
       
       <router-link to="/">
         <span class="title">
-        CountAbility
+        countAbility
         </span>
       </router-link>
     </div>
     <div class="right">
-      <button
-        class="button-55"
-      >
-        <router-link to="/session"> <!-- TODO session-->
+      <router-link to="/session"> <!-- TODO session-->
+        <span class="subbar">
           Session
-        </router-link>
-      </button>
-      <button
-        class="button-55"
-      >
-        <router-link to="/draw"> <!-- TODO link-->
+        </span>
+      </router-link>
+      <router-link to="/draw"> <!-- TODO link-->
+        <span class="subbar">
           Draw!
-        </router-link>
-      </button>
-      <button
-        class="button-55"
-      >
-        <router-link to="/trust"> <!-- TODO link-->
+        </span>
+      </router-link>
+      <router-link to="/trust"> <!-- TODO link-->
+        <span class="subbar">
           Friend
-        </router-link>
-      </button>
+        </span>
+      </router-link>
       <button
         class="button-55"
       >
@@ -69,7 +63,7 @@ nav {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     padding: 1vw 2vw;
 
-    background-image: radial-gradient(100% 100% at 100% 0, #5adaff 0, #5468ff 100%);
+    background-image: radial-gradient(100% 100% at 100% 0, #00c8ff 0, #288352 100%);
     border: 0;
     box-shadow: rgba(45, 35, 66, .4) 0 2px 4px,rgba(45, 35, 66, .3) 0 7px 13px -3px,rgba(58, 65, 111, .5) 0 -3px 0 inset;
     
@@ -80,13 +74,18 @@ nav {
 }
 
 a { text-decoration: none; }
-a:visited {color:#5564b9;} /* Visited link    */
-a:hover {color:#5564b9;}   /* Mouse over link */
+a:visited { color: #6c6a6a; }
+/*
+a:visited {color:#eceef6;}  Visited link   
+a:hover {color:#5564b9;}    Mouse over link 
+*/
 
 .title {
     color:#ffffff;
     font-size: 40px;
     margin: 0 20px;
+    font: Akshar;
+    font-weight: 400;
 }
 
 img {
@@ -139,13 +138,21 @@ Code reference: https://getcssscan.com/css-buttons-examples
   padding: .75rem;
   text-decoration: none;
   transition: all 235ms ease-in-out;
-  border-bottom-left-radius: 15px 255px;
-  border-bottom-right-radius: 225px 15px;
-  border-top-left-radius: 255px 15px;
-  border-top-right-radius: 15px 225px;
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+}
+.subbar {
+  align-self: center;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Neucha, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 23px;
+  padding: .75rem;
+  text-shadow: 0px 1.5px #c0c0c0;
 }
 
 .button-55:hover {

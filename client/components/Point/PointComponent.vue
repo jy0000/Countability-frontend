@@ -6,8 +6,8 @@
     class="point"
   >
     <section>
-      <!-- Header and features (endorse, for example)-->
-      <!-- If the user signs in, they get to see this-->
+      <!-- Header and features -->
+      <!-- If the user signs in, they get to see this -->
       <header>
         <h2 class="box">
           Points
@@ -18,6 +18,12 @@
       >
         <h3 class="button-55">
           Your points: {{ $store.state.point }}
+        </h3>
+        <h3 class="button-55">
+          -
+        </h3>
+        <h3 class="button-55">
+          +
         </h3>
       </div>
       <!-- If the user signs in, they get to see above-->
