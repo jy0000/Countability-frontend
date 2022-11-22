@@ -1,6 +1,6 @@
 import type {NextFunction, Request, Response} from 'express';
 import express from 'express';
-import LevelCollection from '../level/collection';
+import PointCollection from '../point/collection';
 import UserCollection from '../user/collection';
 
 import * as userValidator from '../user/middleware';
@@ -30,10 +30,10 @@ router.get(
     // Get endorser, post to endorse
     const currentUserId = req.session.userId as string;
     const currentUser = await UserCollection.findOneByUserId(currentUserId);
-    const currentLevel = await LevelCollection.findOne(currentUser.level);
+    const currentPoint = await PointCollection.findOne(currentUser.point);
 
     // Make endorsement
-    const canEndorse = currentLevel.privileges.get('canEndorse');
+    const canEndorse = currentPoint.privileges.get('canEndorse');
     res.status(200).json({
       privilege_access: canEndorse
       // Weird bug here with canEndorse appearing to work but var evaluation is not right.

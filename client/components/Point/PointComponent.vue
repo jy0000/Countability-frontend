@@ -3,34 +3,22 @@
 
 <template>
   <article
-    class="level"
+    class="point"
   >
     <section>
       <!-- Header and features (endorse, for example)-->
       <!-- If the user signs in, they get to see this-->
       <header>
         <h2 class="box">
-          Current engagement level
+          Points
         </h2>
       </header>
       <div
         v-if="$store.state.username"
       >
         <h3 class="button-55">
-          Your engagement level: {{ $store.state.level }}
+          Your points: {{ $store.state.point }}
         </h3>
-        <div
-          v-if="$store.state.level >= 0"
-          class="button-55"
-        >
-          Priviledge unlocked at Level 0:  Make News and Post Post
-        </div>
-        <div
-          v-if="$store.state.level >= 2"
-          class="button-55"
-        >
-          Priviledge unlocked at above Level 2:  Endorse any post.
-        </div>
       </div>
       <!-- If the user signs in, they get to see above-->
     </section>
@@ -41,11 +29,11 @@
 import BlockForm from '@/components/common/BlockForm.vue';
 
 export default {
-  name: 'LevelComponent',
+  name: 'PointComponent',
   mixins: [BlockForm],
   data() {
     return {
-      url: '/api/level',
+      url: '/api/point',
       method: 'GET',
       hasBody: false,
       refreshPosts: true,

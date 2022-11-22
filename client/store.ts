@@ -14,7 +14,7 @@ const store = new Vuex.Store({
     posts: [], // All posts created in the app
     trusts: [], // All trusts created in the app
     username: null, // Username of the logged in user
-    level: 0, // Level of the logged in user
+    point: 0, // Point of the logged in user
     alerts: {} // global success/error messages encountered during submissions to non-visible forms
   },
   mutations: {
@@ -34,12 +34,12 @@ const store = new Vuex.Store({
        */
       state.username = username;
     },
-    setLevel(state, level) {
+    setPoint(state, point) {
       /**
-       * Update the stored level to the specified one.
-       * @param username - new level to set
+       * Update the stored point to the specified one.
+       * @param username - new point to set
        */
-      state.level = level;
+      state.point = point;
     },
     updateFilter(state, filter) {
       /**
@@ -69,15 +69,15 @@ const store = new Vuex.Store({
     //    */
     //   state.trusts = trusts;
     // },
-    /** Added this level */
-    updateLevel(state, level) {
+    /** Added this point */
+    updatePoint(state, point) {
       /**
        * Update the stored posts filter to the specified one.
        * @param filter - Username of the user to fitler posts by
        */
-      state.level = level;
+      state.point = point;
     },
-    /** End of Added this level (frontend, call after made post request)*/
+    /** End of Added this point (frontend, call after made post request)*/
     async refreshPosts(state) {
       /**
        * Request the server for the currently available posts.

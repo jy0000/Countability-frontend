@@ -175,14 +175,14 @@ export default {
         this.editing = false;
         options.method = 'GET';
         options.body = null; // GET request MUST not have body, so muyst clear
-        r = await fetch('/api/level/', options); // secondary call, don't change this.url
+        r = await fetch('/api/point/', options); // secondary call, don't change this.url
         const res = await r.json();
         if (!r.ok) {
           // If response is not okay, we throw an error and enter the catch block
           throw new Error(res.error);
         } else {
-          console.log(res, res.requestResponse.currentLevel)
-          this.$store.commit('setLevel', res.requestResponse.currentLevel); // frontend update 
+          console.log(res, res.requestResponse.currentPoint)
+          this.$store.commit('setPoint', res.requestResponse.currentPoint); // frontend update 
         }
         this.$store.commit('refreshPosts');
 

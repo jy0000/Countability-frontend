@@ -3,18 +3,18 @@ import {Schema, model} from 'mongoose';
 import type {User} from '../user/model';
 
 /**
- * This file defines the properties stored in a Level.
+ * This file defines the properties stored in a Point.
  */
-export type Level = {
-  _id: Types.ObjectId; // The id of this level
-  level: number;
+export type Point = {
+  _id: Types.ObjectId; // The id of this point
+  point: number;
   username: string;
   privileges: Map<string, boolean>;
 };
 
-const LevelSchema = new Schema({
-  // Current user level
-  level: {
+const PointSchema = new Schema({
+  // Current user point
+  point: {
     type: Number,
     required: true
   },
@@ -29,5 +29,5 @@ const LevelSchema = new Schema({
   }
 });
 
-const LevelModel = model<Level>('Level', LevelSchema);
-export default LevelModel;
+const PointModel = model<Point>('Point', PointSchema);
+export default PointModel;

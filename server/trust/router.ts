@@ -6,7 +6,7 @@ import TrustCollection from './collection';
 import * as userValidator from '../user/middleware';
 import * as trustValidator from '../trust/middleware';
 import * as util from './util';
-import LevelCollection from '..//level/collection';
+import PointCollection from '..//point/collection';
 
 const router = express.Router();
 
@@ -94,7 +94,7 @@ router.delete(
     res.status(201).json({
       message: 'You removed your trust for the user.'
     });
-    await LevelCollection.deleteEverything();
+    await PointCollection.deleteEverything();
   }
 );
 

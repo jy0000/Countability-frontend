@@ -1,6 +1,6 @@
 import type {NextFunction, Request, Response} from 'express';
 import express from 'express';
-import LevelCollection from './collection';
+import PointCollection from './collection';
 import UserCollection from '../user/collection';
 
 import * as userValidator from '../user/middleware';
@@ -10,10 +10,10 @@ import PostCollection from '../post/collection';
 const router = express.Router();
 
 /**
- * Get updated level based on post number.
+ * Get updated point based on post number.
  *
- * @name GET /api/level
- * @return {LevelResponse} - The current user level
+ * @name GET /api/point
+ * @return {PointResponse} - The current user point
  * @throws {403} - - If the user is not logged in
  */
 router.get(
@@ -26,13 +26,13 @@ router.get(
     const user = await UserCollection.findOneByUserId(currentUserId);
     const userPosts = await PostCollection.findAllByUsername(user.username);
 
-    const currentUserLevel = await LevelCollection.updateOne(user.level, userPosts);
-    const response = util.constructLevelResponse(currentUserLevel);
+    const currentUserPoint = await PointCollection.updateOne(user.point, userPosts);
+    const response = util.constructPointResponse(currentUserPoint);
     res.status(200).json({
-      message: `Your current level is LEVEL ${currentUserLevel.level}`,
+      message: `Your current point is LEVEL ${currentUserPoint.point}`,
       requestResponse: response
     });
   }
 );
 
-export {router as levelRouter};
+export {router as pointRouter};

@@ -11,7 +11,7 @@ import {userRouter} from '../server/user/router';
 import {postRouter} from '../server/post/router';
 import {feedChannelRouter} from '../server/feedChannel/router';
 import {trustRouter} from '../server/trust/router';
-import {levelRouter} from '../server/level/router';
+import {pointRouter} from '../server/point/router';
 import {endorseRouter} from '../server/endorse/router';
 import MongoStore from 'connect-mongo';
 
@@ -76,7 +76,7 @@ app.use('/api/users', userRouter);
 app.use('/api/posts', postRouter);
 app.use('/api/feedChannel', feedChannelRouter);
 app.use('/api/trust', trustRouter);
-app.use('/api/level', levelRouter);
+app.use('/api/point', pointRouter);
 app.use('/api/endorse', endorseRouter);
 
 // Catch all the other routes and display error message

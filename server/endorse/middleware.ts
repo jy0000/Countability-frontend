@@ -3,7 +3,7 @@ import {Types} from 'mongoose';
 import PostCollection from '../post/collection';
 import UserCollection from '../user/collection';
 import EndorseCollection from './collection';
-import LevelCollection from '../level/collection';
+import PointCollection from '../point/collection';
 import EndorseModel from './model';
 
 /**
@@ -31,12 +31,12 @@ const isEndorseExist = async (req: Request, res: Response, next: NextFunction) =
  */
 const canUserEndorse = async (req: Request, res: Response, next: NextFunction) => {
   const user = await UserCollection.findOneByUserId(req.session.userId);
-  const userLevel = await LevelCollection.findOne(user.level); // Id
-  const canEndorse = userLevel.privileges.get('canEndorse');
+  const userPoint = await PointCollection.findOne(user.point); // Id
+  const canEndorse = userPoint.privileges.get('canEndorse');
   if (!canEndorse) {
     res.status(409).json({
       error: {
-        message: 'Your level is not enough to endorse. Make more posts!'
+        message: 'Your point is not enough to endorse. Make more posts!'
       }
     });
     return;

@@ -71,7 +71,7 @@ export default {
       method: 'GET', // Form request method
       hasBody: false, // Whether or not form request has a body
       setUsername: false, // Whether or not stored username should be updated after form submission
-      setLevel: false,
+      setPoint: false,
       refreshTrust: false,
       refreshPosts: false, // Whether or not stored posts should be updated after form submission
       alerts: {}, // Displays success/error messages encountered during form submission
@@ -122,41 +122,41 @@ export default {
           const res = text ? JSON.parse(text) : {user: null};
           this.$store.commit('refreshTrusts');
           this.$store.commit('setUsername', res.user ? res.user.username : null);
-          this.$store.commit('setLevel', 0);
+          this.$store.commit('setPoint', 0);
           // }
         }
 
-        if (this.setLevel) {
-          // Also update the level (backend fetch)
+        if (this.setPoint) {
+          // Also update the point (backend fetch)
           options.method = 'GET';
           options.body = null; // GET request MUST not have body, so muyst clear
-          const r = await fetch('/api/level', options); // secondary call, don't change this.url
+          const r = await fetch('/api/point', options); // secondary call, don't change this.url
           const res = await r.json();
           if (!r.ok) {
             // If response is not okay, we throw an error and enter the catch block
             throw new Error(res.error);
           } else {
-            this.$store.commit('setLevel', res.requestResponse.currentLevel); // frontend update 
+            this.$store.commit('setPoint', res.requestResponse.currentPoint); // frontend update 
           }
         }
 
         if (this.refreshPosts) {
-          // Also update the level (backend fetch)
+          // Also update the point (backend fetch)
           options.method = 'GET';
           options.body = null; // GET request MUST not have body, so muyst clear
-          const r = await fetch('/api/level/', options); // secondary call, don't change this.url
+          const r = await fetch('/api/point/', options); // secondary call, don't change this.url
           const res = await r.json();
           if (!r.ok) {
             // If response is not okay, we throw an error and enter the catch block
             throw new Error(res.error);
           } else {
-            this.$store.commit('setLevel', res.requestResponse.currentLevel); // frontend update 
+            this.$store.commit('setPoint', res.requestResponse.currentPoint); // frontend update 
           }
           this.$store.commit('refreshPosts'); // frontend update
         }
 
         if (this.refreshTrust) {
-          // Also update the level (backend fetch)
+          // Also update the point (backend fetch)
           this.$store.commit('refreshTrusts'); // frontend update
         }
 

@@ -1,6 +1,6 @@
 import type {Types} from 'mongoose';
 import {Schema, model} from 'mongoose';
-import type {Level} from '../level/model';
+import type {Point} from '../point/model';
 
 /**
  * This file defines the properties stored in a User
@@ -13,7 +13,7 @@ export type User = {
   username: string;
   password: string;
   dateJoined: Date;
-  level: Types.ObjectId;
+  point: Types.ObjectId;
 };
 
 export type PopulatedUser = {
@@ -21,7 +21,7 @@ export type PopulatedUser = {
   username: string;
   password: string;
   dateJoined: Date;
-  level: Level;
+  point: Point;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -29,10 +29,10 @@ export type PopulatedUser = {
 // type given by the type property, inside MongoDB
 const UserSchema = new Schema({
   // The date the user joined
-  level: {
+  point: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: 'Level'
+    ref: 'Point'
   },
   // The user's username
   username: {
