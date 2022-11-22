@@ -72,7 +72,7 @@ export default {
       hasBody: false, // Whether or not form request has a body
       setUsername: false, // Whether or not stored username should be updated after form submission
       setPoint: false,
-      refreshTrust: false,
+      refreshFriend: false,
       refreshPosts: false, // Whether or not stored posts should be updated after form submission
       alerts: {}, // Displays success/error messages encountered during form submission
       callback: null // Function to run after successful form submission
@@ -120,7 +120,7 @@ export default {
           // Different response totally
           const text = await r.text();
           const res = text ? JSON.parse(text) : {user: null};
-          this.$store.commit('refreshTrusts');
+          this.$store.commit('refreshFriends');
           this.$store.commit('setUsername', res.user ? res.user.username : null);
           this.$store.commit('setPoint', 0);
           // }
@@ -155,9 +155,9 @@ export default {
           this.$store.commit('refreshPosts'); // frontend update
         }
 
-        if (this.refreshTrust) {
+        if (this.refreshFriend) {
           // Also update the point (backend fetch)
-          this.$store.commit('refreshTrusts'); // frontend update
+          this.$store.commit('refreshFriends'); // frontend update
         }
 
         if (this.callback) {

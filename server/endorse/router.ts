@@ -10,7 +10,7 @@ import * as util from './util';
 import PostCollection from '../post/collection';
 import EndorseCollection from './collection';
 import * as endorseValidator from './middleware';
-import TrustCollection from '../trust/collection';
+import FriendCollection from '../friend/collection';
 
 const router = express.Router();
 
@@ -74,7 +74,7 @@ router.get(
  * @throws {403} - - If the user is not logged in
  */
 router.get(
-  '/fromTrusted',
+  '/fromFriended',
   [
     userValidator.isUserLoggedIn
   ],
@@ -82,10 +82,10 @@ router.get(
     // Get endorser, post to endorse
     const currentUserId = req.session.userId as string;
     const currentUser = await UserCollection.findOneByUserId(currentUserId);
-    const allEndorsedPosts = await EndorseCollection.findAllByTrustedUsers(currentUserId);
+    const allEndorsedPosts = await EndorseCollection.findAllByFriendedUsers(currentUserId);
     const response = allEndorsedPosts.map(util.constructEndorseResponse);
     res.status(200).json({
-      message: 'Posts your trusted friends endorsed:',
+      message: 'Posts your friended friends endorsed:',
       response
     });
   }
@@ -139,7 +139,7 @@ router.post(
  * @name DELETE /api/remove/:id
  *
  * @return {string} - A success message
- * @throws {400} - Trust doesn't already exist
+ * @throws {400} - Friend doesn't already exist
  * @throws {403} - Not logged in
  */
 

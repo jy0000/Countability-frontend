@@ -3,20 +3,20 @@
 
 <template>
   <article
-    class="trust"
+    class="friend"
   >
     <header>
       <!-- Header and features (endorse, for example)-->
       <h3 class="author">
-        @{{ trust.trustReceiver }}
+        @{{ friend.friendReceiver }}
       </h3>
       <!-- If the user signs in, they get to see this-->
       <div
-        v-if="$store.state.username === trust.trustGiver"
+        v-if="$store.state.username === friend.friendGiver"
         class="actions"
       >
-        <button @click="deleteTrust">
-          ❌ Remove trust
+        <button @click="deleteFriend">
+          ❌ Remove friend
         </button>
       </div>
       <!-- If the user signs in, they get to see above-->
@@ -24,11 +24,11 @@
     <!-- Content starts here, if editing, else show content -->
     <!-- Added descriptive post -->
     <p class="info">
-      Trusted by you: @{{ trust.trustGiver }}
+      Friended by you: @{{ friend.friendGiver }}
     </p>
     <!-- End of Added descriptive post -->
     <p class="info">
-      Trusted on: {{ trust.dateTrusted }}
+      Friended on: {{ friend.dateFriended }}
     </p>
     <section class="alerts">
       <article
@@ -44,38 +44,38 @@
 
 <script>
 export default {
-  name: 'TrustComponent',
+  name: 'FriendComponent',
   props: {
     // Data from the stored post
-    trust: {
+    friend: {
       type: Object,
       required: true
     }
   },
   data() {
     return {
-      // trustReceiver: this.trust.trustReceiver, // Potentially-new content for this post
+      // friendReceiver: this.friend.friendReceiver, // Potentially-new content for this post
       alerts: {} // Displays success/error messages encountered during post modification
     };
   },
   methods: {
-    async deleteTrust() {
+    async deleteFriend() {
       /**
-       * Deletes this trust.
+       * Deletes this friend.
        */
       const options = {
         method: 'DELETE', headers: {'Content-Type': 'application/json'}
       };
       try {
-      const r = await fetch(`/api/trust/${this.trust.trustReceiver}`, options);
+      const r = await fetch(`/api/friend/${this.friend.friendReceiver}`, options);
       if (!r.ok) {
           const res = await r.json();
           throw new Error(res.error);
         }
-        this.$store.commit('refreshTrusts');
+        this.$store.commit('refreshFriends');
 
         this.$store.commit('alert', {
-          message: 'Successfully deleted trust!', status: 'success'
+          message: 'Successfully deleted friend!', status: 'success'
         });
       } catch (e) {
         this.$set(this.alerts, e, 'error');
@@ -86,7 +86,7 @@ export default {
 </script>
 
 <style scoped>
-.trust {
+.friend {
   background-color: #13aa52;
   border: 1px solid #13aa52;
   border-radius: 4px;

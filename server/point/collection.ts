@@ -6,7 +6,7 @@ import UserCollection from '../user/collection';
 import PostCollection from '../post/collection';
 
 /**
- * This files contains a class that has the functionality to explore trust
+ * This files contains a class that has the functionality to explore friend
  * stored in MongoDB, including CRUD operations.
  */
 class PointCollection {
@@ -43,7 +43,7 @@ class PointCollection {
    * Find current point object
    *
    * @param {string} pointId - The point id
-   * @return {Promise<HydratedDocument<Post>> | Promise<null> } - The trust relation between the two users.
+   * @return {Promise<HydratedDocument<Post>> | Promise<null> } - The friend relation between the two users.
    */
   static async findOne(
     pointId: Types.ObjectId | string

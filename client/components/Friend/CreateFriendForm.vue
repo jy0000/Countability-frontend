@@ -4,20 +4,21 @@
 import BlockForm from '@/components/common/BlockForm.vue';
 
 export default {
-  name: 'CreateTrustForm',
+  name: 'CreateFriendForm',
   mixins: [BlockForm],
   data() {
     return {
-      url: '/api/trust/',
+      url: '/api/friend/',
       method: 'POST',
       hasBody: true,
       fields: [
-        {id: 'username', label: 'Enter the countAbility handle of the person to trust', value: ''},
+        {id: 'username', label: 'Enter the countAbility handle of the person to friend', value: ''},
       ],
-      title: 'Create a trust',
-      refreshTrust: true,
+      title: 'Create a friend',
+      refreshFriend: true,
+      // <!-- TODO Make friendrequests -->
       callback: () => {
-        const message = 'Successfully created trust between you to!';
+        const message = 'Friend Request Sent!'; 
         this.$set(this.alerts, message, 'success');
         // Delete this success message after 3 seconds
         setTimeout(() => this.$delete(this.alerts, message), 3000);

@@ -4,7 +4,7 @@ import PostCollection from '../post/collection';
 import UserCollection from './collection';
 import * as userValidator from '../user/middleware';
 import * as util from './util';
-import TrustCollection from '../trust/collection';
+import FriendCollection from '../friend/collection';
 
 const router = express.Router();
 
@@ -163,7 +163,7 @@ router.delete(
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
     await UserCollection.deleteOne(userId);
     await PostCollection.deleteMany(userId);
-    await TrustCollection.untrustAllById(userId);
+    await FriendCollection.unfriendAllById(userId);
     req.session.userId = undefined;
     res.status(200).json({
       message: 'Your account has been deleted successfully.'

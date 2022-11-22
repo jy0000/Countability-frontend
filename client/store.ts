@@ -10,9 +10,10 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     filter: null, // Username to filter shown posts by (null = show all)
-    trustFilter: 'Users you trust', // Condition to filter shown trusts by
+    friendFilter: 'Users you friend', // Condition to filter shown friends by
     posts: [], // All posts created in the app
-    trusts: [], // All trusts created in the app
+    sessions: [], // All sessions created in the app
+    friends: [], // All friends created in the app
     username: null, // Username of the logged in user
     point: 0, // Point of the logged in user
     alerts: {} // global success/error messages encountered during submissions to non-visible forms
@@ -48,12 +49,12 @@ const store = new Vuex.Store({
        */
       state.filter = filter;
     },
-    updateTrustFilter(state, filter) {
+    updateFriendFilter(state, filter) {
       /**
        * Update the stored posts filter to the specified one.
        * @param filter - Username of the user to fitler posts by
        */
-      state.trustFilter = filter;
+      state.friendFilter = filter;
     },
     updatePosts(state, posts) {
       /**
@@ -62,12 +63,19 @@ const store = new Vuex.Store({
        */
       state.posts = posts;
     },
-    // updateTrusts(state, trusts) {
+    updateSessions(state, sessions) {
+      /**
+       * Update the stored sessions to the provided sessions.
+       * @param sessions - Sessions to store
+       */
+      state.sessions = sessions;
+    },
+    // updateFriends(state, friends) {
     //   /**
-    //    * Update the stored trusts to the provided posts.
+    //    * Update the stored friends to the provided posts.
     //    * @param posts - Posts to store
     //    */
-    //   state.trusts = trusts;
+    //   state.friends = friends;
     // },
     /** Added this point */
     updatePoint(state, point) {
@@ -92,14 +100,14 @@ const store = new Vuex.Store({
         state.posts = res;
       }
     },
-    async refreshTrusts(state) {
+    async refreshFriends(state) {
       /**
-       * Request the server for the currently available trusts.
+       * Request the server for the currently available friends.
        */
-      const url = state.trustFilter ? `/api/trust?view=${state.trustFilter}` : '/api/trust?view=Users you trust';
+      const url = state.friendFilter ? `/api/friend?view=${state.friendFilter}` : '/api/friend?view=Users you friend';
       const res = await fetch(url).then(async r => r.json());
-      console.log('present', res, res.trustedUsers);
-      state.trusts = res.trustedUsers;
+      console.log('present', res, res.friendedUsers);
+      state.friends = res.friendedUsers;
     }
   },
   // Store data across page refreshes, only discard on browser close

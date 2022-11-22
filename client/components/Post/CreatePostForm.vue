@@ -12,10 +12,14 @@ export default {
       method: 'POST',
       hasBody: true,
       fields: [
-        {id: 'content', label: 'Content', value: ''},
-        {id: 'postType', label: 'Which type of post are you making?', value:'', placeholder: "Enter 'News' or 'Fibe' for News or Fibe post"},
-        {id: 'sourceLink', label: "Enter a news source", value: ''},
-        {id: 'emoji', label: "Enter an emoji (any one-word descriptive term you want, for now)", value: ''}
+        // {id: 'content', label: 'Content', value: ''},
+        // {id: 'postType', label: 'Which type of post are you making?', value:'', placeholder: "Enter 'News' or 'Fibe' for News or Fibe post"},
+        // {id: 'sourceLink', label: "Enter a news source", value: ''},
+        // {id: 'emoji', label: "Enter an emoji (any one-word descriptive term you want, for now)", value: ''}
+        {id: 'photo', label: 'Photo', value: ''},
+        {id: 'caption', label: 'Post Caption', value:'', placeholder: ""},
+        {id: 'focusReflection', label: "How focused were you?", value: ''},
+        {id: 'progressReflection', label: "How much progress did you make", value: ''}
       ],
       title: 'Create a post',
       refreshPosts: true,

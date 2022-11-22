@@ -1,4 +1,4 @@
-<!-- Default page that also displays posts -->
+<!-- Default page that also displays sessions -->
 
 <template>
   <main>
@@ -8,7 +8,7 @@
           Welcome @{{ $store.state.username }}
         </h2>
       </header>
-      <CreatePostForm />
+      <CreateSessionForm />
     </section>
     <section v-else>
       <header>
@@ -24,7 +24,7 @@
           >
             Sign in
           </router-link>
-          to create, edit, and delete posts.
+          to create, edit, and delete sessions.
         </h3>
       </article>
     </section>
@@ -38,42 +38,52 @@
             </span>
           </h2>
         </div>
-        <!-- Added post feed channel selection-->
+        <!-- Added session feed channel selection-->
         <div
           class="right"
         >
           <SelectFeedChannel
             ref="selectFeedChannel"
             class="button-55"
-            value="postType"
-            placeholder="🔍 Type 'News' / 'Fibe' for selected feed channel posts (optional)"
-            button="🔄 Get posts"
+            value="sessionType"
+            placeholder="🔍 Type 'News' / 'Fibe' for selected feed channel sessions (optional)"
+            button="🔄 Get sessions"
           />
         </div>
-        <!-- End of Added post feed channel selection-->
+        <!-- End of Added session feed channel selection-->
         <div class="right">
-          <GetPostsForm
-            ref="getPostsForm"
+          <GetSessionsForm
+            ref="getSessionsForm"
             class="button-55"
             value="author"
             placeholder="🔍 Filter by author (optional)"
-            button="🔄 Get posts"
+            button="🔄 Get sessions"
           />
         </div>
       </header>
       <section
-        v-if="$store.state.posts.length"
+        v-if="$store.state.sessions.length"
       >
-        <PostComponent
-          v-for="post in $store.state.posts"
-          :key="post.id"
-          :post="post"
+        <SessionComponent
+          v-for="session in $store.state.sessions"
+          :key="session.id"
+          :session="session"
         />
       </section>
       <article
         v-else
       >
-        <h3>No posts found.</h3>
+        <h3>No sessions found.</h3>
+      </article>
+      <article>
+        <!-- <router-link
+          class="button-sign-in"
+          to="/createpost"
+        >
+          Post
+        </router-link>
+        to create post -->
+        <CreatePostForm />
       </article>
     </section>
   </main>
@@ -81,20 +91,22 @@
 
 <script>
 // Components
-import PostComponent from '@/components/Post/PostComponent.vue';
-import CreatePostForm from '@/components/Post/CreatePostForm.vue';
-import GetPostsForm from '@/components/Post/GetPostsForm.vue';
+import SessionComponent from '@/components/Session/SessionComponent.vue';
+import CreateSessionForm from '@/components/Session/CreateSessionForm.vue';
+import GetSessionsForm from '@/components/Session/GetSessionsForm.vue';
 import SelectFeedChannel from '@/components/FeedChannel/SelectFeedChannel.vue';
 
+import CreatePostForm from '@/components/Post/CreatePostForm.vue';
+
 export default {
-  name: 'PostPage',
-  components: {PostComponent, GetPostsForm, CreatePostForm, SelectFeedChannel},
+  name: 'SessionPage',
+  components: {SessionComponent, GetSessionsForm, CreateSessionForm, CreatePostForm, SelectFeedChannel},
   mounted() {
     // Primitive fix
     if (this.$refs.selectFeedChannel) {
       this.$refs.selectFeedChannel.submit(); // Added this for feed channel filtering
     } else {
-      this.$refs.getPostsForm.submit();
+      this.$refs.getSessionsForm.submit();
     }
   }
 };

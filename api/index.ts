@@ -9,8 +9,9 @@ import dotenv from 'dotenv';
 import * as userValidator from '../server/user/middleware';
 import {userRouter} from '../server/user/router';
 import {postRouter} from '../server/post/router';
+import {sessionRouter} from '../server/session/router';
 import {feedChannelRouter} from '../server/feedChannel/router';
-import {trustRouter} from '../server/trust/router';
+import {friendRouter} from '../server/friend/router';
 import {pointRouter} from '../server/point/router';
 import {endorseRouter} from '../server/endorse/router';
 import MongoStore from 'connect-mongo';
@@ -74,8 +75,9 @@ app.use(userValidator.isCurrentSessionUserExists);
 // Add routers from routes folder
 app.use('/api/users', userRouter);
 app.use('/api/posts', postRouter);
+app.use('/api/sessions', sessionRouter);
 app.use('/api/feedChannel', feedChannelRouter);
-app.use('/api/trust', trustRouter);
+app.use('/api/friend', friendRouter);
 app.use('/api/point', pointRouter);
 app.use('/api/endorse', endorseRouter);
 

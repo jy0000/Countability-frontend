@@ -3,7 +3,7 @@ import type {Endorse} from '../Endorse/model';
 import EndorseModel from './model';
 import UserCollection from '../user/collection';
 import UserModel from '../user/model';
-import TrustCollection from '../trust/collection';
+import FriendCollection from '../friend/collection';
 
 /**
  * This files contains a class that has the functionality to explore endorse
@@ -16,7 +16,7 @@ class EndorseCollection {
    * @param {string} endorserId - The user endorsed user id.
    * @param {string} endorsedPostId - The endorsed post id.
    * @param {string} endorsedPostAuthorId - The endorsed post author id.
-   * @return {Promise<HydratedDocument<Trust>>} - The new trust.
+   * @return {Promise<HydratedDocument<Friend>>} - The new friend.
    *
    * Operations:
    *  addOne
@@ -30,21 +30,21 @@ class EndorseCollection {
     currentPostAuthorId: Types.ObjectId | string
   ): Promise<HydratedDocument<Endorse>> {
     const date = new Date();
-    const trust = new EndorseModel({
+    const friend = new EndorseModel({
       endorserId: currentId,
       endorsedPostId: currentPostId,
       endorsedPostAuthorId: currentPostAuthorId,
       dateEndorsed: date
     });
-    await trust.save(); // Saves trust to MongoDB
-    return trust.populate(['endorserId', 'endorsedPostId', 'endorsedPostAuthorId', 'dateEndorsed']);
+    await friend.save(); // Saves friend to MongoDB
+    return friend.populate(['endorserId', 'endorsedPostId', 'endorsedPostAuthorId', 'dateEndorsed']);
   }
 
   /**
    * Find current Endorse object
    *
    * @param {string} postId - The Endorse id
-   * @return {Promise<HydratedDocument<Post>> | Promise<null> } - The trust relation between the two users.
+   * @return {Promise<HydratedDocument<Post>> | Promise<null> } - The friend relation between the two users.
    */
   static async findOne(
     postId: Types.ObjectId | string,
@@ -79,14 +79,14 @@ class EndorseCollection {
 
   /**
    * Find all posts endorsed by username.
-   * @param {string} userId - The user who is trying to view all endorsed posts from their trusted useers.
+   * @param {string} userId - The user who is trying to view all endorsed posts from their friended useers.
    * @return {Promise<HydratedDocument<Post>[]>} - An array of all of the posts
    */
-  static async findAllByTrustedUsers(userId: Types.ObjectId | string): Promise<Array<HydratedDocument<Endorse>>> {
-    const trustedUsers = await TrustCollection.findAllTrustGivenById(userId);
-    const allTrustedUserIds = trustedUsers.map(trust => trust.trustReceiverId._id);
-    const endorsementsFromTrusted = await EndorseModel.find({endorserId: {$in: allTrustedUserIds}}).populate('endorserId');
-    return endorsementsFromTrusted;
+  static async findAllByFriendedUsers(userId: Types.ObjectId | string): Promise<Array<HydratedDocument<Endorse>>> {
+    const friendedUsers = await FriendCollection.findAllFriendGivenById(userId);
+    const allFriendedUserIds = friendedUsers.map(friend => friend.friendReceiverId._id);
+    const endorsementsFromFriended = await EndorseModel.find({endorserId: {$in: allFriendedUserIds}}).populate('endorserId');
+    return endorsementsFromFriended;
   }
 }
 
