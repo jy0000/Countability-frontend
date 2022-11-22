@@ -1,5 +1,5 @@
-# Fritter Frontend
-Congrats, you've completed the Fritter backend! Now it's time to make an interface that your users will be able to interact with in A6: Fritter frontend. **Make sure to read this document fully** as well, as it contains a lot of A6-specific info!
+# countAbility Frontend
+Congrats, you've completed the countAbility backend! Now it's time to make an interface that your users will be able to interact with in A6: countAbility frontend. **Make sure to read this document fully** as well, as it contains a lot of A6-specific info!
 
 ## Starter Code
 
@@ -19,7 +19,7 @@ The project is structured as follows:
     - `Post/` contains the homepage and components related to Posts
     - `Login/` contains the login/register page and the related forms
     - `Common/` contains general form components that can be reused across different concepts
-  - `public/` contains base HTML files and static assets (like the default Fritter logo)
+  - `public/` contains base HTML files and static assets (like the default countAbility logo)
   - `router.ts` contains the Vue router
   - `store.ts` contains the Vuex store, which stores application state and persistent data
 
@@ -52,7 +52,7 @@ A summary of the changes is provided below:
 - `user/collection.ts`
   - add typings to a `updateOne()` parameter to make TypeScript happy
 
-Once you're done, test once more that you can run the project locally. Now you're ready to start developing your frontend interface for Fritter!
+Once you're done, test once more that you can run the project locally. Now you're ready to start developing your frontend interface for countAbility!
 
 ## Running locally
 
@@ -69,9 +69,9 @@ We will be using Vercel to host a publicly accessible deployment of your applica
 
 1. Log in to Vercel and go to the [project creation page](https://vercel.com/new) and select `Continue with GitHub`.
 
-2. Find your frontend repository you just created and click `Import`. For the `Framework Preset`, choose `Vue.js`. In the `Build and Output Settings` section, toggle the override switch for `Output Directory` and set it to `client/dist`. In the `Environment Variables` section, add an entry where `NAME` is `MONGO_SRV` and `VALUE` is your [MongoDB secret](https://github.com/61040-fa22/fritter-backend#mongodb-atlas-setup).
+2. Find your frontend repository you just created and click `Import`. For the `Framework Preset`, choose `Vue.js`. In the `Build and Output Settings` section, toggle the override switch for `Output Directory` and set it to `client/dist`. In the `Environment Variables` section, add an entry where `NAME` is `MONGO_SRV` and `VALUE` is your [MongoDB secret](https://github.com/61040-fa22/countAbility-backend#mongodb-atlas-setup).
 
-3. Click `Deploy` and you will get a link like `https://fritter-starter-abcd.vercel.app/` where you can access your site.
+3. Click `Deploy` and you will get a link like `https://countAbility-starter-abcd.vercel.app/` where you can access your site.
 
 Vercel will automatically deploy the latest version of your code whenever a push is made to the `main` branch.
 
@@ -89,7 +89,7 @@ Every component takes advantage of an [HTML-based template syntax](https://v2.vu
 </section>
 <section v-else>
   <header>
-    <h2>Welcome to Fritter!</h2>
+    <h2>Welcome to countAbility!</h2>
   </header>
   <article>
     <h3>
@@ -101,7 +101,7 @@ Every component takes advantage of an [HTML-based template syntax](https://v2.vu
   </article>
 </section>
 ```
-Here, if `store.state.username` exists, we say `Welcome @username`. Otherwise, we say `Welcome to Fritter!` and give them a link to the login page. This is just one example of conditional rendering.
+Here, if `store.state.username` exists, we say `Welcome @username`. Otherwise, we say `Welcome to countAbility!` and give them a link to the login page. This is just one example of conditional rendering.
 
 ### Components
 Each `.vue` file also has script tag, which is where you can export the actual component.

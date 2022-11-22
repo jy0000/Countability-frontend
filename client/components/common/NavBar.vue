@@ -14,17 +14,23 @@
       </router-link>
     </div>
     <div class="right">
-      <router-link to="/session"> <!-- TODO session-->
+      <router-link 
+        v-if="$store.state.username"
+        to="/session"> <!-- TODO session-->
         <span class="subbar">
           Session
         </span>
       </router-link>
-      <router-link to="/draw"> <!-- TODO link-->
+      <router-link 
+        v-if="$store.state.username"
+        to="/draw"> <!-- TODO link-->
         <span class="subbar">
           Draw!
         </span>
       </router-link>
-      <router-link to="/trust"> <!-- TODO link-->
+      <router-link 
+        v-if="$store.state.username"
+        to="/trust"> <!-- TODO link-->
         <span class="subbar">
           Friend
         </span>

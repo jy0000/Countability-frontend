@@ -13,7 +13,7 @@
     <section v-else>
       <header>
         <h2 class="box">
-          Welcome to Fritter!
+          Welcome to countAbility!
         </h2>
       </header>
       <article>
