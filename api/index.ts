@@ -13,7 +13,6 @@ import {sessionRouter} from '../server/session/router';
 import {feedChannelRouter} from '../server/feedChannel/router';
 import {friendRouter} from '../server/friend/router';
 import {pointRouter} from '../server/point/router';
-import {endorseRouter} from '../server/endorse/router';
 import MongoStore from 'connect-mongo';
 
 // Load environmental variables
@@ -79,7 +78,6 @@ app.use('/api/sessions', sessionRouter);
 app.use('/api/feedChannel', feedChannelRouter);
 app.use('/api/friend', friendRouter);
 app.use('/api/point', pointRouter);
-app.use('/api/endorse', endorseRouter);
 
 // Catch all the other routes and display error message
 app.all('*', (req: Request, res: Response) => {

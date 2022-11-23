@@ -65,7 +65,10 @@ class PointCollection {
    */
   static async updateOne(pointId: Types.ObjectId | string, userPosts: Post[]): Promise<HydratedDocument<Point>> {
     const userPoint = await PointModel.findOne({_id: pointId});
+    console.log(userPoint);
+    console.log(userPosts);
     const currentNumPosts = userPosts.length;
+    console.log(currentNumPosts);
     const allowedPriviledges = new Map<string, boolean>();
     allowedPriviledges.set('canUpvote', currentNumPosts >= 1);
     allowedPriviledges.set('canEndorse', currentNumPosts >= 2);

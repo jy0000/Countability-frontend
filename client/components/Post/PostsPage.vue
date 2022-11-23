@@ -39,7 +39,7 @@
           <SelectFeedChannel
             ref="selectFeedChannel"
             class="button-55"
-            value="postType"
+            value="caption"
             placeholder="🔍 Type 'News' / 'Fibe' for selected feed channel posts (optional)"
             button="🔄 Get posts"
           />
@@ -56,7 +56,7 @@
         </div>
       </header>
       <section
-        v-if="$store.state.posts.length" && "$store.state.username"
+        v-if="$store.state.posts.length && $store.state.username"
       >
         <PostComponent
           v-for="post in $store.state.posts"

@@ -7,11 +7,11 @@ type PostResponse = {
   _id: string;
   author: string;
   dateCreated: string;
-  content: string;
+  photo: string;
   dateModified: string;
-  postType: string;
-  sourceLink: string;
-  emoji: string;
+  caption: string;
+  focusReflection: string;
+  progressReflection: string;
 };
 
 /**
@@ -43,9 +43,9 @@ const constructPostResponse = (post: HydratedDocument<Post>): PostResponse => {
     author: username,
     dateCreated: formatDate(post.dateCreated),
     dateModified: formatDate(post.dateModified),
-    postType: postCopy.postType,
-    sourceLink: postCopy.postType === 'News' ? postCopy.sourceLink : '',
-    emoji: postCopy.postType === 'Fibe' ? postCopy.emoji : ''
+    caption: postCopy.caption,
+    focusReflection: postCopy.focusReflection,
+    progressReflection: postCopy.progressReflection
   };
 };
 

@@ -39,32 +39,32 @@
       </div>
       <!-- If the user signs in, they get to see above-->
     </header>
-    <!-- Content starts here, if editing, else show content -->
+    <!-- Content starts here, if editing, else show photo -->
     <textarea
       v-if="editing"
-      class="content"
+      class="photo"
       :value="draft"
       @input="draft = $event.target.value"
     />
     <p
       v-else
-      class="content"
+      class="photo"
     >
-      {{ post.content }}
+      {{ post.photo }}
     </p>
     <!-- Added descriptive post -->
     <p class="info">
       <i
-        v-if="post.postType == 'News'"
+        v-if="post.caption == 'News'"
         class="newsPost"
-      > Source: {{ post.sourceLink }}</i>
+      > Source: {{ post.focusReflection }}</i>
       <i
-        v-else-if="post.postType == 'Fibe'"
+        v-else-if="post.caption == 'Fibe'"
         class="fibePost"
-      >  @{{ post.author }} is feeling {{ post.emoji }}</i>
+      >  @{{ post.author }} is feeling {{ post.progressReflection }}</i>
     </p>
     <p class="info">
-      <b>Post type: A {{ post.postType }} post.</b>
+      <b>Post type: A {{ post.caption }} post.</b>
     </p>
     <!-- End of Added descriptive post -->
     <p class="info">
@@ -96,7 +96,7 @@ export default {
   data() {
     return {
       editing: false, // Whether or not this post is in edit mode
-      draft: this.post.content, // Potentially-new content for this post
+      draft: this.post.photo, // Potentially-new photo for this post
       alerts: {} // Displays success/error messages encountered during post modification
     };
   },
@@ -106,14 +106,14 @@ export default {
        * Enables edit mode on this post.
        */
       this.editing = true; // Keeps track of if a post is being edited
-      this.draft = this.post.content; // The content of our current "draft" while being edited
+      this.draft = this.post.photo; // The photo of our current "draft" while being edited
     },
     stopEditing() {
       /**
        * Disables edit mode on this post.
        */
       this.editing = false;
-      this.draft = this.post.content;
+      this.draft = this.post.photo;
     },
     deletePost() {
       /**
@@ -131,10 +131,10 @@ export default {
     },
     submitEdit() {
       /**
-       * Updates post to have the submitted draft content.
+       * Updates post to have the submitted draft photo.
        */
-      if (this.post.content === this.draft) {
-        const error = 'Error: Edited post content should be different than current post content.';
+      if (this.post.photo === this.draft) {
+        const error = 'Error: Edited post photo should be different than current post photo.';
         this.$set(this.alerts, error, 'error'); // Set an alert to be the error text, timeout of 3000 ms
         setTimeout(() => this.$delete(this.alerts, error), 3000);
         return;
@@ -143,7 +143,7 @@ export default {
       const params = {
         method: 'PATCH',
         message: 'Successfully edited post!',
-        body: JSON.stringify({content: this.draft}),
+        body: JSON.stringify({photo: this.draft}),
         callback: () => {
           this.$set(this.alerts, params.message, 'success');
           setTimeout(() => this.$delete(this.alerts, params.message), 3000);
