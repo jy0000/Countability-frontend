@@ -5,10 +5,10 @@
     <section v-if="$store.state.username">
       <header>
         <h2 class="box">
-          Find people you trust @{{ $store.state.username }}
+          Find friends!
         </h2>
       </header>
-      <CreateTrustForm />
+      <CreateFriendForm />
     </section>
     <section v-else>
       <header>
@@ -24,29 +24,29 @@
           >
             Sign in
           </router-link>
-          to add or remove trust.
+          to add or remove friend.
         </h3>
       </article>
     </section>
     <section>
       <article>
         <h2 class="box">
-          Users you trust
+          Users you friend
         </h2>
       </article>
       <section
-        v-if="$store.state.trusts.length"
+        v-if="$store.state.friends.length"
       >
-        <TrustComponent
-          v-for="trust in $store.state.trusts"
-          :key="trust.id"
-          :trust="trust"
+        <FriendComponent
+          v-for="friend in $store.state.friends"
+          :key="friend.id"
+          :friend="friend"
         />
       </section>
       <article
         v-else
       >
-        <h3>No trust found.</h3>
+        <h3>No friend found.</h3>
       </article>
     </section>
   </main>
@@ -54,12 +54,12 @@
 
 <script>
 // Components
-import TrustComponent from '@/components/Trust/TrustComponent.vue';
-import CreateTrustForm from '@/components/Trust/CreateTrustForm.vue';
+import FriendComponent from '@/components/Friend/FriendComponent.vue';
+import CreateFriendForm from '@/components/Friend/CreateFriendForm.vue';
 
 export default {
-  name: 'TrustPage',
-  components: {TrustComponent, CreateTrustForm},
+  name: 'FriendPage',
+  components: {FriendComponent, CreateFriendForm},
   mounted() {
   }
 };

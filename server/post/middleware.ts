@@ -3,45 +3,12 @@ import {Types} from 'mongoose';
 import PostCollection from './collection';
 
 /**
- * Checks if a string is a valid URL with schema (like https)
- */
-function isUrl(s: string) {
-  const regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-/]))?/;
-  return regexp.test(s);
-}
-
-/**
  * Checks if a post has the resource needed for its post type
  */
 const isPostPropertyComplete = async (req: Request, res: Response, next: NextFunction) => {
-  if (req.body.postType !== 'News' && req.body.postType !== 'Fibe') {
+  if (!req.body.focusReflection || !req.body.progressReflection) {
     res.status(412).json({
-      error: 'Please provide a valid Post type: News or Fibe.'
-    });
-    return;
-  }
-
-  const isNewsPost = req.body.postType === 'News';
-  const isFibePost = req.body.postType === 'Fibe';
-  if (isNewsPost) {
-    if (!req.body.sourceLink) {
-      res.status(412).json({
-        error: 'News post needs a source link.'
-      });
-      return;
-    }
-
-    if (!isUrl(req.body.sourceLink)) {
-      res.status(412).json({
-        error: 'The provided source link is not in valid URL format (include https and schema)'
-      });
-      return;
-    }
-  }
-
-  if (isFibePost && !req.body.emoji) {
-    res.status(412).json({
-      error: 'Fibe post needs an emoji.' // Added this for error
+      error: 'Fibe post needs a focusReflection and progressReflection.' // Added this for error
     });
     return;
   }
@@ -69,21 +36,21 @@ const isPostExists = async (req: Request, res: Response, next: NextFunction) => 
 };
 
 /**
- * Checks if the content of the post in req.body is valid, i.e not a stream of empty
+ * Checks if the photo of the post in req.body is valid, i.e not a stream of empty
  * spaces and not more than 140 characters
  */
 const isValidPostContent = (req: Request, res: Response, next: NextFunction) => {
-  const {content} = req.body as {content: string}; // Changed
-  if (!content.trim()) {
+  const {photo} = req.body as {photo: string}; // Changed
+  if (!photo.trim()) {
     res.status(400).json({
-      error: 'Post content must be at least one character long.'
+      error: 'Post photo must be at least one character long.'
     });
     return;
   }
 
-  if (content.length > 140) {
+  if (photo.length > 140) {
     res.status(413).json({
-      error: 'Post content must be no more than 140 characters.'
+      error: 'Post photo must be no more than 140 characters.'
     });
     return;
   }

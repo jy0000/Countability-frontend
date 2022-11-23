@@ -3,7 +3,8 @@ import VueRouter from 'vue-router';
 import PostsPage from './components/Post/PostsPage.vue';
 import AccountPage from './components/Account/AccountPage.vue';
 import LoginPage from './components/Login/LoginPage.vue';
-import TrustPage from './components/Trust/TrustPage.vue';
+import FriendPage from './components/Friend/FriendPage.vue';
+import SessionPage from './components/Session/SessionsPage.vue';
 import NotFound from './NotFound.vue';
 
 Vue.use(VueRouter);
@@ -13,7 +14,8 @@ const routes = [
   {path: '/account', name: 'Account', component: AccountPage},
   {path: '/login', name: 'Login', component: LoginPage},
   {path: '*', name: 'Not Found', component: NotFound},
-  {path: '/trust', name: 'Trust', component: TrustPage},
+  {path: '/friend', name: 'Friend', component: FriendPage},
+  {path: '/session', name: 'Session', component: SessionPage},
 ];
 
 const router = new VueRouter({routes});

@@ -30,7 +30,7 @@
       </router-link>
       <router-link 
         v-if="$store.state.username"
-        to="/trust"> <!-- TODO link-->
+        to="/friend"> <!-- TODO link-->
         <span class="subbar">
           Friend
         </span>

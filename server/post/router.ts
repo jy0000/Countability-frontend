@@ -50,23 +50,23 @@ router.get(
 );
 
 /**
- * Get posts from trusted users.
+ * Get posts from friended users.
  *
- * @name GET /api/posts/trusted
+ * @name GET /api/posts/friended
  *
  * @return {PostResponse[]} - An array of posts created by user with id, authorId
  *
  */
 router.get(
-  '/trusted',
+  '/friended',
   [
     userValidator.isUserLoggedIn
   ],
   async (req: Request, res: Response, next: NextFunction) => {
     // Check if authorId query parameter was supplied
     const currentUserId = req.session.userId as string;
-    const trustedUsersPosts = await PostCollection.findAllByTrustedUsers(currentUserId);
-    const response = trustedUsersPosts.map(util.constructPostResponse);
+    const friendedUsersPosts = await PostCollection.findAllByFriendedUsers(currentUserId);
+    const response = friendedUsersPosts.map(util.constructPostResponse);
     res.status(200).json(response);
   }
 );
@@ -76,11 +76,11 @@ router.get(
  *
  * @name POST /api/posts
  *
- * @param {string} content - The content of the post
+ * @param {string} photo - The photo of the post
  * @return {PostResponse} - The created post
  * @throws {403} - If the user is not logged in
- * @throws {400} - If the post content is empty or a stream of empty spaces
- * @throws {413} - If the post content is more than 140 characters long
+ * @throws {400} - If the post photo is empty or a stream of empty spaces
+ * @throws {413} - If the post photo is more than 140 characters long
  */
 router.post(
   '/',
@@ -91,7 +91,7 @@ router.post(
   ],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    const post = await PostCollection.addOne(userId, req.body.content, req.body.postType, req.body.sourceLink, req.body.emoji);
+    const post = await PostCollection.addOne(userId, req.body.photo, req.body.caption, req.body.focusReflection, req.body.progressReflection);
 
     res.status(201).json({
       message: 'Your post was created successfully.',
@@ -130,13 +130,13 @@ router.delete(
  *
  * @name PATCH /api/posts/:id
  *
- * @param {string} content - the new content for the post
+ * @param {string} photo - the new photo for the post
  * @return {PostResponse} - the updated post
  * @throws {403} - if the user is not logged in or not the author of
  *                 of the post
  * @throws {404} - If the postId is not valid
- * @throws {400} - If the post content is empty or a stream of empty spaces
- * @throws {413} - If the post content is more than 140 characters long
+ * @throws {400} - If the post photo is empty or a stream of empty spaces
+ * @throws {413} - If the post photo is more than 140 characters long
  */
 router.patch(
   '/:postId?',
@@ -147,7 +147,7 @@ router.patch(
     postValidator.isValidPostContent
   ],
   async (req: Request, res: Response) => {
-    const post = await PostCollection.updateOne(req.params.postId, req.body.content);
+    const post = await PostCollection.updateOne(req.params.postId, req.body.photo);
     res.status(200).json({
       message: 'Your post was updated successfully.',
       post: util.constructPostResponse(post)

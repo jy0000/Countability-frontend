@@ -1,18 +1,18 @@
-<!-- Reusable component representing a single post and its actions -->
+<!-- Reusable component representing a single session and its actions -->
 <!-- We've tagged some elements with classes; consider writing CSS using those classes to style them... -->
 
 <template>
   <article
-    class="post"
+    class="session"
   >
     <header>
       <!-- Header and features (endorse, for example)-->
       <h3 class="author">
-        @{{ post.author }}
+        @{{ session.author }}
       </h3>
       <!-- If the user signs in, they get to see this-->
       <div
-        v-if="$store.state.username === post.author"
+        v-if="$store.state.username === session.author"
         class="actions"
       >
         <button
@@ -33,7 +33,7 @@
         >
           ✏️ Edit
         </button>
-        <button @click="deletePost">
+        <button @click="deleteSession">
           🗑️ Delete
         </button>
       </div>
@@ -50,26 +50,26 @@
       v-else
       class="content"
     >
-      {{ post.content }}
+      {{ session.content }}
     </p>
-    <!-- Added descriptive post -->
+    <!-- Added descriptive session -->
     <p class="info">
       <i
-        v-if="post.postType == 'News'"
-        class="newsPost"
-      > Source: {{ post.sourceLink }}</i>
+        v-if="session.sessionType == 'News'"
+        class="newsSession"
+      > Source: {{ session.sourceLink }}</i>
       <i
-        v-else-if="post.postType == 'Fibe'"
-        class="fibePost"
-      >  @{{ post.author }} is feeling {{ post.emoji }}</i>
+        v-else-if="session.sessionType == 'Fibe'"
+        class="fibeSession"
+      >  @{{ session.author }} is feeling {{ session.emoji }}</i>
     </p>
     <p class="info">
-      <b>Post type: A {{ post.postType }} post.</b>
+      <b>Session type: A {{ session.sessionType }} session.</b>
     </p>
-    <!-- End of Added descriptive post -->
+    <!-- End of Added descriptive session -->
     <p class="info">
-      Posted at {{ post.dateModified }}
-      <i v-if="post.edited">(edited)</i>
+      Sessioned at {{ session.dateModified }}
+      <i v-if="session.edited">(edited)</i>
     </p>
     <section class="alerts">
       <article
@@ -85,45 +85,45 @@
 
 <script>
 export default {
-  name: 'PostComponent',
+  name: 'SessionComponent',
   props: {
-    // Data from the stored post
-    post: {
+    // Data from the stored session
+    session: {
       type: Object,
       required: true
     }
   },
   data() {
     return {
-      editing: false, // Whether or not this post is in edit mode
-      draft: this.post.content, // Potentially-new content for this post
-      alerts: {} // Displays success/error messages encountered during post modification
+      editing: false, // Whether or not this session is in edit mode
+      draft: this.session.content, // Potentially-new content for this session
+      alerts: {} // Displays success/error messages encountered during session modification
     };
   },
   methods: {
     startEditing() {
       /**
-       * Enables edit mode on this post.
+       * Enables edit mode on this session.
        */
-      this.editing = true; // Keeps track of if a post is being edited
-      this.draft = this.post.content; // The content of our current "draft" while being edited
+      this.editing = true; // Keeps track of if a session is being edited
+      this.draft = this.session.content; // The content of our current "draft" while being edited
     },
     stopEditing() {
       /**
-       * Disables edit mode on this post.
+       * Disables edit mode on this session.
        */
       this.editing = false;
-      this.draft = this.post.content;
+      this.draft = this.session.content;
     },
-    deletePost() {
+    deleteSession() {
       /**
-       * Deletes this post.
+       * Deletes this session.
        */
       const params = {
         method: 'DELETE',
         callback: () => {
           this.$store.commit('alert', {
-            message: 'Successfully deleted post!', status: 'success'
+            message: 'Successfully deleted session!', status: 'success'
           });
         }
       };
@@ -131,10 +131,10 @@ export default {
     },
     submitEdit() {
       /**
-       * Updates post to have the submitted draft content.
+       * Updates session to have the submitted draft content.
        */
-      if (this.post.content === this.draft) {
-        const error = 'Error: Edited post content should be different than current post content.';
+      if (this.session.content === this.draft) {
+        const error = 'Error: Edited session content should be different than current session content.';
         this.$set(this.alerts, error, 'error'); // Set an alert to be the error text, timeout of 3000 ms
         setTimeout(() => this.$delete(this.alerts, error), 3000);
         return;
@@ -142,7 +142,7 @@ export default {
 
       const params = {
         method: 'PATCH',
-        message: 'Successfully edited post!',
+        message: 'Successfully edited session!',
         body: JSON.stringify({content: this.draft}),
         callback: () => {
           this.$set(this.alerts, params.message, 'success');
@@ -153,7 +153,7 @@ export default {
     },
     async request(params) {
       /**
-       * Submits a request to the post's endpoint
+       * Submits a request to the session's endpoint
        * @param params - Options for the requxest
        * @param params.body - Body for the request, if it exists
        * @param params.callback - Function to run if the the request succeeds
@@ -166,7 +166,7 @@ export default {
       }
 
       try {
-        let r = await fetch(`/api/posts/${this.post._id}`, options);
+        let r = await fetch(`/api/sessions/${this.session._id}`, options);
         if (!r.ok) {
           const res = await r.json();
           throw new Error(res.error);
@@ -184,7 +184,7 @@ export default {
           console.log(res, res.requestResponse.currentPoint)
           this.$store.commit('setPoint', res.requestResponse.currentPoint); // frontend update 
         }
-        this.$store.commit('refreshPosts');
+        this.$store.commit('refreshSessions');
 
         params.callback();
       } catch (e) {
@@ -198,7 +198,7 @@ export default {
 
 <style scoped>
 /* CSS */
-.post {
+.session {
   font-size: 16px;
   letter-spacing: 2px;
   text-decoration: none;
@@ -210,7 +210,7 @@ export default {
   background-color: rgb(199, 193, 193, 0.35)
 }
 
-.newsPost{
+.newsSession{
   font-size: 16px;
   letter-spacing: 2px;
   text-decoration: none;
@@ -222,7 +222,7 @@ export default {
   margin-bottom: 15px;
 }
 
-.fibePost{
+.fibeSession{
   font-size: 16px;
   letter-spacing: 2px;
   text-decoration: none;

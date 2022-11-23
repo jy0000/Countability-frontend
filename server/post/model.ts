@@ -10,22 +10,22 @@ export type Post = {
   _id: Types.ObjectId;
   authorId: Types.ObjectId;
   dateCreated: Date;
-  content: string;
+  photo: string;
   dateModified: Date;
-  postType: string;
-  sourceLink: string; // News post property
-  emoji: string; // Fibe post property
+  caption: string;
+  focusReflection: string; // News post property
+  progressReflection: string; // Fibe post property
 };
 
 export type PopulatedPost = {
   _id: Types.ObjectId;
   authorId: User;
   dateCreated: Date;
-  content: string;
+  photo: string;
   dateModified: Date;
-  postType: string;
-  sourceLink: string; // News post property
-  emoji: string; // Fibe post property
+  caption: string;
+  focusReflection: string; // News post property
+  progressReflection: string; // Fibe post property
 };
 
 const PostSchema = new Schema<Post>({
@@ -40,8 +40,8 @@ const PostSchema = new Schema<Post>({
     type: Date,
     required: true
   },
-  // The content of the post
-  content: {
+  // The photo of the post
+  photo: {
     type: String,
     required: true
   },
@@ -51,17 +51,17 @@ const PostSchema = new Schema<Post>({
     required: true
   },
   // The type of the post
-  postType: {
+  caption: {
     type: String,
     required: true
   },
   // News post property
-  sourceLink: {
+  focusReflection: {
     type: String,
     required: false // Required for all, but default value is empty string for Fibe post
   },
   // Fibe post property
-  emoji: {
+  progressReflection: {
     type: String,
     required: false // Required for all, but default value is empty string for Fibe post
   }

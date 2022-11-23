@@ -2,7 +2,7 @@ import type {HydratedDocument, Types} from 'mongoose';
 import type {Post} from './model';
 import PostModel from './model';
 import UserCollection from '../user/collection';
-import TrustCollection from '../trust/collection';
+import FriendCollection from '../friend/collection';
 
 /**
  * This files contains a class that has the functionality to explore posts
@@ -17,25 +17,25 @@ class PostCollection {
    * Add a post to the collection
    *
    * @param {string} authorId - The id of the author of the post
-   * @param {string} content - The id of the content of the post
+   * @param {string} photo - The id of the photo of the post
    * @return {Promise<HydratedDocument<Post>>} - The newly created post
    */
   static async addOne(
     authorId: Types.ObjectId | string,
-    content: string,
-    postType: string,
-    sourceLink: string,
-    emoji: string
+    photo: string,
+    caption: string,
+    focusReflection: string,
+    progressReflection: string
   ): Promise<HydratedDocument<Post>> {
     const date = new Date();
     const post = new PostModel({
       authorId,
       dateCreated: date,
-      content,
+      photo,
       dateModified: date,
-      postType,
-      sourceLink,
-      emoji
+      caption,
+      focusReflection,
+      progressReflection
     });
     await post.save(); // Saves post to MongoDB
     return post.populate('authorId');
@@ -79,7 +79,7 @@ class PostCollection {
    * @return {Promise<HydratedDocument<Post>[]>} - An array of all of the posts
    */
   static async findAllByPostType(targetPostType: string): Promise<Array<HydratedDocument<Post>>> {
-    return PostModel.find({postType: targetPostType}).sort({dateModified: -1}).populate('authorId');
+    return PostModel.find({caption: targetPostType}).sort({dateModified: -1}).populate('authorId');
   }
 
   /**
@@ -88,23 +88,23 @@ class PostCollection {
    * @param {string} currentUserId - The current user Id
    * @return {Promise<HydratedDocument<Post>[]>} - An array of all of the posts
    */
-  static async findAllByTrustedUsers(currentUserId: string): Promise<Array<HydratedDocument<Post>>> {
-    const allTrusts = await TrustCollection.findAllTrustGivenById(currentUserId);
-    const allTrustedUserIds = allTrusts.map(trust => trust.trustReceiverId._id);
-    const postsFromTrustedUsers = await PostModel.find({authorId: {$in: allTrustedUserIds}}).sort({dateModified: -1}).populate('authorId');
-    return postsFromTrustedUsers;
+  static async findAllByFriendedUsers(currentUserId: string): Promise<Array<HydratedDocument<Post>>> {
+    const allFriends = await FriendCollection.findAllFriendGivenById(currentUserId);
+    const allFriendedUserIds = allFriends.map(friend => friend.friendReceiverId._id);
+    const postsFromFriendedUsers = await PostModel.find({authorId: {$in: allFriendedUserIds}}).sort({dateModified: -1}).populate('authorId');
+    return postsFromFriendedUsers;
   }
 
   /**
-   * Update a post with the new content
+   * Update a post with the new photo
    *
    * @param {string} postId - The id of the post to be updated
-   * @param {string} content - The new content of the post
+   * @param {string} photo - The new photo of the post
    * @return {Promise<HydratedDocument<Post>>} - The newly updated post
    */
-  static async updateOne(postId: Types.ObjectId | string, content: string): Promise<HydratedDocument<Post>> {
+  static async updateOne(postId: Types.ObjectId | string, photo: string): Promise<HydratedDocument<Post>> {
     const post = await PostModel.findOne({_id: postId});
-    post.content = content;
+    post.photo = photo;
     post.dateModified = new Date();
     await post.save();
     return post.populate('authorId');

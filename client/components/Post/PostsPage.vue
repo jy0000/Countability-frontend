@@ -39,7 +39,7 @@
           <SelectFeedChannel
             ref="selectFeedChannel"
             class="button-55"
-            value="postType"
+            value="caption"
             placeholder="🔍 Type 'News' / 'Fibe' for selected feed channel posts (optional)"
             button="🔄 Get posts"
           />
@@ -56,7 +56,7 @@
         </div>
       </header>
       <section
-        v-if="$store.state.posts.length" && "$store.state.username"
+        v-if="$store.state.posts.length && $store.state.username"
       >
         <PostComponent
           v-for="post in $store.state.posts"
@@ -76,13 +76,12 @@
 <script>
 // Components
 import PostComponent from '@/components/Post/PostComponent.vue';
-import CreatePostForm from '@/components/Post/CreatePostForm.vue';
 import GetPostsForm from '@/components/Post/GetPostsForm.vue';
 import SelectFeedChannel from '@/components/FeedChannel/SelectFeedChannel.vue';
 
 export default {
   name: 'PostPage',
-  components: {PostComponent, GetPostsForm, CreatePostForm, SelectFeedChannel},
+  components: {PostComponent, GetPostsForm, SelectFeedChannel},
   mounted() {
     // Primitive fix
     if (this.$refs.selectFeedChannel) {
