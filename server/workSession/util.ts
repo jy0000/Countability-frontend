@@ -29,7 +29,7 @@ const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:
  * @param {HydratedDocument<Session>} session - A session
  * @returns {SessionResponse} - The session object formatted for the frontend
  */
-const constructSessionResponse = (session: HydratedDocument<Session>): SessionResponse => {
+const constructWorkSessionResponse = (session: HydratedDocument<Session>): SessionResponse => {
   const sessionCopy: PopulatedSession = {
     ...session.toObject({
       versionKey: false // Cosmetics; prevents returning of __v property

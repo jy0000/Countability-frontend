@@ -17,21 +17,21 @@ const router = express.Router();
 /**
  * Get all work sessions of a specific user.
  *
- * @name GET /api/sessions?userId=id
- * @return {WorkSessionResponse[]} - An array of sessions created by user with id, userId
- * @throws {400} - If authorId is not given
- * @throws {404} - If no user has given authorId
+ * @name GET /api/sessions?username
+ * @return {WorkSessionResponse[]} - An array of sessions created by sessionOwner
+ * @throws {400} - If userId is not given
+ * @throws {404} - If no user has given userId
  */
 router.get(
   '/',
   async (req: Request, res: Response, next: NextFunction) => {
-    if (req.query.userId !== undefined) {
+    if (req.query.sessionOwner !== undefined) {
       next();
       return;
     }
 
-    const allSessions = await WorkSessionCollection.findAll();
-    const response = allSessions.map(util.constructWorkSessionResponse);
+    const userWorkSessions = await WorkSessionCollection.findAllByUsername(req.query.sessionOwner as string);
+    const response = userWorkSessions.map(util.constructWorkSessionResponse);
     res.status(200).json(response);
   },
   [
