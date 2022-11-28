@@ -16,6 +16,7 @@ const store = new Vuex.Store({
     friends: [], // All friends created in the app
     username: null, // Username of the logged in user
     point: 0, // Point of the logged in user
+    drawings: [],
     alerts: {} // global success/error messages encountered during submissions to non-visible forms
   },
   mutations: {
@@ -62,6 +63,13 @@ const store = new Vuex.Store({
        * @param posts - Posts to store
        */
       state.posts = posts;
+    },
+    updateDrawings(state, drawings) {//TODO Where use??
+      /**
+       * Update the stored drawings to the provided drawings.
+       * @param drawings - Posts to store
+       */
+      state.drawings = drawings;
     },
     updateSessions(state, sessions) {
       /**

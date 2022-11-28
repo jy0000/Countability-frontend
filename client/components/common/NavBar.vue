@@ -23,7 +23,7 @@
       </router-link>
       <router-link 
         v-if="$store.state.username"
-        to="/draw"> <!-- TODO link-->
+        to="/drawing"> <!-- TODO link-->
         <span class="subbar">
           Draw!
         </span>
