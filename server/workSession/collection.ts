@@ -2,10 +2,9 @@ import type {HydratedDocument, Types} from 'mongoose';
 import type {WorkSession} from './model';
 import WorkSessionModel from './model';
 import UserCollection from '../user/collection';
-import FriendCollection from '../friend/collection';
 
 /**
- * A class representing a work session for a user.
+ * A collection class representing a work session for a user.
  */
 class WorkSessionCollection {
   /**
@@ -16,113 +15,69 @@ class WorkSessionCollection {
    * @return {Promise<HydratedDocument<WorkSession>>} - The newly created WorkSession
    */
   static async addOne(
-    authorId: Types.ObjectId | string,
-    content: string,
-    WorkSessionType: string,
-    sourceLink: string,
-    emoji: string
+    sessionOwnerId: Types.ObjectId | string,
+    numChecks: number
   ): Promise<HydratedDocument<WorkSession>> {
-    const date = new Date();
-    const WorkSession = new WorkSessionModel({
-      authorId,
-      dateCreated: date,
-      content,
-      dateModified: date,
-      WorkSessionType,
-      sourceLink,
-      emoji
+    const startDate = new Date();
+    const newWorkSession = new WorkSessionModel({
+      startDate,
+      sessionOwnerId,
+      numChecks,
+      checks: []
     });
-    await WorkSession.save(); // Saves WorkSession to MongoDB
-    return WorkSession.populate('authorId');
+    await newWorkSession.save();
+    return newWorkSession.populate('startDate');
   }
 
   /**
-   * Find a WorkSession by WorkSessionId
+   * Find a work session by session ID
    *
-   * @param {string} WorkSessionId - The id of the WorkSession to find
+   * @param {string} workSessionId - The id of the WorkSession to find
    * @return {Promise<HydratedDocument<WorkSession>> | Promise<null> } - The WorkSession with the given WorkSessionId, if any
    */
-  static async findOne(WorkSessionId: Types.ObjectId | string): Promise<HydratedDocument<WorkSession>> {
-    return WorkSessionModel.findOne({_id: WorkSessionId}).populate('authorId');
+  static async findOne(workSessionId: Types.ObjectId | string): Promise<HydratedDocument<WorkSession>> {
+    return WorkSessionModel.findOne({_id: workSessionId}).populate('startDate');
   }
 
   /**
-   * Get all the WorkSessions in the database
+   * Get all work sessions in the database
    *
    * @return {Promise<HydratedDocument<WorkSession>[]>} - An array of all of the WorkSessions
    */
   static async findAll(): Promise<Array<HydratedDocument<WorkSession>>> {
     // Retrieves WorkSessions and sorts them from most to least recent
-    return WorkSessionModel.find({}).sort({dateModified: -1}).populate('authorId');
+    return WorkSessionModel.find({}).sort({startDate: -1}).populate('startDate');
   }
 
   /**
-   * Get all the WorkSessions in by given author
+   * Get all work sessions in by given author
    *
    * @param {string} username - The username of author of the WorkSessions
    * @return {Promise<HydratedDocument<WorkSession>[]>} - An array of all of the WorkSessions
    */
   static async findAllByUsername(username: string): Promise<Array<HydratedDocument<WorkSession>>> {
-    const author = await UserCollection.findOneByUsername(username);
-    return WorkSessionModel.find({authorId: author._id}).sort({dateModified: -1}).populate('authorId');
+    const owner = await UserCollection.findOneByUsername(username);
+    return WorkSessionModel.find({sessionOwnerId: owner._id}).sort({startDate: -1}).populate('startDate');
   }
 
   /**
-   * Get all the WorkSessions in by given type
+   * Delete a work session with the given WorkSessionId.
    *
-   * @param {string} targetWorkSessionType - The WorkSession type desired.
-   * @return {Promise<HydratedDocument<WorkSession>[]>} - An array of all of the WorkSessions
-   */
-  static async findAllByWorkSessionType(targetWorkSessionType: string): Promise<Array<HydratedDocument<WorkSession>>> {
-    return WorkSessionModel.find({WorkSessionType: targetWorkSessionType}).sort({dateModified: -1}).populate('authorId');
-  }
-
-  /**
-   * Get all the WorkSessions in by given type
-   *
-   * @param {string} currentUserId - The current user Id
-   * @return {Promise<HydratedDocument<WorkSession>[]>} - An array of all of the WorkSessions
-   */
-  static async findAllByFriendedUsers(currentUserId: string): Promise<Array<HydratedDocument<WorkSession>>> {
-    const allFriends = await FriendCollection.findAllFriendGivenById(currentUserId);
-    const allFriendedUserIds = allFriends.map(friend => friend.friendReceiverId._id);
-    const WorkSessionsFromFriendedUsers = await WorkSessionModel.find({authorId: {$in: allFriendedUserIds}}).sort({dateModified: -1}).populate('authorId');
-    return WorkSessionsFromFriendedUsers;
-  }
-
-  /**
-   * Update a WorkSession with the new content
-   *
-   * @param {string} WorkSessionId - The id of the WorkSession to be updated
-   * @param {string} content - The new content of the WorkSession
-   * @return {Promise<HydratedDocument<WorkSession>>} - The newly updated WorkSession
-   */
-  static async updateOne(WorkSessionId: Types.ObjectId | string, content: string): Promise<HydratedDocument<WorkSession>> {
-    const WorkSession = await WorkSessionModel.findOne({_id: WorkSessionId});
-    WorkSession.content = content;
-    WorkSession.dateModified = new Date();
-    await WorkSession.save();
-    return WorkSession.populate('authorId');
-  }
-
-  /**
-   * Delete a WorkSession with given WorkSessionId.
-   *
-   * @param {string} WorkSessionId - The WorkSessionId of WorkSession to delete
+   * @param {string} workSessionId - The WorkSessionId of WorkSession to delete
    * @return {Promise<Boolean>} - true if the WorkSession has been deleted, false otherwise
    */
-  static async deleteOne(WorkSessionId: Types.ObjectId | string): Promise<boolean> {
-    const WorkSession = await WorkSessionModel.deleteOne({_id: WorkSessionId});
-    return WorkSession !== null;
+  static async deleteOne(workSessionId: Types.ObjectId | string): Promise<boolean> {
+    const workSession = await WorkSessionModel.deleteOne({_id: workSessionId});
+    return workSession !== null;
   }
 
   /**
-   * Delete all the WorkSessions by the given author
+   * Delete all the work sessions by the given owner
    *
-   * @param {string} authorId - The id of author of WorkSessions
+   * @param {string} sessionOwnerId - The id of the owner of the work sessions
    */
-  static async deleteMany(authorId: Types.ObjectId | string): Promise<void> {
-    await WorkSessionModel.deleteMany({authorId});
+  static async deleteAllByOwnerId(sessionOwnerId: Types.ObjectId | string): Promise<void> {
+    await WorkSessionModel.deleteMany({sessionOwnerId});
   }
 }
 

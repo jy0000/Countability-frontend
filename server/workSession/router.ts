@@ -8,23 +8,19 @@ import * as util from './util';
 const router = express.Router();
 
 /**
- * Get all the sessions
+ * Get all sessions on the server.
  *
  * @name GET /api/sessions
- *
- * @return {SessionResponse[]} - A list of all the sessions sorted in descending
- *                      order by date modified
+ * @return {SessionResponse[]} - all sessions in descending order
  */
 
 /**
- * Get sessions by author.
+ * Get all sessions by owner.
  *
- * @name GET /api/sessions?authorId=id
- *
+ * @name GET /api/sessions?sessionOwnerId=id
  * @return {SessionResponse[]} - An array of sessions created by user with id, authorId
  * @throws {400} - If authorId is not given
  * @throws {404} - If no user has given authorId
- *
  */
 router.get(
   '/',
