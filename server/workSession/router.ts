@@ -1,6 +1,6 @@
 import type {NextFunction, Request, Response} from 'express';
 import express from 'express';
-import SessionCollection from './collection';
+import WorkSessionCollection from './collection';
 import * as userValidator from '../user/middleware';
 import * as sessionValidator from './middleware';
 import * as util from './util';
@@ -8,31 +8,30 @@ import * as util from './util';
 const router = express.Router();
 
 /**
- * Get all sessions on the server.
+ * Get all work sessions on the server.
  *
  * @name GET /api/sessions
- * @return {SessionResponse[]} - all sessions in descending order
+ * @return {WorkSessionResponse[]} - all sessions in descending order
  */
 
 /**
- * Get all sessions by owner.
+ * Get all work sessions of a specific user.
  *
- * @name GET /api/sessions?sessionOwnerId=id
- * @return {SessionResponse[]} - An array of sessions created by user with id, authorId
+ * @name GET /api/sessions?userId=id
+ * @return {WorkSessionResponse[]} - An array of sessions created by user with id, userId
  * @throws {400} - If authorId is not given
  * @throws {404} - If no user has given authorId
  */
 router.get(
   '/',
   async (req: Request, res: Response, next: NextFunction) => {
-    // Check if authorId query parameter was supplied
-    if (req.query.author !== undefined) {
+    if (req.query.userId !== undefined) {
       next();
       return;
     }
 
-    const allSessions = await SessionCollection.findAll();
-    const response = allSessions.map(util.constructSessionResponse);
+    const allSessions = await WorkSessionCollection.findAll();
+    const response = allSessions.map(util.constructWorkSessionResponse);
     res.status(200).json(response);
   },
   [
@@ -40,7 +39,7 @@ router.get(
   ],
   async (req: Request, res: Response) => {
     const authorSessions = await SessionCollection.findAllByUsername(req.query.author as string);
-    const response = authorSessions.map(util.constructSessionResponse);
+    const response = authorSessions.map(util.constructWorkSessionResponse);
     res.status(200).json(response);
   }
 );
@@ -50,7 +49,7 @@ router.get(
  *
  * @name GET /api/sessions/friended
  *
- * @return {SessionResponse[]} - An array of sessions created by user with id, authorId
+ * @return {WorkSessionResponse[]} - An array of sessions created by user with id, authorId
  *
  */
 router.get(
@@ -62,7 +61,7 @@ router.get(
     // Check if authorId query parameter was supplied
     const currentUserId = req.session.userId as string;
     const friendedUsersSessions = await SessionCollection.findAllByFriendedUsers(currentUserId);
-    const response = friendedUsersSessions.map(util.constructSessionResponse);
+    const response = friendedUsersSessions.map(util.constructWorkSessionResponse);
     res.status(200).json(response);
   }
 );
@@ -73,7 +72,7 @@ router.get(
  * @name POST /api/sessions
  *
  * @param {string} content - The content of the session
- * @return {SessionResponse} - The created session
+ * @return {WorkSessionResponse} - The created session
  * @throws {403} - If the user is not logged in
  * @throws {400} - If the session content is empty or a stream of empty spaces
  * @throws {413} - If the session content is more than 140 characters long
@@ -91,7 +90,7 @@ router.post(
 
     res.status(201).json({
       message: 'Your session was created successfully.',
-      session: util.constructSessionResponse(session)
+      session: util.constructWorkSessionResponse(session)
     });
   }
 );
@@ -127,7 +126,7 @@ router.delete(
  * @name PATCH /api/sessions/:id
  *
  * @param {string} content - the new content for the session
- * @return {SessionResponse} - the updated session
+ * @return {WorkSessionResponse} - the updated session
  * @throws {403} - if the user is not logged in or not the author of
  *                 of the session
  * @throws {404} - If the sessionId is not valid
@@ -146,7 +145,7 @@ router.patch(
     const session = await SessionCollection.updateOne(req.params.sessionId, req.body.content);
     res.status(200).json({
       message: 'Your session was updated successfully.',
-      session: util.constructSessionResponse(session)
+      session: util.constructWorkSessionResponse(session)
     });
   }
 );

@@ -50,9 +50,9 @@ class WorkSessionCollection {
   }
 
   /**
-   * Get all work sessions in by given author
+   * Get all work sessions in by given username
    *
-   * @param {string} username - The username of author of the WorkSessions
+   * @param {string} username - The username of owner of the WorkSessions
    * @return {Promise<HydratedDocument<WorkSession>[]>} - An array of all of the WorkSessions
    */
   static async findAllByUsername(username: string): Promise<Array<HydratedDocument<WorkSession>>> {
