@@ -13,6 +13,19 @@ import FriendCollection from '../friendship/collection';
  * and contains all the information in Post. https://mongoosejs.com/docs/typescript.html
  */
 class PostCollection {
+  /** Operations:
+   *  addOne - Add a post to the collection
+   *  findOne - Find a post by postId
+   *  findAll - Get all the posts in the database
+   *  findAllByUsername - Get all the posts in by given author
+   *  findAllByPostType - Get all the posts in by given type
+   *  findAllByFriendedUsers - Get all the posts in by given type
+   *  updateOne - Update a post with the new photo
+   *  deleteOne - Delete a post with given postId.
+   *  deleteMany - Delete all the posts by the given author
+   */
+
+
   /**
    * Add a post to the collection
    *

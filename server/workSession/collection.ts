@@ -7,6 +7,15 @@ import UserCollection from '../user/collection';
  * A collection class representing a work session for a user.
  */
 class WorkSessionCollection {
+    /** Operations:
+   *  addOne - Add a WorkSession to the collection
+   *  findOne - Find a work session by session ID
+   *  findAll - Get all work sessions 
+   *  findAllByUsername - Get all work sessions in by given username
+   *  deleteOne - Delete a work session with the given WorkSessionId.
+   *  deleteAllByOwnerId - Delete all the work sessions by the given owner
+   */
+
   /**
    * Add a WorkSession to the collection
    *
