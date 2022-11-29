@@ -16,6 +16,7 @@ const routes = [
   {path: '*', name: 'Not Found', component: NotFound},
   {path: '/friend', name: 'Friend', component: FriendPage},
   {path: '/session', name: 'Session', component: SessionPage},
+  {path: '/profile', name: 'Home', component: PostsPage},
 ];
 
 const router = new VueRouter({routes});
