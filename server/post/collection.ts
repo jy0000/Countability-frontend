@@ -2,7 +2,7 @@ import type {HydratedDocument, Types} from 'mongoose';
 import type {Post} from './model';
 import PostModel from './model';
 import UserCollection from '../user/collection';
-import FriendCollection from '../friend/collection';
+import FriendCollection from '../friendship/collection';
 
 /**
  * This files contains a class that has the functionality to explore posts

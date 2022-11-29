@@ -11,7 +11,7 @@ import {userRouter} from '../server/user/router';
 import {postRouter} from '../server/post/router';
 import {sessionRouter} from '../server/workSession/router';
 import {feedChannelRouter} from '../server/feedChannel/router';
-import {friendRouter} from '../server/friend/router';
+import {friendRouter} from '../server/friendship/router';
 import {pointRouter} from '../server/point/router';
 import MongoStore from 'connect-mongo';
 

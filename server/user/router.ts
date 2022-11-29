@@ -4,7 +4,7 @@ import PostCollection from '../post/collection';
 import UserCollection from './collection';
 import * as userValidator from '../user/middleware';
 import * as util from './util';
-import FriendCollection from '../friend/collection';
+import FriendCollection from '../friendship/collection';
 
 const router = express.Router();
 
