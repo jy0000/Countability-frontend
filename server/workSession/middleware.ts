@@ -1,5 +1,7 @@
 import type {Request, Response, NextFunction} from 'express';
 import {Types} from 'mongoose';
+import UserCollection from 'server/user/collection';
+import WorkSessionCollection from './collection';
 import SessionCollection from './collection';
 
 /**
@@ -14,6 +16,7 @@ function isUrl(s: string) {
  * Checks if a session has the resource needed for its session type
  */
 const isSessionPropertyComplete = async (req: Request, res: Response, next: NextFunction) => {
+
   if (req.body.sessionType !== 'News' && req.body.sessionType !== 'Fibe') {
     res.status(412).json({
       error: 'Please provide a valid Session type: News or Fibe.'
@@ -68,22 +71,23 @@ const isSessionExists = async (req: Request, res: Response, next: NextFunction) 
   next();
 };
 
-/**
- * Checks if the content of the session in req.body is valid, i.e not a stream of empty
- * spaces and not more than 140 characters
- */
-const isValidSessionContent = (req: Request, res: Response, next: NextFunction) => {
-  const {content} = req.body as {content: string}; // Changed
-  if (!content.trim()) {
-    res.status(400).json({
-      error: 'Session content must be at least one character long.'
-    });
-    return;
+const isSessionOwnerExists = async (req: Request, res: Response, next: NextFunction) => {
+  const username = req.params.sessionOwner;
+  const user = await UserCollection.findOneByUsername(username);
+  if (user) {
+    next();
+  } else {
+    res.status(401).json({error: 'Username does not exist.'});
   }
+}
 
-  if (content.length > 140) {
-    res.status(413).json({
-      error: 'Session content must be no more than 140 characters.'
+/**
+ * Checks if the provided numChecks is valid
+ */
+ const isValidSessionNumChecks = async (req: Request, res: Response, next: NextFunction) => {
+  if (req.body.numChecks as number < 0) {
+    res.status(400).json({
+      error: 'Number of checks must be a nonnegative integer.'
     });
     return;
   }
@@ -92,11 +96,48 @@ const isValidSessionContent = (req: Request, res: Response, next: NextFunction) 
 };
 
 /**
- * Checks if the current user is the author of the session whose sessionId is in req.params
+ * Checks if logged in user is already in a session
+ */
+ const isAlreadyInSession = async (req: Request, res: Response, next: NextFunction) => {
+  const user = await UserCollection.findOneByUserId(req.session.userId);
+  const sessions = await WorkSessionCollection.findAllByUsername(user.username);
+  for (let i = 0; i < sessions.length; i++) {
+    const session = sessions[i];
+    if (!session.endDate) {
+      res.status(409).json({
+        error: 'User can only be in one session at a time.'
+      });
+      return;
+    }
+  }
+
+  next();
+};
+
+/**
+ * Checks if logged in user is not in a session
+ */
+ const isNotInSession = async (req: Request, res: Response, next: NextFunction) => {
+  const user = await UserCollection.findOneByUserId(req.session.userId);
+  const sessions = await WorkSessionCollection.findAllByUsername(user.username);
+  for (let i = 0; i < sessions.length; i++) {
+    const session = sessions[i];
+    if (!session.endDate) {
+      next();
+    }
+  }
+  res.status(409).json({
+    error: 'User cannot end session without starting one first.'
+  });
+  return;
+};
+
+/**
+ * Checks if the current user is the owner of the session whose sessionId is in req.params
  */
 const isValidSessionModifier = async (req: Request, res: Response, next: NextFunction) => {
   const session = await SessionCollection.findOne(req.params.sessionId);
-  const userId = session.authorId._id;
+  const userId = session.sessionOwnerId
   if (req.session.userId !== userId.toString()) {
     res.status(403).json({
       error: 'Cannot modify other users\' sessions.'
@@ -109,7 +150,10 @@ const isValidSessionModifier = async (req: Request, res: Response, next: NextFun
 
 export {
   isSessionPropertyComplete,
-  isValidSessionContent,
+  isSessionOwnerExists,
   isSessionExists,
-  isValidSessionModifier
+  isValidSessionModifier,
+  isValidSessionNumChecks,
+  isAlreadyInSession,
+  isNotInSession
 };
