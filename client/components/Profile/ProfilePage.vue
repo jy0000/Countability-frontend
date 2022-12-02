@@ -5,7 +5,7 @@
     <section v-if="$store.state.username">
       <header>
         <h2 class="box">
-          Welcome @{{ $store.state.username }}
+          @{{ $store.state.username }}
         </h2>
       </header>
     </section>
@@ -22,38 +22,30 @@
         </h3>
       </article>
     </section>
+    <div class="left">
+      <img src="../../public/luffy.png"> <!--Logo credit: https://emojiterra.com/beaver/ -->
+    </div>
     <section v-if="$store.state.username">
       <header>
         <div class="left">
           <h2 class="box">
-            📙 My feeds
+            3 Friends 
+            <span v-if="$store.state.filter">
+              by @{{ $store.state.filter }}
+            </span>
+          </h2>
+        </div>
+        <div class="left">
+          <h2 class="box">
+            4 Points 
             <span v-if="$store.state.filter">
               by @{{ $store.state.filter }}
             </span>
           </h2>
         </div>
         <!-- Added post feed channel selection-->
-        <div
-          class="right"
-        >
-          <SelectFeedChannel
-            ref="selectFeedChannel"
-            class="button-55"
-            value="caption"
-            placeholder="🔍 Type 'News' / 'Fibe' for selected feed channel posts (optional)"
-            button="🔄 Get posts"
-          />
-        </div>
+
         <!-- End of Added post feed channel selection-->
-        <div class="right">
-          <GetPostsForm
-            ref="getPostsForm"
-            class="button-55"
-            value="author"
-            placeholder="🔍 Filter by author (optional)"
-            button="🔄 Get posts"
-          />
-        </div>
       </header>
       <section
         v-if="$store.state.posts.length && $store.state.username"
@@ -75,8 +67,8 @@
 
 <script>
 // Components
-import PostComponent from '@/components/Post/PostComponent.vue';
-import GetPostsForm from '@/components/Post/GetPostsForm.vue';
+import PostComponent from '@/components/Profile/PostComponent.vue';
+import GetPostsForm from '@/components/Profile/GetPostsForm.vue';
 import SelectFeedChannel from '@/components/FeedChannel/SelectFeedChannel.vue';
 
 export default {
