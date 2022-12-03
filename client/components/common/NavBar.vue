@@ -14,40 +14,36 @@
       </router-link>
     </div>
     
-    <!-- TODO session-->
     <div class="right">
+      <!-- TODO In router.ts, add session link if not there, create a SessionPage under client/WorkSession-->
       <button
         class="button-55"
       >
-        <router-link 
-          v-if="$store.state.username"
-          to="/session"
-        >
+        <router-link to="/session">
           Work session
         </router-link>
       </button>
-      <!-- TODO link-->
+     
+      <!-- TODO In router.ts, add friend link, create a FriendPage under client/Friend-->
       <button
         class="button-55"
       >
-        <router-link 
-          v-if="$store.state.username"
-          to="/draw"
-        >
+        <router-link to="/friend">
           Friends
         </router-link>
       </button>
-      <!-- TODO link-->
+
+
+      <!-- TODO In router.ts, add profile link if not there, create a ProfilePage under client/Profile-->
       <button
         class="button-55"
       >
-        <router-link 
-          v-if="$store.state.username"
-          to="/profile"
-        >
+        <router-link to="/profile">
           Profile
         </router-link>
       </button>
+
+      <!-- User (Account/login management = DONE)-->
       <button
         class="button-55"
       >
@@ -147,7 +143,7 @@ Code reference: https://getcssscan.com/css-buttons-examples
   border-width: 2px;
   box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
   box-sizing: border-box;
-  color: #41403e;
+  color: black;
   cursor: pointer;
   display: inline-block;
   font-family: Neucha, sans-serif;

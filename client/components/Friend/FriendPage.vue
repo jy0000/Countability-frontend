@@ -55,7 +55,7 @@
 <script>
 // Components
 import FriendComponent from '@/components/Friend/FriendComponent.vue';
-import CreateFriendForm from '@/components/Friend/CreateFriendForm.vue';
+import CreateFriendForm from '@/components/Friend/CreateFriendRequestForm.vue';
 
 export default {
   name: 'FriendPage',
