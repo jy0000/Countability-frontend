@@ -17,7 +17,7 @@ export type PopulatedFriendship = {
   _id: Types.ObjectId;
   userOne: User;
   userTwo: User;
-  dateFriended: Date;
+  dateCreated: Date;
 };
 
 const FriendshipSchema = new Schema<Friendship>({

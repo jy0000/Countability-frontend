@@ -12,15 +12,15 @@ import PointCollection from '../point/collection';
  * and contains all the information in User. https://mongoosejs.com/docs/typescript.html
  */
 class UserCollection {
-    /** Operations:
+  /** Operations:
    *  addOne - Add a new user
    *  findOneByUserId - Find a user by userId
    *  findOneByUsername - Find a user by username (case insensitive).
    *  findOneByUsernameAndPassword - Find a user by username (case insensitive) and password.
    *  updateOne - Update user's information
    *  deleteOne - Delete a user from the collection.
+   *  findAllFriendsOfUsers - Find all users this user is friend with
    */
-
 
   /**
    * Add a new user

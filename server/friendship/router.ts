@@ -95,4 +95,4 @@ router.delete(
   }
 );
 
-export {router as friendRequestRouter};
+export {router as friendshipRouter};

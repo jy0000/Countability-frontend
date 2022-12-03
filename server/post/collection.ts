@@ -2,7 +2,7 @@ import type {HydratedDocument, Types} from 'mongoose';
 import type {Post} from './model';
 import PostModel from './model';
 import UserCollection from '../user/collection';
-import FriendCollection from '../friendship/collection';
+import FriendshipCollection from '../friendship/collection';
 
 /**
  * This files contains a class that has the functionality to explore posts
@@ -19,12 +19,11 @@ class PostCollection {
    *  findAll - Get all the posts in the database
    *  findAllByUsername - Get all the posts in by given author
    *  findAllByPostType - Get all the posts in by given type
-   *  findAllByFriendedUsers - Get all the posts in by given type
+   *  findAllByUserFriends - Get all the posts in by given type
    *  updateOne - Update a post with the new photo
    *  deleteOne - Delete a post with given postId.
    *  deleteMany - Delete all the posts by the given author
    */
-
 
   /**
    * Add a post to the collection
@@ -33,6 +32,7 @@ class PostCollection {
    * @param {string} photo - The id of the photo of the post
    * @return {Promise<HydratedDocument<Post>>} - The newly created post
    */
+  // eslint-disable-next-line max-params
   static async addOne(
     authorId: Types.ObjectId | string,
     photo: string,
@@ -96,14 +96,16 @@ class PostCollection {
   }
 
   /**
-   * Get all the posts in by given type
+   * Get all posts by friends of the current user
    *
    * @param {string} currentUserId - The current user Id
    * @return {Promise<HydratedDocument<Post>[]>} - An array of all of the posts
    */
-  static async findAllByFriendedUsers(currentUserId: string): Promise<Array<HydratedDocument<Post>>> {
-    const allFriends = await FriendCollection.findAllFriendGivenById(currentUserId);
-    const allFriendedUserIds = allFriends.map(friend => friend.friendReceiverId._id);
+  static async findAllByUserFriends(currentUserId: Types.ObjectId | string): Promise<Array<HydratedDocument<Post>>> {
+    // First get all friendships the user is involved with
+    const allFriendshipsOfUser = await FriendshipCollection.findAllFriendshipsOfUser(currentUserId);
+    // Then get all friend user id in each friendship, following the invariant that a user cannot friend themself
+    const allFriendedUserIds = allFriendshipsOfUser.map(friendship => friendship.userOneId === currentUserId ? friendship.userTwoId : friendship.userOneId);
     const postsFromFriendedUsers = await PostModel.find({authorId: {$in: allFriendedUserIds}}).sort({dateModified: -1}).populate('authorId');
     return postsFromFriendedUsers;
   }

@@ -61,16 +61,15 @@ class FriendshipCollection {
   /**
    * Find all friendships where this user is involved (can be none)
    *
-   * @param {Types.ObjectId | string} username
+   * @param {Types.ObjectId | string} currentUserId
    * @return {Promise<HydratedDocument<Friendship>[]> | Promise<null>}
    */
-  static async findAllFriendshipsOfUser(username: Types.ObjectId | string): Promise<Array<HydratedDocument<Friendship>>> {
-    const user = await UserCollection.findOneByUsername(username as string);
+  static async findAllFriendshipsOfUser(currentUserId: Types.ObjectId | string): Promise<Array<HydratedDocument<Friendship>>> {
     const friendships = await FriendshipModel.find({
       $or: [{
-        userOneId: user._id
+        userOneId: currentUserId
       }, {
-        userTwoId: user._id
+        userTwoId: currentUserId
       }]
     });
     return friendships;

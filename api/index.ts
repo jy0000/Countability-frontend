@@ -7,12 +7,14 @@ import http from 'http';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import * as userValidator from '../server/user/middleware';
+
 import {userRouter} from '../server/user/router';
 import {postRouter} from '../server/post/router';
 import {sessionRouter} from '../server/workSession/router';
-import {feedChannelRouter} from '../server/feedChannel/router';
-import {friendRouter} from '../server/friendship/router';
+import {friendshipRouter} from '../server/friendship/router';
+import {friendRequestRouter} from '../server/friendRequest/router';
 import {pointRouter} from '../server/point/router';
+
 import MongoStore from 'connect-mongo';
 
 // Load environmental variables
@@ -75,8 +77,8 @@ app.use(userValidator.isCurrentSessionUserExists);
 app.use('/api/users', userRouter);
 app.use('/api/posts', postRouter);
 app.use('/api/sessions', sessionRouter);
-app.use('/api/feedChannel', feedChannelRouter);
-app.use('/api/friend', friendRouter);
+app.use('/api/friendship', friendshipRouter);
+app.use('/api/friendRequest', friendRequestRouter);
 app.use('/api/point', pointRouter);
 
 // Catch all the other routes and display error message

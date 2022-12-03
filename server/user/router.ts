@@ -5,7 +5,7 @@ import UserCollection from './collection';
 import * as userValidator from '../user/middleware';
 import * as util from './util';
 import FriendshipCollection from '../friendship/collection';
-import FriendRequestCollection from 'server/friendRequest/collection';
+import FriendRequestCollection from '../friendRequest/collection';
 
 const router = express.Router();
 
