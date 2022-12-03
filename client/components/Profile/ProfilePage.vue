@@ -1,5 +1,4 @@
 <!-- Default page that also displays posts -->
-
 <template>
   <main>
     <section v-if="$store.state.username">
@@ -23,20 +22,20 @@
       </article>
     </section>
     <div class="left">
-      <img src="../../public/luffy.png"> <!--Logo credit: https://emojiterra.com/beaver/ -->
+      <img src="../../public/luffy.png">
     </div>
     <section v-if="$store.state.username">
       <header>
-        <div class="left">
-          <h2 class="box">
+        <div class="center">
+          <h2>
             3 Friends 
             <span v-if="$store.state.filter">
               by @{{ $store.state.filter }}
             </span>
           </h2>
         </div>
-        <div class="left">
-          <h2 class="box">
+        <div class="right">
+          <h2>
             4 Points 
             <span v-if="$store.state.filter">
               by @{{ $store.state.filter }}
@@ -47,11 +46,28 @@
 
         <!-- End of Added post feed channel selection-->
       </header>
+      <header>
+        <div class="tab">
+            <button title="First" active><p>I'm the first tab</p></button>
+            <button title="Second"><p>I'm the second tab</p></button>
+            <button title="Disabled" disabled><p>I'm a disabled tab!</p></button>
+        </div>
+        <div>
+          <b-card no-body>
+            <b-tabs pills card>
+              <b-tab title="Tab 1" active><b-card-text>Tab contents 1</b-card-text></b-tab>
+              <b-tab title="Tab 2"><b-card-text>Tab contents 2</b-card-text></b-tab>
+            </b-tabs>
+          </b-card>
+        </div>
+      </header>
+
       <section
         v-if="$store.state.posts.length && $store.state.username"
       >
         <PostComponent
           v-for="post in $store.state.posts"
+          v-if="$store.state.username === post.author"
           :key="post.id"
           :post="post"
         />
@@ -67,20 +83,12 @@
 
 <script>
 // Components
-import PostComponent from '@/components/Profile/PostComponent.vue';
+import PostComponent from '@/components/Post/PostComponent.vue';
 import GetPostsForm from '@/components/Profile/GetPostsForm.vue';
-import SelectFeedChannel from '@/components/FeedChannel/SelectFeedChannel.vue';
-
 export default {
   name: 'PostPage',
-  components: {PostComponent, GetPostsForm, SelectFeedChannel},
+  components: {PostComponent, GetPostsForm},
   mounted() {
-    // Primitive fix
-    if (this.$refs.selectFeedChannel) {
-      this.$refs.selectFeedChannel.submit(); // Added this for feed channel filtering
-    } else {
-      this.$refs.getPostsForm.submit();
-    }
   }
 };
 </script>
