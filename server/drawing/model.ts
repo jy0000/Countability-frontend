@@ -10,22 +10,20 @@ export type Drawing = {
   _id: Types.ObjectId;
   authorId: Types.ObjectId;
   dateCreated: Date;
-  photo: string;
+  pixels: number[];
   dateModified: Date;
-  caption: string;
-  focusReflection: string; // News drawing property
-  progressReflection: string; // Fibe drawing property
+  width: number;
+  height: number;
 };
 
 export type PopulatedDrawing = {
   _id: Types.ObjectId;
   authorId: User;
   dateCreated: Date;
-  photo: string;
+  pixels: number[];
   dateModified: Date;
-  caption: string;
-  focusReflection: string; // News drawing property
-  progressReflection: string; // Fibe drawing property
+  width: number;
+  height: number;
 };
 
 const DrawingSchema = new Schema<Drawing>({
@@ -35,35 +33,25 @@ const DrawingSchema = new Schema<Drawing>({
     required: true,
     ref: 'User'
   },
-  // The date the drawing was created
   dateCreated: {
     type: Date,
     required: true
   },
-  // The photo of the drawing
-  photo: {
-    type: String,
+  pixels: {
+    type: [Number],
     required: true
   },
-  // The date the drawing was modified
   dateModified: {
     type: Date,
     required: true
   },
-  // The type of the drawing
-  caption: {
-    type: String,
+  width: {
+    type: Number,
     required: true
   },
-  // News drawing property
-  focusReflection: {
-    type: String,
-    required: false // Required for all, but default value is empty string for Fibe drawing
-  },
-  // Fibe drawing property
-  progressReflection: {
-    type: String,
-    required: false // Required for all, but default value is empty string for Fibe drawing
+  height: {
+    type: Number,
+    required: false
   }
 });
 

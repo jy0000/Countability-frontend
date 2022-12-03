@@ -6,9 +6,9 @@ import DrawingCollection from './collection';
  * Checks if a drawing has the resource needed for its drawing type
  */
 const isDrawingPropertyComplete = async (req: Request, res: Response, next: NextFunction) => {
-  if (!req.body.focusReflection || !req.body.progressReflection) {
+  if (!req.body.height || !req.body.width) {
     res.status(412).json({
-      error: 'Fibe drawing needs a focusReflection and progressReflection.' // Added this for error
+      error: 'Fibe drawing needs a height and width.' // Added this for error
     });
     return;
   }
@@ -20,7 +20,7 @@ const isDrawingPropertyComplete = async (req: Request, res: Response, next: Next
  * Checks if a drawing with drawingId is req.params exists
  */
 const isDrawingExists = async (req: Request, res: Response, next: NextFunction) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  // eslNumber-disable-next-line @typescript-eslNumber/no-unsafe-assignment
   const drawingId = req.body.drawingId === undefined ? req.params.drawingId : req.body.drawingId;
   const validFormat = Types.ObjectId.isValid(drawingId);
   console.log(drawingId);
@@ -36,24 +36,23 @@ const isDrawingExists = async (req: Request, res: Response, next: NextFunction) 
 };
 
 /**
- * Checks if the photo of the drawing in req.body is valid, i.e not a stream of empty
- * spaces and not more than 140 characters
+ * Checks if the pixels of the drawing in req.body is valid, i.e not more than the points
  */
 const isValidDrawingContent = (req: Request, res: Response, next: NextFunction) => {
-  const {photo} = req.body as {photo: string}; // Changed
-  if (!photo.trim()) {
-    res.status(400).json({
-      error: 'Drawing photo must be at least one character long.'
-    });
-    return;
-  }
+  // const {pixels} = req.body as {pixels: string}; // Changed
+  // if (!pixels.trim()) {
+  //   res.status(400).json({
+  //     error: 'Drawing pixels must be at least one character long.'
+  //   });
+  //   return;
+  // }
 
-  if (photo.length > 140) {
-    res.status(413).json({
-      error: 'Drawing photo must be no more than 140 characters.'
-    });
-    return;
-  }
+  // if (pixels.length > 140) {
+  //   res.status(413).json({
+  //     error: 'Drawing pixels must be no more than 140 characters.'
+  //   });
+  //   return;
+  // }
 
   next();
 };

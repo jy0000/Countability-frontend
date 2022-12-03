@@ -7,11 +7,10 @@ type DrawingResponse = {
   _id: string;
   author: string;
   dateCreated: string;
-  photo: string;
+  pixels: number[];
   dateModified: string;
-  caption: string;
-  focusReflection: string;
-  progressReflection: string;
+  width: number;
+  height: number;
 };
 
 /**
@@ -23,7 +22,7 @@ type DrawingResponse = {
 const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:mm:ss a');
 
 /**
- * Transform a raw Drawing object from the database into an object
+ * Transform a raw Drawing object from the database Numbero an object
  * with all the information needed by the frontend
  *
  * @param {HydratedDocument<Drawing>} drawing - A drawing
@@ -42,11 +41,10 @@ const constructDrawingResponse = (drawing: HydratedDocument<Drawing>): DrawingRe
     _id: drawingCopy._id.toString(),
     author: username,
     dateCreated: formatDate(drawing.dateCreated),
+    pixels: drawingCopy.pixels,
     dateModified: formatDate(drawing.dateModified),
-    caption: drawingCopy.caption,
-    // Defaults to empty string if the drawing type does not have this property.
-    focusReflection: drawingCopy.caption === 'News' ? drawingCopy.focusReflection : '',
-    progressReflection: drawingCopy.caption === 'Fibe' ? drawingCopy.progressReflection : ''
+    width: drawingCopy.width,
+    height: drawingCopy.height
   };
 };
 

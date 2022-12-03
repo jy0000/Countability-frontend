@@ -17,25 +17,23 @@ class DrawingCollection {
    * Add a drawing to the collection
    *
    * @param {string} authorId - The id of the author of the drawing
-   * @param {string} photo - The id of the photo of the drawing
+   * @param {string} pixels - The id of the pixels of the drawing
    * @return {Promise<HydratedDocument<Drawing>>} - The newly created drawing
    */
   static async addOne(
     authorId: Types.ObjectId | string,
-    photo: string,
-    caption: string,
-    focusReflection: string,
-    progressReflection: string
+    pixels: number[],
+    width: number,
+    height: number
   ): Promise<HydratedDocument<Drawing>> {
     const date = new Date();
     const drawing = new DrawingModel({
       authorId,
       dateCreated: date,
-      photo,
+      pixels,
       dateModified: date,
-      caption,
-      focusReflection,
-      progressReflection
+      width,
+      height
     });
     await drawing.save(); // Saves drawing to MongoDB
     return drawing.populate('authorId');
@@ -79,7 +77,7 @@ class DrawingCollection {
    * @return {Promise<HydratedDocument<Drawing>[]>} - An array of all of the drawings
    */
   static async findAllByDrawingType(targetDrawingType: string): Promise<Array<HydratedDocument<Drawing>>> {
-    return DrawingModel.find({caption: targetDrawingType}).sort({dateModified: -1}).populate('authorId');
+    return DrawingModel.find({width: targetDrawingType}).sort({dateModified: -1}).populate('authorId');
   }
 
   /**
@@ -96,15 +94,15 @@ class DrawingCollection {
   }
 
   /**
-   * Update a drawing with the new photo
+   * Update a drawing with the new pixels
    *
    * @param {string} drawingId - The id of the drawing to be updated
-   * @param {string} photo - The new photo of the drawing
+   * @param {number[]} pixels - The new pixels of the drawing
    * @return {Promise<HydratedDocument<Drawing>>} - The newly updated drawing
    */
-  static async updateOne(drawingId: Types.ObjectId | string, photo: string): Promise<HydratedDocument<Drawing>> {
+  static async updateOne(drawingId: Types.ObjectId | string, pixels: number[]): Promise<HydratedDocument<Drawing>> {
     const drawing = await DrawingModel.findOne({_id: drawingId});
-    drawing.photo = photo;
+    drawing.pixels = pixels;
     drawing.dateModified = new Date();
     await drawing.save();
     return drawing.populate('authorId');
