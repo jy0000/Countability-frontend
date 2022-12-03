@@ -5,7 +5,7 @@
   <main>
     <section>
       <header>
-        <h2>New to countAbility?</h2>
+        <h2>New to Countability?</h2>
       </header>
       <RegisterForm />
     </section>

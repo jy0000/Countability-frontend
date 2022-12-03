@@ -13,7 +13,7 @@
     <section v-else>
       <header>
         <h2 class="box">
-          Welcome to countAbility!
+          Welcome to Countability!
         </h2>
       </header>
       <article>

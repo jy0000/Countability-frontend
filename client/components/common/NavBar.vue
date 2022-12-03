@@ -9,39 +9,45 @@
       
       <router-link to="/">
         <span class="title">
-        countAbility
+          Countability
         </span>
       </router-link>
     </div>
+    
+    <!-- TODO session-->
     <div class="right">
-      <router-link 
-        v-if="$store.state.username"
-        to="/session"> <!-- TODO session-->
-        <span class="subbar">
-          Session
-        </span>
-      </router-link>
-      <router-link 
-        v-if="$store.state.username"
-        to="/draw"> <!-- TODO link-->
-        <span class="subbar">
-          Draw!
-        </span>
-      </router-link>
-      <router-link 
-        v-if="$store.state.username"
-        to="/friend"> <!-- TODO link-->
-        <span class="subbar">
-          Friend
-        </span>
-      </router-link>
-      <router-link 
-        v-if="$store.state.username"
-        to="/profile"> <!-- TODO link-->
-        <span class="subbar">
+      <button
+        class="button-55"
+      >
+        <router-link 
+          v-if="$store.state.username"
+          to="/session"
+        >
+          Work session
+        </router-link>
+      </button>
+      <!-- TODO link-->
+      <button
+        class="button-55"
+      >
+        <router-link 
+          v-if="$store.state.username"
+          to="/draw"
+        >
+          Friends
+        </router-link>
+      </button>
+      <!-- TODO link-->
+      <button
+        class="button-55"
+      >
+        <router-link 
+          v-if="$store.state.username"
+          to="/profile"
+        >
           Profile
-        </span>
-      </router-link>
+        </router-link>
+      </button>
       <button
         class="button-55"
       >
