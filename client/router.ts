@@ -1,11 +1,14 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+
+import NotFound from './NotFound.vue';
+
 import PostsPage from './components/Post/PostsPage.vue';
 import AccountPage from './components/Account/AccountPage.vue';
 import LoginPage from './components/Login/LoginPage.vue';
 import FriendPage from './components/Friend/FriendPage.vue';
 import SessionPage from './components/Session/SessionPage.vue';
-import NotFound from './NotFound.vue';
+import ProfilePage from './components/Profile/ProfilePage.vue';
 
 Vue.use(VueRouter);
 
@@ -16,7 +19,7 @@ const routes = [
   {path: '*', name: 'Not Found', component: NotFound},
   {path: '/friend', name: 'Friends', component: FriendPage},
   {path: '/session', name: 'Session', component: SessionPage},
-  {path: '/profile', name: 'Home', component: PostsPage},
+  {path: '/profile', name: 'Home', component: ProfilePage},
 ];
 
 const router = new VueRouter({routes});

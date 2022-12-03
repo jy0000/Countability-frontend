@@ -16,13 +16,13 @@
       <div
         v-if="$store.state.username"
       >
-        <h3 class="button-55">
+        <h3 class="uniform-button">
           Your points: {{ $store.state.point }}
         </h3>
-        <h3 class="button-55">
+        <h3 class="uniform-button">
           -
         </h3>
-        <h3 class="button-55">
+        <h3 class="uniform-button">
           +
         </h3>
       </div>
@@ -66,7 +66,7 @@ export default {
   margin-bottom: 10px;
 }
 
-.button-55 {
+.uniform-button {
   align-self: center;
   background-color: #fff;
   background-image: none;

@@ -16,50 +16,53 @@
     
     <div class="right">
       <!-- TODO In router.ts, add session link if not there, create a SessionPage under client/WorkSession-->
-      <button
-        class="button-55"
-      >
-        <router-link to="/session">
+      <router-link to="/session">
+        <button
+          class="uniform-button"
+        >
           Work session
-        </router-link>
-      </button>
+        </button>
+      </router-link>
      
       <!-- TODO In router.ts, add friend link, create a FriendPage under client/Friend-->
-      <button
-        class="button-55"
-      >
-        <router-link to="/friend">
+      <router-link to="/friend">
+        <button
+          class="uniform-button"
+        >
           Friends
-        </router-link>
-      </button>
-
+        </button>
+      </router-link>
 
       <!-- TODO In router.ts, add profile link if not there, create a ProfilePage under client/Profile-->
-      <button
-        class="button-55"
-      >
-        <router-link to="/profile">
+      <router-link to="/profile">
+        <button
+          class="uniform-button"
+        >
           Profile
-        </router-link>
-      </button>
+        </button>
+      </router-link>
 
       <!-- User (Account/login management = DONE)-->
-      <button
-        class="button-55"
+      <router-link
+        v-if="$store.state.username"
+        to="/account"
       >
-        <router-link
-          v-if="$store.state.username"
-          to="/account"
+        <button
+          class="uniform-button"
         >
           Account
-        </router-link>
-        <router-link
-          v-else
-          to="/login"
+        </button>
+      </router-link>
+      <router-link
+        v-else
+        to="/login"
+      >
+        <button
+          class="uniform-button"
         >
           Login
-        </router-link>
-      </button>
+        </button>
+      </router-link>
     </div>
     <section class="alerts">
       <article
@@ -131,7 +134,8 @@ img {
 /* CSS 
 Code reference: https://getcssscan.com/css-buttons-examples
 */
-.button-55 {
+
+.uniform-button {
   align-self: center;
   background-color: #fff;
   background-image: none;
@@ -143,7 +147,7 @@ Code reference: https://getcssscan.com/css-buttons-examples
   border-width: 2px;
   box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
   box-sizing: border-box;
-  color: black;
+  color:#41403e;
   cursor: pointer;
   display: inline-block;
   font-family: Neucha, sans-serif;
@@ -170,13 +174,13 @@ Code reference: https://getcssscan.com/css-buttons-examples
   text-shadow: 0px 1.5px #c0c0c0;
 }
 
-.button-55:hover {
-  box-shadow: rgba(0, 0, 0, .3) 2px 8px 8px -5px;
+.uniform-button:hover {
+  box-shadow: black;
   transform: translate3d(0, 2px, 0);
 }
 
-.button-55:focus {
-  box-shadow: rgba(0, 0, 0, .3) 2px 8px 4px -6px;
+.uniform-button:focus {
+  box-shadow: black;
 }
 
 </style>

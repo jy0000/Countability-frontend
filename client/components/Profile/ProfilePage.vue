@@ -5,7 +5,7 @@
     <section v-if="$store.state.username">
       <header>
         <h2 class="box">
-          Find friends!
+          Your profile
         </h2>
       </header>
       <CreateFriendRequestForm />
@@ -20,14 +20,15 @@
         <h3>
           <router-link
             to="/login"
-            class="button-55"
+            class="uniform-button"
           >
             Sign in
           </router-link>
-          to add or remove friend.
+          to check out your profile and create art!
         </h3>
       </article>
     </section>
+
     <section v-if="$store.state.username">
       <article>
         <h2 class="box">
@@ -102,9 +103,10 @@ section .scrollbox {
   margin-bottom: 10px;
 }
 
-.button-55 {
+.uniform-button {
   align-self: center;
   background-color: #fff;
+  background-image: none;
   background-position: 0 90%;
   background-repeat: repeat no-repeat;
   background-size: 4px 3px;
@@ -127,14 +129,17 @@ section .scrollbox {
   border-bottom-right-radius: 225px 15px;
   border-top-left-radius: 255px 15px;
   border-top-right-radius: 15px 225px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
 }
 
-.button-55:hover {
+.uniform-button:hover {
   box-shadow: rgba(0, 0, 0, .3) 2px 8px 8px -5px;
   transform: translate3d(0, 2px, 0);
 }
 
-.button-55:focus {
+.uniform-button:focus {
   box-shadow: rgba(0, 0, 0, .3) 2px 8px 4px -6px;
 }
 </style>

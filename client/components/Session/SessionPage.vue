@@ -44,7 +44,7 @@
         >
           <SelectFeedChannel
             ref="selectFeedChannel"
-            class="button-55"
+            class="uniform-button"
             value="sessionType"
             placeholder="🔍 Type 'News' / 'Fibe' for selected feed channel sessions (optional)"
             button="🔄 Get sessions"
@@ -54,7 +54,7 @@
         <div class="right">
           <GetSessionsForm
             ref="getSessionsForm"
-            class="button-55"
+            class="uniform-button"
             value="author"
             placeholder="🔍 Filter by author (optional)"
             button="🔄 Get sessions"
@@ -193,7 +193,7 @@ section .scrollbox {
   border-top-left-radius: 255px 15px;
   border-top-right-radius: 15px 225px;
 }
-.button-55 {
+.uniform-button {
   align-self: center;
   background-color: rgb(199, 193, 193, 0.45);
   background-image: none;

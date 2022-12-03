@@ -38,7 +38,7 @@
         >
           <SelectFeedChannel
             ref="selectFeedChannel"
-            class="button-55"
+            class="uniform-button"
             value="caption"
             placeholder="🔍 Type 'News' / 'Fibe' for selected feed channel posts (optional)"
             button="🔄 Get posts"
@@ -48,7 +48,7 @@
         <div class="right">
           <GetPostsForm
             ref="getPostsForm"
-            class="button-55"
+            class="uniform-button"
             value="author"
             placeholder="🔍 Filter by author (optional)"
             button="🔄 Get posts"
@@ -174,7 +174,7 @@ section .scrollbox {
   border-top-left-radius: 255px 15px;
   border-top-right-radius: 15px 225px;
 }
-.button-55 {
+.uniform-button {
   align-self: center;
   background-color: rgb(199, 193, 193, 0.45);
   background-image: none;

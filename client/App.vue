@@ -76,4 +76,16 @@ main {
 .alerts .success {
     background-color: rgb(45, 135, 87);
 }
+
+h3 {
+  color: #41403e;
+}
+
+h2 {
+  color: #41403e;
+}
+
+h1 {
+  color: #41403e;
+}
 </style>
