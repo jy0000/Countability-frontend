@@ -1,12 +1,12 @@
 import type {HydratedDocument} from 'mongoose';
 import moment from 'moment';
-import type {Friend, PopulatedFriend} from './model';
+import type {Friendship, PopulatedFriendship} from './model';
 
-type FriendResponse = {
+type response = {
   _id: string;
-  friendGiver: string;
-  friendReceiver: string;
-  dateFriended: string;
+  userOne: string;
+  userTwo: string;
+  dateCreated: string;
 };
 
 /**
@@ -18,31 +18,35 @@ type FriendResponse = {
 const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:mm:ss a');
 
 /**
- * Transform a raw Friend object from the database into an object
- * with all the information needed by the frontend
- *
- * @param {HydratedDocument<Friend>} friend - A friend
- * @returns {FriendResponse} - The post object formatted for the frontend
- */
-const constructFriendResponse = (friend: HydratedDocument<Friend>): FriendResponse => {
-  const friendCopy: PopulatedFriend = {
-    ...friend.toObject({
+  * Transform a raw Friend object from the database into an object
+  * with all the information needed by the frontend
+  *
+  * @param {HydratedDocument<Friendship>} friendship - A friendship object representing mutual friendship between 2 users
+  * @returns {response} - The post object formatted for the frontend
+  */
+const constructResponse = (friendship: HydratedDocument<Friendship>): response => {
+  const copy: PopulatedFriendship = {
+    ...friendship.toObject({
       versionKey: false // Cosmetics; prevents returning of __v property
     })
   };
-  const friendGiverUsername = friendCopy.friendGiverId.username;
-  const friendReceiverUsername = friendCopy.friendReceiverId.username;
-  delete friendCopy.friendGiverId;
-  delete friendCopy.friendReceiverId;
+
+  // Avoid mutation and aliasing
+  const userOneName = copy.userOne.username;
+  const userTwoName = copy.userTwo.username;
+  delete copy.userOne;
+  delete copy.userTwo;
+
   return {
-    ...friendCopy,
-    _id: friendCopy._id.toString(),
-    friendGiver: friendGiverUsername,
-    friendReceiver: friendReceiverUsername, // Actual response include human-readable info
-    dateFriended: formatDate(friend.dateFriended)
+    ...copy,
+    _id: copy._id.toString(),
+    userOne: userOneName,
+    userTwo: userTwoName,
+    dateCreated: formatDate(friendship.dateCreated)
   };
 };
 
 export {
-  constructFriendResponse
+  constructResponse
 };
+

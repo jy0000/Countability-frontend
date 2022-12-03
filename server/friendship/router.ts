@@ -1,101 +1,98 @@
 import type {NextFunction, Request, Response} from 'express';
 import express from 'express';
 import UserCollection from '../user/collection';
-import FriendCollection from './collection';
+import FriendshipCollection from './collection';
 
 import * as userValidator from '../user/middleware';
-import * as friendValidator from './middleware';
+import * as friendshipValidator from './middleware';
 import * as util from './util';
-import PointCollection from '../point/collection';
 
 const router = express.Router();
 
 /**
- * Get everyone who is friended by the user.
+ * Overview:
+ * Get all friendships of the user
+ * Add a friendship (when the user confirms a friend request)
+ * Delete a friendship
+ */
+
+/**
+ * Get all friendships of this user
  *
- * @name GET /api/friend
- *
- * @return {FriendResponse[]} - An array of friends.
+ * @name GET /api/friendship/
+ * @throws {403} - If the user is not logged in
  */
 router.get(
-  '/:view?',
+  '/',
   [
     userValidator.isUserLoggedIn
   ],
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async (req: Request, res: Response, next: NextFunction) => {
+    // Get current session user
     const userId = req.session.userId as string;
     const user = await UserCollection.findOneByUserId(userId);
-    // Display message to clarify who is the current user.
-    const msgPrefix = `You (username: ${user.username})`;
-    const msg = req.query.view === 'Users you friend' ? `${msgPrefix} have friended:` : `${msgPrefix} are friended by:`;
-    const friend = req.query.view === 'Users who friend you' ? await FriendCollection.findAllFriendReceivedById(userId) : await FriendCollection.findAllFriendGivenById(userId);
-    const response = friend.map(util.constructFriendResponse);
+
+    const friendships = await FriendshipCollection.findAllFriendshipsOfUser(user.username);
+    const response = friendships.map(util.constructResponse);
     res.status(200).json({
-      message: msg,
-      friendedUsers: response
+      message: 'Your friends:',
+      requests: response
     });
   }
 );
 
 /**
- * Create a new friend.
+ * Add a friendship
  *
- * @name POST /api/friend/
+ * @name POST /api/friendship/
  *
  * @param {string} friendReceiver - the user to receives this user's friend.
  * @return {FriendResponse} - The created friend
- * @throws {409} - Friend already established
  * @throws {403} - Not logged-in
- * @throws {404} - User to receive friend not exits.
+ * @throws {409} - Friendship already established, or friend request already made by user / or to user
+ * @throws {404} - User to receive friend request does not exits.
+ * @throws {405} - User friends themselvs
  */
 router.post(
   '/',
   [
     userValidator.isUserLoggedIn,
-    friendValidator.isFriendReceiverExist,
-    friendValidator.isFriendAlreadyExist,
-    friendValidator.isFriendSelf
+    friendshipValidator.isFriendshipAlreadyExist
   ],
   async (req: Request, res: Response) => {
-    const friendGiverId = (req.session.userId as string);
-    const friendReceiver = await UserCollection.findOneByUsername(req.body.username);
-    const newFriend = await FriendCollection.addOne(friendGiverId, friendReceiver._id);
+    const userOneId = (req.session.userId as string);
+    const userTwo = await UserCollection.findOneByUsername(req.body.username);
+    const newFriendRequest = await FriendshipCollection.addOne(userOneId, userTwo._id);
     res.status(201).json({
-      message: 'Hooray, you added this user as your friended friend.',
-      friend: util.constructFriendResponse(newFriend)
+      message: 'Hooray, you have added this user as friend',
+      requests: util.constructResponse(newFriendRequest)
     });
-    // DELETE EVERYTHING ADDED because there was a bug about dangling removed object
-    // await FriendCollection.deleteEverything();
   }
 );
 
 /**
- * Remove a friend
+ * Remove a friendship made
  *
- * @name DELETE /api/remove/:id
+ * @name DELETE /api/remove/:
  *
  * @return {string} - A success message
- * @throws {400} - Friend doesn't already exist
+ * @throws {400} - Friendship doesn't already exist
  * @throws {403} - Not logged in
- * @throws {404} - User does not exist
  */
 
 router.delete(
-  '/:username?',
+  '/:friendshipId?',
   [
     userValidator.isUserLoggedIn,
-    friendValidator.isFriendReceiverExist,
-    friendValidator.isFriendNotExist
+    friendshipValidator.isFriendshipNotExist
   ],
   async (req: Request, res: Response) => {
-    const userId = (req.session.userId as string);
-    const friendedUser = await UserCollection.findOneByUsername(req.params.username);
-    await FriendCollection.unfriendOneById(userId, friendedUser._id); // Delete friend
+    await FriendshipCollection.deleteOne(req.params.friendshipId);
     res.status(201).json({
-      message: 'You removed your friend for the user.'
+      message: 'You unfriended this user.'
     });
-    await PointCollection.deleteEverything();
   }
 );
 
-export {router as friendRouter};
+export {router as friendRequestRouter};

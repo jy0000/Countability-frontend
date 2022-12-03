@@ -61,8 +61,7 @@ class FriendshipCollection {
   /**
    * Find all friendships where this user is involved (can be none)
    *
-   * @param {string} giverId
-   * @param {string} receiverId
+   * @param {Types.ObjectId | string} username
    * @return {Promise<HydratedDocument<Friendship>[]> | Promise<null>}
    */
   static async findAllFriendshipsOfUser(username: Types.ObjectId | string): Promise<Array<HydratedDocument<Friendship>>> {
@@ -80,7 +79,7 @@ class FriendshipCollection {
   /**
    * Delete one friend request by id.
    *
-   * @param {string} username
+   * @param {Types.ObjectId | string} friendshipId
    * @return {Promise<HydratedDocument<Friendship>[]>} - The friend relation between the two users.
    */
   static async deleteOne(
@@ -93,16 +92,15 @@ class FriendshipCollection {
   /**
   * Delete all friendships where user is involved
   *
-  * @param {string} username
+  * @param {Types.ObjectId | string} userId
   * @return {Promise<void>}
   */
   static async deleteAllFriendshipOfUser(
-    username: Types.ObjectId | string
+    userId: Types.ObjectId | string
   ): Promise<void> {
-    const user = await UserCollection.findOneByUsername(username as string);
     // This redundancy should be ok because of the unique nature of a friendship
-    await FriendshipModel.deleteMany({userOneId: user._id});
-    await FriendshipModel.deleteMany({userTwoId: user._id});
+    await FriendshipModel.deleteMany({userOneId: userId});
+    await FriendshipModel.deleteMany({userTwoId: userId});
   }
 }
 
