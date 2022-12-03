@@ -1,17 +1,33 @@
 import type {Request, Response, NextFunction} from 'express';
-import FriendshipCollection from './collection';
+import FriendCollection from './collection';
+import UserCollection from '../user/collection';
 
 /**
- * Overview:
- * isFriendshipAlreadyExist (for post)
- * isFriendshipNotExist (for delete)
+ * Checks if a friend not exists. (for delete request, friend removal)
  */
+const isFriendNotExist = async (req: Request, res: Response, next: NextFunction) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const friendUsername = req.body.username ? req.body.username : req.params.username;
+  const friendReceiver = await UserCollection.findOneByUsername(friendUsername);
+  const friend = await FriendCollection.findOne(req.session.userId, friendReceiver._id);
+  if (!friend) {
+    res.status(409).json({
+      error: {
+        followNotFound: 'No friend between you and this user.'
+      }
+    });
+    return;
+  }
+
+  next();
+};
 
 /**
- * Checks if a friend exists. (for post request, friendship adding)
+ * Checks if a friend already exists. (for post request, friend creation)
  */
-const isFriendshipAlreadyExist = async (req: Request, res: Response, next: NextFunction) => {
-  const friend = await FriendshipCollection.findOne(req.body.friendshipId);
+const isFriendAlreadyExist = async (req: Request, res: Response, next: NextFunction) => {
+  const friendReceiver = await UserCollection.findOneByUsername(req.body.username);
+  const friend = await FriendCollection.findOne(req.session.userId, friendReceiver._id);
   if (friend) {
     res.status(409).json({
       error: 'You have friended this user already.'
@@ -23,13 +39,30 @@ const isFriendshipAlreadyExist = async (req: Request, res: Response, next: NextF
 };
 
 /**
- * Checks if a friend not exists. (for delete request, friendship removal)
+ * Ensures a user cannot enfriend themself
  */
-const isFriendshipNotExist = async (req: Request, res: Response, next: NextFunction) => {
-  const friend = await FriendshipCollection.findOne(req.body.friendshipId);
-  if (!friend) {
-    res.status(409).json({
-      error: 'You have never friended this user.'
+const isFriendSelf = async (req: Request, res: Response, next: NextFunction) => {
+  const user = await UserCollection.findOneByUserId(req.session.userId);
+  if (user.username === req.body.username) {
+    res.status(405).json({
+      error: 'Cannot friend yourself.'
+    });
+    return;
+  }
+
+  next();
+};
+
+/**
+ * Checks if the person to give friend to exists
+ */
+const isFriendReceiverExist = async (req: Request, res: Response, next: NextFunction) => {
+  const username = (req.body.username === undefined) ? req.params.username : req.body.username as string;
+
+  const friendReceiver = await UserCollection.findOneByUsername(username);
+  if (!friendReceiver) {
+    res.status(404).json({
+      error: 'User does not exist.'
     });
     return;
   }
@@ -38,6 +71,8 @@ const isFriendshipNotExist = async (req: Request, res: Response, next: NextFunct
 };
 
 export {
-  isFriendshipAlreadyExist,
-  isFriendshipNotExist
+  isFriendAlreadyExist,
+  isFriendNotExist,
+  isFriendSelf,
+  isFriendReceiverExist
 };

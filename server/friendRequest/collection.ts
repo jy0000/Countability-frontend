@@ -14,7 +14,7 @@ class FriendRequestCollection {
    *    findAllSentByUserId - Find all requests sent by the user of username 'username'
    *    findAllReceivedByUserId - Find all requests received by the user of username 'username'
    *    deleteOne - Delete a friend request by id
-   *    deleteAllRequestsOfUser - Delete all requests sent by or received by a specific user; used when deleting the user account
+   *    deleteAllRequestsRelatedToUsername - Delete all requests sent by or received by a specific user; used when deleting the user account
    */
 
   /**
@@ -98,16 +98,17 @@ class FriendRequestCollection {
   }
 
   /**
-   * Find all friend requests made by or received by a specific user
+   * Find all friend requests made by a specific user name
    *
    * @param {string} username
    * @return {Promise<HydratedDocument<FriendRequest>[]>} - The friend relation between the two users.
    */
-  static async deleteAllRequestsOfUser(
-    userId: Types.ObjectId | string
+  static async deleteAllRequestsRelatedToUsername(
+    username: string
   ): Promise<boolean> {
-    const deleteRequestsSentByUser = await FriendRequestModel.deleteMany({friendRequestSenderId: userId});
-    const deleteRequestsReceivedByUser = await FriendRequestModel.deleteMany({friendRequestReceiverId: userId});
+    const user = await UserCollection.findOneByUsername(username);
+    const deleteRequestsSentByUser = await FriendRequestModel.deleteMany({friendRequestSenderId: user._id});
+    const deleteRequestsReceivedByUser = await FriendRequestModel.deleteMany({friendRequestReceiverId: user._id});
     return (deleteRequestsSentByUser !== null || deleteRequestsReceivedByUser !== null);
   }
 }
