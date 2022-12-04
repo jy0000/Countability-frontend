@@ -47,36 +47,27 @@
         <!-- End of Added post feed channel selection-->
       </header>
       <header>
-        <div class="tab">
-            <button title="First" active><p>I'm the first tab</p></button>
-            <button title="Second"><p>I'm the second tab</p></button>
-            <button title="Disabled" disabled><p>I'm a disabled tab!</p></button>
-        </div>
         <div>
-          <b-card no-body>
-            <b-tabs pills card>
-              <b-tab title="Tab 1" active><b-card-text>Tab contents 1</b-card-text></b-tab>
-              <b-tab title="Tab 2"><b-card-text>Tab contents 2</b-card-text></b-tab>
-            </b-tabs>
-          </b-card>
+          <tabs>
+            <tab title="Sessions">
+              <section
+                v-if="$store.state.posts.length && $store.state.username">
+                <PostComponent
+                  v-for="post in $store.state.posts"
+                  v-if="$store.state.username === post.author"
+                  :key="post.id"
+                  :post="post"
+                />
+              </section>
+              <article
+                v-else>
+                <h3>No posts found.</h3>
+              </article></tab>
+            <tab title="Drawings">Fill with drawings</tab>
+            <tab title="Friends">Show Friends</tab>
+          </tabs>
         </div>
       </header>
-
-      <section
-        v-if="$store.state.posts.length && $store.state.username"
-      >
-        <PostComponent
-          v-for="post in $store.state.posts"
-          v-if="$store.state.username === post.author"
-          :key="post.id"
-          :post="post"
-        />
-      </section>
-      <article
-        v-else
-      >
-        <h3>No posts found.</h3>
-      </article>
     </section>
   </main>
 </template>
@@ -85,9 +76,11 @@
 // Components
 import PostComponent from '@/components/Post/PostComponent.vue';
 import GetPostsForm from '@/components/Profile/GetPostsForm.vue';
+import Tab from './ProfileTab.vue'
+import Tabs from './ProfileTabs.vue'
 export default {
   name: 'PostPage',
-  components: {PostComponent, GetPostsForm},
+  components: {PostComponent, GetPostsForm, Tab, Tabs},
   mounted() {
   }
 };
