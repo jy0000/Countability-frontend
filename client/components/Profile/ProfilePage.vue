@@ -35,17 +35,11 @@
         <div class="center">
           <h2>
             {{ $store.state.friends.length }} Friends 
-            <span v-if="$store.state.filter">
-              by @{{ $store.state.filter }}
-            </span>
           </h2>
         </div>
         <div class="right">
           <h2>
             {{ $store.state.point }} Points 
-            <span v-if="$store.state.filter">
-              by @{{ $store.state.filter }}
-            </span>
           </h2>
         </div>
         <!-- Added post feed channel selection-->
@@ -59,8 +53,9 @@
               <section
                 v-if="$store.state.posts.length && $store.state.username">
                 <PostComponent
-                  v-for="post in $store.state.posts"
                   v-if="$store.state.username === post.author"
+
+                  v-for="post in $store.state.posts"
                   :key="post.id"
                   :post="post"
                 />
