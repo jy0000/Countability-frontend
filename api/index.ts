@@ -14,7 +14,7 @@ import {sessionRouter} from '../server/workSession/router';
 // import {friendshipRouter} from '../server/friendship/router';
 import {friendRequestRouter} from '../server/friendRequest/router';
 import {pointRouter} from '../server/point/router';
-
+// import {profileRouter} from '../server/post/router';
 import MongoStore from 'connect-mongo';
 
 // Load environmental variables
@@ -80,6 +80,8 @@ app.use('/api/sessions', sessionRouter);
 // app.use('/api/friendship', friendshipRouter);
 app.use('/api/friendRequest', friendRequestRouter);
 app.use('/api/point', pointRouter);
+app.use('/api/profile', postRouter); 
+
 
 // Catch all the other routes and display error message
 app.all('*', (req: Request, res: Response) => {
