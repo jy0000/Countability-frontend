@@ -28,7 +28,7 @@
       <header>
         <div class="center">
           <h2>
-            3 Friends 
+            {{ $store.state.friends.length }} Friends 
             <span v-if="$store.state.filter">
               by @{{ $store.state.filter }}
             </span>
@@ -36,7 +36,7 @@
         </div>
         <div class="right">
           <h2>
-            4 Points 
+            {{ $store.state.point }} Points 
             <span v-if="$store.state.filter">
               by @{{ $store.state.filter }}
             </span>
@@ -65,13 +65,17 @@
               </article></tab>
             <tab title="Drawings"><router-link 
               v-if="$store.state.username"
-              to="/draw"> <!-- TODO link-->
+              to="/draw"> <!-- TODO bring in componenet-->
               <span class="subbar">
-                Make New Drawing!
+                <button class="box">
+                  Make New Drawing!
+                </button>
               </span>
             </router-link>
           </tab>
-            <tab title="Friends">Show Friends</tab>
+            <tab title="Friends">
+              <FriendPage></FriendPage>
+            </tab>
           </tabs>
         </div>
       </header>
@@ -83,11 +87,12 @@
 // Components
 import PostComponent from '@/components/Post/PostComponent.vue';
 import GetPostsForm from '@/components/Profile/GetPostsForm.vue';
+import FriendPage from '@/components/Friend/FriendPage.vue';
 import Tab from './ProfileTab.vue'
 import Tabs from './ProfileTabs.vue'
 export default {
   name: 'PostPage',
-  components: {PostComponent, GetPostsForm, Tab, Tabs},
+  components: {PostComponent, GetPostsForm, Tab, Tabs, FriendPage},
   mounted() {
   }
 };
