@@ -1,62 +1,4 @@
-<!-- Reusable component representing a form in a block style -->
 <!-- This is just an example; feel free to define any reusable components you want! -->
-
-<template>
-  <form
-    class="button-89"
-    @submit.prevent="submit"
-  >
-    <h3>{{ title }}</h3>
-    <article
-      v-if="fields.length"
-    >
-      <div
-        v-for="field in fields"
-        :key="field.id"
-      >
-        <label :for="field.id">{{ field.label }}:</label>
-        <!-- Input type (text box, input) -->
-        <textarea
-          v-if="field.id === 'content'"
-          :name="field.id"
-          :value="field.value"
-          @input="field.value = $event.target.value"
-        />
-        <input
-          v-else-if="field.id === 'postType'"
-          :name="field.id"
-          :value="field.value"
-          :placeholder="field.placeholder"
-          @input="field.value = $event.target.value"
-        >
-        <input
-          v-else
-          :type="field.id === 'password' ? 'password' : 'text'"
-          :name="field.id"
-          :value="field.value"
-          @input="field.value = $event.target.value"
-        >
-      </div>
-    </article>
-    <article v-else>
-      <p>{{ content }}</p>
-    </article>
-    <button
-      type="submit"
-    >
-      {{ title }}
-    </button>
-    <section class="alerts">
-      <article
-        v-for="(status, alert, index) in alerts"
-        :key="index"
-        :class="status"
-      >
-        <p>{{ alert }}</p>
-      </article>
-    </section>
-  </form>
-</template>
 
 <script>
 
@@ -70,9 +12,13 @@ export default {
       url: '', // Url to submit form to
       method: 'GET', // Form request method
       hasBody: false, // Whether or not form request has a body
+      height: 10,
+      weight: 10,
+      points: [],
       setUsername: false, // Whether or not stored username should be updated after form submission
       setPoint: false,
       refreshFriend: false,
+      refreshDrawings: true,
       refreshPosts: false, // Whether or not stored posts should be updated after form submission
       alerts: {}, // Displays success/error messages encountered during form submission
       callback: null // Function to run after successful form submission
