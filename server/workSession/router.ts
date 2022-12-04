@@ -13,33 +13,54 @@ const router = express.Router();
  * @name GET /api/sessions
  * @return {WorkSessionResponse[]} - all sessions in descending order
  */
+router.get(
+  '/',
+  async (req: Request, res: Response) => {
+    const ownerSessions = await WorkSessionCollection.findAll();
+    const response = ownerSessions.map(util.constructWorkSessionResponse);
+    res.status(200).json(response);
+  }
+);
+
 
 /**
  * Get all work sessions of a specific user.
  *
- * @name GET /api/sessions?username
+ * @name GET /api/sessions/:sessionOwner?
  * @return {WorkSessionResponse[]} - An array of sessions created by sessionOwner
- * @throws {400} - If userId is not given
- * @throws {404} - If no user has given userId
+ * @throws {404} - If no user has username sessionOwner
  */
 router.get(
-  '/',
-  async (req: Request, res: Response, next: NextFunction) => {
-    if (req.query.sessionOwner !== undefined) {
-      next();
-      return;
-    }
-
-    const userWorkSessions = await WorkSessionCollection.findAllByUsername(req.query.sessionOwner as string);
-    const response = userWorkSessions.map(util.constructWorkSessionResponse);
-    res.status(200).json(response);
-  },
+  '/:sessionOwner?',
   [
-    userValidator.isAuthorExists
+    sessionValidator.isSessionOwnerExists
   ],
   async (req: Request, res: Response) => {
-    const authorSessions = await WorkSessionCollection.findAllByUsername(req.query.author as string);
-    const response = authorSessions.map(util.constructWorkSessionResponse);
+    // Check if sessionOwner parameter was supplied
+    const owner = req.params.sessionOwner as string;
+    const ownerSessions = await WorkSessionCollection.findAllByUsername(owner);
+    const response = ownerSessions.map(util.constructWorkSessionResponse);
+    res.status(200).json(response);
+  }
+);
+
+/**
+ * Get a work session with a specific sessionId.
+ *
+ * @name GET /api/sessions/:sessionId?
+ * @return {WorkSessionResponse} - A work session with the id provided
+ * @throws {404} - If no session has id sessionId
+ */
+ router.get(
+  '/:sessionId?',
+  [
+    sessionValidator.isSessionExists
+  ],
+  async (req: Request, res: Response) => {
+    // Check if sessionId parameter was supplied
+    const id = req.params.sessionId as string;
+    const session = await WorkSessionCollection.findOne(id);
+    const response = util.constructWorkSessionResponse(session);
     res.status(200).json(response);
   }
 );
@@ -49,18 +70,18 @@ router.get(
  *
  * @name POST /api/sessions
  *
- * @param {string} content - The content of the session
+ * @param {number} numChecks - the number of checks administered to the owner of the session
  * @return {WorkSessionResponse} - The created session
  * @throws {403} - If the user is not logged in
- * @throws {400} - If the session content is empty or a stream of empty spaces
- * @throws {413} - If the session content is more than 140 characters long
+ * @throws {400} - If the numChecks given is not a valid nonnegative integer
+ * @throws {409} - If the user has already started a session
  */
 router.post(
   '/',
   [
     userValidator.isUserLoggedIn,
-    sessionValidator.isValidSessionContent,
-    sessionValidator.isSessionPropertyComplete
+    sessionValidator.isValidSessionNumChecks,
+    sessionValidator.isAlreadyInSession
   ],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
@@ -79,21 +100,44 @@ router.post(
  * @name DELETE /api/sessions/:id
  *
  * @return {string} - A success message
- * @throws {403} - If the user is not logged in or is not the author of
- *                 the session
  * @throws {404} - If the sessionId is not valid
  */
 router.delete(
   '/:sessionId?',
   [
-    userValidator.isUserLoggedIn,
     sessionValidator.isSessionExists,
-    sessionValidator.isValidSessionModifier
   ],
   async (req: Request, res: Response) => {
     await WorkSessionCollection.deleteOne(req.params.sessionId);
     res.status(200).json({
       message: 'Your session was deleted successfully.'
+    });
+  }
+);
+
+/**
+ * End the current session for the user
+ *
+ * @name POST /api/sessions/end
+ *
+ * @return {string} - A success message
+ * @throws {403} - If the user is not logged in or is not the owner of
+ *                 the session
+ * @throws {404} - If the sessionId is not valid
+ * @throws {409} - If the user has already started a session
+ */
+ router.post(
+  '/end',
+  [
+    userValidator.isUserLoggedIn,
+    sessionValidator.isNotInSession
+  ],
+  async (req: Request, res: Response) => {
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const session = await WorkSessionCollection.endOneByUser(userId);
+    res.status(200).json({
+      message: 'Your session was ended successfully.',
+      session: util.constructWorkSessionResponse(session)
     });
   }
 );

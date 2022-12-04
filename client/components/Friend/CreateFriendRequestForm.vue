@@ -12,7 +12,7 @@ export default {
       method: 'POST',
       hasBody: true,
       fields: [
-        {id: 'username', label: 'Enter the countAbility handle of the person to friend', value: ''},
+        {id: 'username', label: 'Enter the Countability handle of the person to friend', value: ''},
       ],
       title: 'Create a friend',
       refreshFriend: true,

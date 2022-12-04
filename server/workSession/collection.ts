@@ -7,20 +7,10 @@ import UserCollection from '../user/collection';
  * A collection class representing a work session for a user.
  */
 class WorkSessionCollection {
-  /** Operations:
-   *  addOne - Add a WorkSession to the collection
-   *  findOne - Find a work session by session ID
-   *  findAll - Get all work sessions
-   *  findAllByUsername - Get all work sessions in by given username
-   *  deleteOne - Delete a work session with the given WorkSessionId.
-   *  deleteAllByOwnerId - Delete all the work sessions by the given owner
-   */
-
   /**
    * Add a WorkSession to the collection
    *
-   * @param {string} authorId - The id of the author of the WorkSession
-   * @param {string} content - The id of the content of the WorkSession
+   * @param {string} sessionOwnerId - The id of the owner of the WorkSession
    * @return {Promise<HydratedDocument<WorkSession>>} - The newly created WorkSession
    */
   static async addOne(
@@ -35,7 +25,7 @@ class WorkSessionCollection {
       checks: []
     });
     await newWorkSession.save();
-    return newWorkSession.populate('startDate');
+    return newWorkSession.populate('sessionOwnerId');
   }
 
   /**
@@ -45,7 +35,7 @@ class WorkSessionCollection {
    * @return {Promise<HydratedDocument<WorkSession>> | Promise<null> } - The WorkSession with the given WorkSessionId, if any
    */
   static async findOne(workSessionId: Types.ObjectId | string): Promise<HydratedDocument<WorkSession>> {
-    return WorkSessionModel.findOne({_id: workSessionId}).populate('startDate');
+    return WorkSessionModel.findOne({_id: workSessionId}).populate('sessionOwnerId');
   }
 
   /**
@@ -55,7 +45,7 @@ class WorkSessionCollection {
    */
   static async findAll(): Promise<Array<HydratedDocument<WorkSession>>> {
     // Retrieves WorkSessions and sorts them from most to least recent
-    return WorkSessionModel.find({}).sort({startDate: -1}).populate('startDate');
+    return WorkSessionModel.find({}).sort({startDate: -1}).populate('sessionOwnerId');
   }
 
   /**
@@ -66,7 +56,7 @@ class WorkSessionCollection {
    */
   static async findAllByUsername(username: string): Promise<Array<HydratedDocument<WorkSession>>> {
     const owner = await UserCollection.findOneByUsername(username);
-    return WorkSessionModel.find({sessionOwnerId: owner._id}).sort({startDate: -1}).populate('startDate');
+    return WorkSessionModel.find({sessionOwnerId: owner._id}).sort({startDate: -1}).populate('sessionOwnerId');
   }
 
   /**
@@ -88,6 +78,50 @@ class WorkSessionCollection {
   static async deleteAllByOwnerId(sessionOwnerId: Types.ObjectId | string): Promise<void> {
     await WorkSessionModel.deleteMany({sessionOwnerId});
   }
+
+  /**
+   * End a work session with the given WorkSessionId.
+   *
+   * @param {string} workSessionId - The WorkSessionId of WorkSession to end
+   * @return {Promise<HydratedDocument<WorkSession>>} - updated workSession
+   */
+   static async endOne(workSessionId: Types.ObjectId | string): Promise<HydratedDocument<WorkSession>> {
+    const workSession = await WorkSessionModel.findOne({_id: workSessionId});
+    const endDate = new Date();
+    workSession.endDate = endDate;
+    await workSession.save();
+    return workSession.populate('sessionOwnerId');
+  }
+
+  /**
+   * End a work session for a specific owner.
+   *
+   * @param {string} userId - The owner id of WorkSession to end
+   * @return {Promise<HydratedDocument<WorkSession>>} - updated workSession
+   */
+   static async endOneByUser(userId: Types.ObjectId | string): Promise<HydratedDocument<WorkSession>> {
+    const workSession = await WorkSessionModel.findOne({sessionOwnerId:userId, endDate: undefined});
+    const endDate = new Date();
+    workSession.endDate = endDate;
+    await workSession.save();
+    return workSession.populate('sessionOwnerId');
+  }
+
+  /**
+   * Update a work session with the given WorkSessionId.
+   *
+   * @param {string} workSessionId - The WorkSessionId of WorkSession to
+   * @return {Promise<HydratedDocument<WorkSession>>} - updated workSession
+   */
+   static async updateOne(workSessionId: Types.ObjectId | string): Promise<HydratedDocument<WorkSession>> {
+    // TODO: finish function
+    const workSession = await WorkSessionModel.findOne({_id: workSessionId});
+    const endDate = new Date();
+    workSession.endDate = endDate;
+    return workSession.populate('sessionOwnerId');
+  }
 }
+
+
 
 export default WorkSessionCollection;

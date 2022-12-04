@@ -1,19 +1,17 @@
 <!-- Default page that also displays sessions -->
-
 <template>
   <main>
     <section v-if="$store.state.username">
       <header>
         <h2 class="box">
-          Welcome @{{ $store.state.username }}
+          @{{ $store.state.username }}
         </h2>
       </header>
-      <CreateSessionForm />
     </section>
     <section v-else>
       <header>
         <h2 class="box">
-          Welcome to countAbility!
+          Welcome to Countability!
         </h2>
       </header>
       <article>
@@ -28,86 +26,81 @@
         </h3>
       </article>
     </section>
-    <section>
+
+    <div class="left">
+      <img src="../../public/luffy.png">
+    </div>
+    <section v-if="$store.state.username">
       <header>
-        <div class="left">
-          <h2 class="box">
-            📙 My feeds
+        <div class="center">
+          <h2>
+            {{ $store.state.friends.length }} Friends 
             <span v-if="$store.state.filter">
               by @{{ $store.state.filter }}
             </span>
           </h2>
         </div>
-        <!-- Added session feed channel selection-->
-        <div
-          class="right"
-        >
-          <SelectFeedChannel
-            ref="selectFeedChannel"
-            class="button-55"
-            value="sessionType"
-            placeholder="🔍 Type 'News' / 'Fibe' for selected feed channel sessions (optional)"
-            button="🔄 Get sessions"
-          />
-        </div>
-        <!-- End of Added session feed channel selection-->
         <div class="right">
-          <GetSessionsForm
-            ref="getSessionsForm"
-            class="button-55"
-            value="author"
-            placeholder="🔍 Filter by author (optional)"
-            button="🔄 Get sessions"
-          />
+          <h2>
+            {{ $store.state.point }} Points 
+            <span v-if="$store.state.filter">
+              by @{{ $store.state.filter }}
+            </span>
+          </h2>
+        </div>
+        <!-- Added post feed channel selection-->
+
+        <!-- End of Added post feed channel selection-->
+      </header>
+      <header>
+        <div>
+          <tabs>
+            <tab title="Sessions">
+              <section
+                v-if="$store.state.posts.length && $store.state.username">
+                <PostComponent
+                  v-for="post in $store.state.posts"
+                  v-if="$store.state.username === post.author"
+                  :key="post.id"
+                  :post="post"
+                />
+              </section>
+              <article
+                v-else>
+                <h3>No posts found.</h3>
+              </article></tab>
+            <tab title="Drawings"><router-link 
+              v-if="$store.state.username"
+              to="/draw"> <!-- TODO bring in componenet-->
+              <span class="subbar">
+                <button class="box">
+                  Make New Drawing!
+                </button>
+              </span>
+            </router-link>
+          </tab>
+            <tab title="Friends">
+              <FriendPage></FriendPage>
+            </tab>
+          </tabs>
         </div>
       </header>
-      <section
-        v-if="$store.state.sessions.length"
-      >
-        <SessionComponent
-          v-for="session in $store.state.sessions"
-          :key="session.id"
-          :session="session"
-        />
-      </section>
-      <article
-        v-else
-      >
-        <h3>No sessions found.</h3>
-      </article>
-      <article>
-        <!-- <router-link
-          class="button-sign-in"
-          to="/createpost"
-        >
-          Post
-        </router-link>
-        to create post -->
-        <CreatePostForm />
-      </article>
     </section>
   </main>
 </template>
 
 <script>
 // Components
-import SessionComponent from '@/components/Session/SessionComponent.vue';
-import CreateSessionForm from '@/components/Session/CreateSessionForm.vue';
-import GetSessionsForm from '@/components/Session/GetSessionsForm.vue';
-import SelectFeedChannel from '@/components/FeedChannel/SelectFeedChannel.vue';
 
-import CreatePostForm from '@/components/Post/CreatePostForm.vue';
-
+import PostComponent from '@/components/Post/PostComponent.vue';
+import GetPostsForm from '@/components/Profile/GetPostsForm.vue';
+import FriendPage from '@/components/Friend/FriendPage.vue';
+import Tab from './ProfileTab.vue'
+import Tabs from './ProfileTabs.vue'
 export default {
-  name: 'SessionPage',
-  components: {SessionComponent, GetSessionsForm, CreateSessionForm, CreatePostForm, SelectFeedChannel},
+  name: 'PostPage',
+  components: {PostComponent, GetPostsForm, Tab, Tabs, FriendPage},
   mounted() {
-    // Primitive fix
-    if (this.$refs.selectFeedChannel) {
-      this.$refs.selectFeedChannel.submit(); // Added this for feed channel filtering
-    } else {
-      this.$refs.getSessionsForm.submit();
-    }
   }
 };
 </script>
@@ -193,7 +186,7 @@ section .scrollbox {
   border-top-left-radius: 255px 15px;
   border-top-right-radius: 15px 225px;
 }
-.button-55 {
+.uniform-button {
   align-self: center;
   background-color: rgb(199, 193, 193, 0.45);
   background-image: none;

@@ -8,12 +8,12 @@
           Find friends!
         </h2>
       </header>
-      <CreateFriendForm />
+      <CreateFriendRequestForm />
     </section>
     <section v-else>
       <header>
         <h2 class="box">
-          Welcome to countAbility!
+          Welcome to Countability!
         </h2>
       </header>
       <article>
@@ -28,7 +28,7 @@
         </h3>
       </article>
     </section>
-    <section>
+    <section v-if="$store.state.username">
       <article>
         <h2 class="box">
           Users you friend
@@ -55,11 +55,11 @@
 <script>
 // Components
 import FriendComponent from '@/components/Friend/FriendComponent.vue';
-import CreateFriendForm from '@/components/Friend/CreateFriendForm.vue';
+import CreateFriendRequestForm from '@/components/Friend/CreateFriendRequestForm.vue';
 
 export default {
   name: 'FriendPage',
-  components: {FriendComponent, CreateFriendForm},
+  components: {FriendComponent, CreateFriendRequestForm},
   mounted() {
   }
 };
@@ -105,7 +105,6 @@ section .scrollbox {
 .button-55 {
   align-self: center;
   background-color: #fff;
-  background-image: none;
   background-position: 0 90%;
   background-repeat: repeat no-repeat;
   background-size: 4px 3px;
@@ -128,9 +127,6 @@ section .scrollbox {
   border-bottom-right-radius: 225px 15px;
   border-top-left-radius: 255px 15px;
   border-top-right-radius: 15px 225px;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
 }
 
 .button-55:hover {

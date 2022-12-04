@@ -19,6 +19,11 @@ class PointCollection {
    * @param {string} currentusername - The id of the current user
    * @return {Promise<HydratedDocument<Point>>} - The new point associated with this user.
    *
+   * Operations:
+   *  addOne
+   *  findOne
+   *  updateOne
+   *  deleteOne
    */
   static async addOne(
     currentUsername: string

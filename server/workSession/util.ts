@@ -7,7 +7,7 @@ type WorkSessionResponse = {
   startDate: string;
   endDate: string;
   sessionOwner: string;
-  numChecks: string;
+  numChecks: number;
   checks: string;
 };
 
@@ -28,22 +28,25 @@ const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:
  */
 const constructWorkSessionResponse = (session: HydratedDocument<WorkSession>): WorkSessionResponse => {
   const sessionCopy: PopulatedWorkSession = {
+    sessionOwner: session.sessionOwnerId,
     ...session.toObject({
       versionKey: false // Cosmetics; prevents returning of __v property
     })
   };
   // Make copies to avoid mutation
   const sessionOwnerUsername = sessionCopy.sessionOwner.username;
-  delete sessionCopy.sessionOwner;
-  return {
-    ...sessionCopy,
+  const toReturn =  {
     _id: sessionCopy._id.toString(),
     startDate: formatDate(session.startDate),
     endDate: formatDate(session.endDate),
     sessionOwner: sessionOwnerUsername,
-    numChecks: sessionCopy.numChecks.toString(),
+    numChecks: sessionCopy.numChecks,
     checks: sessionCopy.checks.toString()
   };
+  if (!sessionCopy.endDate) {
+    delete toReturn.endDate;
+  }
+  return toReturn;
 };
 
 export {
