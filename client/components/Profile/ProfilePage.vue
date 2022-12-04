@@ -88,7 +88,7 @@
 // Components
 
 import PostComponent from '@/components/Post/PostComponent.vue';
-import GetPostsForm from '@/components/Profile/GetPostsForm.vue';
+import GetPostsForm from '@/components/Post/GetPostsForm.vue';
 import FriendPage from '@/components/Friend/FriendPage.vue';
 import Tab from './ProfileTab.vue'
 import Tabs from './ProfileTabs.vue'
