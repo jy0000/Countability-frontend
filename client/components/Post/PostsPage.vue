@@ -32,7 +32,8 @@
             </span>
           </h2>
         </div>
-        
+        <!-- Added post feed channel selection-->
+
         <!-- End of Added post feed channel selection-->
         <div class="right">
           <GetPostsForm
@@ -71,6 +72,7 @@ export default {
   name: 'PostPage',
   components: {PostComponent, GetPostsForm},
   mounted() {
+    // this.$refs.getPostsForm.submit();
   }
 };
 </script>
@@ -112,7 +114,7 @@ section .scrollbox {
 }
 
 /** Cross box */
-.button-89 {
+.input-form-box {
   --b: 3px;   /* border thickness */
   --s: .45em; /* size of the corner */
   --color: #373B44;

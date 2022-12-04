@@ -1,9 +1,7 @@
-<!-- Reusable component representing a form in a block style -->
-<!-- This is just an example; feel free to define any reusable components you want! -->
-
+<!-- Blockform -->
 <template>
   <form
-    class="button-89"
+    class="input-form-box"
     @submit.prevent="submit"
   >
     <h3>{{ title }}</h3>
@@ -15,7 +13,6 @@
         :key="field.id"
       >
         <label :for="field.id">{{ field.label }}:</label>
-        <!-- Input type (text box, input) -->
         <textarea
           v-if="field.id === 'content'"
           :name="field.id"
@@ -67,15 +64,21 @@ export default {
      * Options for submitting this form.
      */
     return {
-      url: '', // Url to submit form to
-      method: 'GET', // Form request method
-      hasBody: false, // Whether or not form request has a body
-      setUsername: false, // Whether or not stored username should be updated after form submission
+      url: '',
+      method: 'GET', // Default method
+      hasBody: false, // Default GET has no body
+
+      setUsername: false,
       setPoint: false,
-      refreshFriend: false,
+
       refreshPosts: false, // Whether or not stored posts should be updated after form submission
-      alerts: {}, // Displays success/error messages encountered during form submission
-      callback: null // Function to run after successful form submission
+
+      refreshOutFriendRequest: false,
+      refreshInFriendRequest: false,
+      refreshFriendList: false,
+      
+      alerts: {}, // No change needed
+      callback: null // No change needed
     };
   },
   methods: {
@@ -90,18 +93,8 @@ export default {
       };
       if (this.hasBody) {
         options.body = JSON.stringify(Object.fromEntries(
-          // Go over each field, checkbox value is not extracted
           this.fields.map(field => {
-            let {id, value} = field;
-            // Return which is selected and return that value 
-            if (field.type === 'radio') {
-              for (const c of field.choices) {
-                if (c.isSelected) {
-                  value = c.value;
-                  field.value = '';
-                }
-              }
-            }
+            const {id, value} = field;
             field.value = '';
             return [id, value];
           })
@@ -109,55 +102,70 @@ export default {
       }
 
       try {
+        // Any post request lands here
+        console.log('post req', this.url, options);
         const r = await fetch(this.url, options);
         if (!r.ok) {
-          // If response is not okay, we throw an error and enter the catch block
           const res = await r.json();
           throw new Error(res.error);
         }
-
+        // USER
+        // Refresh stale state at setUsername (new login session)
         if (this.setUsername) {
-          // Different response totally
+          console.log('1')
           const text = await r.text();
           const res = text ? JSON.parse(text) : {user: null};
-          this.$store.commit('refreshFriends');
+          this.$store.commit('setPoint', 0); // Initialize points
           this.$store.commit('setUsername', res.user ? res.user.username : null);
-          this.$store.commit('setPoint', 0);
-          // }
+          this.$store.commit('refreshOutFriendRequest');
+          this.$store.commit('refreshInFriendRequest');
+          this.$store.commit('refreshFriendList');
         }
 
         if (this.setPoint) {
-          // Also update the point (backend fetch)
+          console.log('2')
           options.method = 'GET';
-          options.body = null; // GET request MUST not have body, so muyst clear
-          const r = await fetch('/api/point', options); // secondary call, don't change this.url
+          options.body = null; // GET request should not have body
+          const r = await fetch('/api/point', options);
           const res = await r.json();
           if (!r.ok) {
-            // If response is not okay, we throw an error and enter the catch block
             throw new Error(res.error);
           } else {
             this.$store.commit('setPoint', res.requestResponse.currentPoint); // frontend update 
           }
         }
+  
+        // FRIENDS AND FRIEND REQUESTS
+        // (Done) Update OUT friend requests shown on screen by GET
+        if (this.refreshOutFriendRequest) {
+          console.log('out blockform refreshs ent')
+          this.$store.commit('refreshOutFriendRequest');
+        }
+
+        // (Done) Update IN friend requests shown on screen by GET
+        if (this.refreshInFriendRequest) {
+          console.log('in blockform refreshs ent')
+          this.$store.commit('refreshInFriendRequest');
+        }
+
+        // (Done) Update currently displayed friend list
+        if (this.refreshFriendList) {
+          console.log('list')
+          this.$store.commit('refreshFriendList');
+        }
 
         if (this.refreshPosts) {
-          // Also update the point (backend fetch)
+          console.log('post')
           options.method = 'GET';
-          options.body = null; // GET request MUST not have body, so muyst clear
-          const r = await fetch('/api/point/', options); // secondary call, don't change this.url
+          options.body = null;
+          const r = await fetch('/api/point/', options);
           const res = await r.json();
           if (!r.ok) {
-            // If response is not okay, we throw an error and enter the catch block
             throw new Error(res.error);
           } else {
             this.$store.commit('setPoint', res.requestResponse.currentPoint); // frontend update 
           }
           this.$store.commit('refreshPosts'); // frontend update
-        }
-
-        if (this.refreshFriend) {
-          // Also update the point (backend fetch)
-          this.$store.commit('refreshFriends'); // frontend update
         }
 
         if (this.callback) {
@@ -207,7 +215,7 @@ textarea {
 }
 
 /* CSS */
-.button-89 {
+.input-form-box {
   --b: 3px;   /* border thickness */
   --s: .45em; /* size of the corner */
   --color: #373B44;
@@ -224,6 +232,6 @@ textarea {
   font-size: 16px;
 
   border: 0;
-  background-color: rgb(199, 193, 193, 0.45)
+  background-color: rgb(199, 193, 193, 0.45);
 }
 </style>

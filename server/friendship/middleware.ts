@@ -14,7 +14,7 @@ const isFriendshipAlreadyExist = async (req: Request, res: Response, next: NextF
   const friend = await FriendshipCollection.findOne(req.body.friendshipId);
   if (friend) {
     res.status(409).json({
-      error: 'You have friended this user already.'
+      error: 'You are already friend with this user.'
     });
     return;
   }

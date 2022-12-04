@@ -51,31 +51,37 @@
           <tabs>
             <tab title="Sessions">
               <section
-                v-if="$store.state.posts.length && $store.state.username">
+                v-if="$store.state.posts.length && $store.state.username"
+              >
                 <PostComponent
-                  v-if="$store.state.username === post.author"
-
                   v-for="post in $store.state.posts"
+
+                  v-if="$store.state.username === post.author"
                   :key="post.id"
                   :post="post"
                 />
               </section>
               <article
-                v-else>
+                v-else
+              >
                 <h3>No posts found.</h3>
-              </article></tab>
-            <tab title="Drawings"><router-link 
-              v-if="$store.state.username"
-              to="/draw"> <!-- TODO bring in componenet-->
-              <span class="subbar">
-                <button class="box">
-                  Make New Drawing!
-                </button>
-              </span>
-            </router-link>
-          </tab>
+              </article>
+            </tab>
+            <tab title="Drawings">
+              <router-link 
+                v-if="$store.state.username"
+                to="/draw"
+              >
+                <!-- TODO bring in componenet-->
+                <span class="subbar">
+                  <button class="box">
+                    Make New Drawing!
+                  </button>
+                </span>
+              </router-link>
+            </tab>
             <tab title="Friends">
-              <FriendPage></FriendPage>
+              <FriendPage />
             </tab>
           </tabs>
         </div>
@@ -88,13 +94,13 @@
 // Components
 
 import PostComponent from '@/components/Post/PostComponent.vue';
-import GetPostsForm from '@/components/Post/GetPostsForm.vue';
 import FriendPage from '@/components/Friend/FriendPage.vue';
 import Tab from './ProfileTab.vue'
 import Tabs from './ProfileTabs.vue'
 export default {
+
   name: 'PostPage',
-  components: {PostComponent, GetPostsForm, Tab, Tabs, FriendPage},
+  components: {PostComponent, Tab, Tabs, FriendPage},
   mounted() {
   }
 };

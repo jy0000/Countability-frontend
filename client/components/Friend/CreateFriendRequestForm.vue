@@ -8,17 +8,18 @@ export default {
   mixins: [BlockForm],
   data() {
     return {
-      url: '/api/friend/',
+      url: '/api/friendRequest/',
       method: 'POST',
+      refreshOutFriendRequest: true,
+      refreshInFriendRequest: true,
       hasBody: true,
       fields: [
-        {id: 'username', label: 'Enter the Countability handle of the person to friend', value: ''},
+        {id: 'username', label: 'Username', value: ''},
       ],
-      title: 'Create a friend',
-      refreshFriend: true,
-      // <!-- TODO Make friendrequests -->
+      title: 'Send friend request',
+
       callback: () => {
-        const message = 'Friend Request Sent!'; 
+        const message = 'Friend request sent!'; 
         this.$set(this.alerts, message, 'success');
         // Delete this success message after 3 seconds
         setTimeout(() => this.$delete(this.alerts, message), 3000);

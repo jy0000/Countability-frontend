@@ -37,7 +37,7 @@ router.get(
     const response = friendships.map(util.constructResponse);
     res.status(200).json({
       message: 'Your friends:',
-      requests: response
+      friendships: response
     });
   }
 );
@@ -66,7 +66,7 @@ router.post(
     const newFriendRequest = await FriendshipCollection.addOne(userOneId, userTwo._id);
     res.status(201).json({
       message: 'Hooray, you have added this user as friend',
-      requests: util.constructResponse(newFriendRequest)
+      friendships: util.constructResponse(newFriendRequest)
     });
   }
 );

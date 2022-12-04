@@ -28,8 +28,10 @@
       </article>
     </section>
     <section>
-      <h4>{{time}}</h4>
-      <button @click='stopTimer'> Submit </button>
+      <h4>{{ time }}</h4>
+      <button @click="stopTimer">
+        Submit
+      </button>
     </section>
     <section>
       <CreatePostForm></CreatePostForm>
@@ -39,24 +41,25 @@
 
 <script>
 // Components
-import SessionComponent from '@/components/Session/SessionComponent.vue';
-import CreateSessionForm from '@/components/Session/CreateSessionForm.vue';
-import GetSessionsForm from '@/components/Session/GetSessionsForm.vue';
+// import SessionComponent from '@/components/Session/SessionComponent.vue';
+// import CreateSessionForm from '@/components/Session/CreateSessionForm.vue';
+// import GetSessionsForm from '@/components/Session/GetSessionsForm.vue';
 
-import CreatePostForm from '@/components/Post/CreatePostForm.vue';
+// import CreatePostForm from '@/components/Post/CreatePostForm.vue';
 
 export default {
   name: 'SessionPage',
-  components: {SessionComponent, GetSessionsForm, CreateSessionForm, CreatePostForm},
-  mounted() {
-    // Primitive fix
-    this.runTimer();
-  },
+  components: {},
+  // components: {SessionComponent, GetSessionsForm, CreateSessionForm, CreatePostForm},
   data() {
     return {
       time: " ",
       intervalId: ""
     }
+  },
+  mounted() {
+    // Primitive fix
+    this.runTimer();
   },
   methods: {
     async submitRequest() {
@@ -144,7 +147,7 @@ section .scrollbox {
 }
 
 /** Cross box */
-.button-89 {
+.input-form-box {
   --b: 3px;   /* border thickness */
   --s: .45em; /* size of the corner */
   --color: #373B44;

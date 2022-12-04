@@ -1,16 +1,10 @@
-<!-- Reusable component representing a single post and its actions -->
-<!-- We've tagged some elements with classes; consider writing CSS using those classes to style them... -->
-
 <template>
-  <article
-    class="friend"
-  >
+  <article class="friend">
     <header>
-      <!-- Header and features (endorse, for example)-->
-      <h3 class="author">
-        @{{ friend.friendReceiver }}
-      </h3>
       <!-- If the user signs in, they get to see this-->
+      <h3 class="author">
+        @{{ $store.state.username }}
+      </h3>
       <div
         v-if="$store.state.username === friend.friendGiver"
         class="actions"
@@ -44,7 +38,7 @@
 
 <script>
 export default {
-  name: 'FriendComponent',
+  name: 'FriendListComponent',
   props: {
     // Data from the stored post
     friend: {
