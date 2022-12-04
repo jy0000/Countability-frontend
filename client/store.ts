@@ -90,15 +90,9 @@ const store = new Vuex.Store({
       /**
        * Request the server for the currently available posts.
        */
-      if (state.filter === 'News' || state.filter === 'Fibe') {
-        const feedChannelURL = `/api/feedChannel?postType=${state.filter}`;
-        const res = await fetch(feedChannelURL).then(async r => r.json());
-        state.posts = res;
-      } else {
         const url = state.filter ? `/api/users/${state.filter}/posts` : '/api/posts';
         const res = await fetch(url).then(async r => r.json());
         state.posts = res;
-      }
     },
     async refreshFriends(state) {
       /**
