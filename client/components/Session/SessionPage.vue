@@ -8,7 +8,6 @@
           Welcome @{{ $store.state.username }}
         </h2>
       </header>
-      <CreateSessionForm />
     </section>
     <section v-else>
       <header>
@@ -29,62 +28,8 @@
       </article>
     </section>
     <section>
-      <header>
-        <div class="left">
-          <h2 class="box">
-            📙 My feeds
-            <span v-if="$store.state.filter">
-              by @{{ $store.state.filter }}
-            </span>
-          </h2>
-        </div>
-        <!-- Added session feed channel selection-->
-        <div
-          class="right"
-        >
-          <SelectFeedChannel
-            ref="selectFeedChannel"
-            class="uniform-button"
-            value="sessionType"
-            placeholder="🔍 Type 'News' / 'Fibe' for selected feed channel sessions (optional)"
-            button="🔄 Get sessions"
-          />
-        </div>
-        <!-- End of Added session feed channel selection-->
-        <div class="right">
-          <GetSessionsForm
-            ref="getSessionsForm"
-            class="uniform-button"
-            value="author"
-            placeholder="🔍 Filter by author (optional)"
-            button="🔄 Get sessions"
-          />
-        </div>
-      </header>
-      <section
-        v-if="$store.state.sessions.length"
-      >
-        <SessionComponent
-          v-for="session in $store.state.sessions"
-          :key="session.id"
-          :session="session"
-        />
-      </section>
-      <article
-        v-else
-      >
-        <h3>No sessions found.</h3>
-      </article>
-      <article>
-        <!-- <router-link
-          class="button-sign-in"
-          to="/createpost"
-        >
-          Post
-        </router-link>
-        to create post -->
-        <CreatePostForm />
-      </article>
+      <h4>{{time}}</h4>
+      <button @click='stopTimer'> Submit </button>
     </section>
   </main>
 </template>
@@ -94,19 +39,66 @@
 import SessionComponent from '@/components/Session/SessionComponent.vue';
 import CreateSessionForm from '@/components/Session/CreateSessionForm.vue';
 import GetSessionsForm from '@/components/Session/GetSessionsForm.vue';
-import SelectFeedChannel from '@/components/FeedChannel/SelectFeedChannel.vue';
 
 import CreatePostForm from '@/components/Post/CreatePostForm.vue';
 
 export default {
   name: 'SessionPage',
-  components: {SessionComponent, GetSessionsForm, CreateSessionForm, CreatePostForm, SelectFeedChannel},
+  components: {SessionComponent, GetSessionsForm, CreateSessionForm, CreatePostForm},
   mounted() {
     // Primitive fix
-    if (this.$refs.selectFeedChannel) {
-      this.$refs.selectFeedChannel.submit(); // Added this for feed channel filtering
-    } else {
-      this.$refs.getSessionsForm.submit();
+    this.runTimer();
+  },
+  data() {
+    return {
+      time: " ",
+      intervalId: ""
+    }
+  },
+  methods: {
+    async submitRequest() {
+      const url = `/api/sessions/a`;
+      console.log('asdfkj');
+      const params = {
+          method: 'GET',
+          message: 'Success!',
+          callback: () => {
+          // this.$set(this.alerts, params.message, 'success');
+          // setTimeout(() => this.$delete(this.alerts, params.message), 3000);
+
+          }
+      };
+      const options = {
+          method: params.method, 
+          headers: {'Content-Type': 'application/json'},
+          // body: JSON.stringify(
+          //   {
+          //     numChecks:1
+          //   }
+          // )
+      };
+      try {
+          const r = await fetch(url, options);
+          if (!r.ok) {
+              const res = await r.json();
+              throw new Error(res.error);
+          }
+          console.log(await r.json());
+          // params.callback();
+      } catch (e) {
+        console.log(e);
+          // this.$set(this.alerts, e, 'error');
+          // setTimeout(() => this.$delete(this.alerts, e), 3000);
+      }
+    },
+    runTimer() {
+      let page = this;
+      this.intervalId = setInterval(() => {
+        page.time = new Date().toLocaleTimeString();
+      }, 1000);
+    },
+    stopTimer() {
+      clearInterval(this.intervalId);
     }
   }
 };
