@@ -32,10 +32,10 @@ const constructResponse = (friendRequest: HydratedDocument<FriendRequest>): resp
   };
 
   // Avoid mutation and aliasing
-  const requestSenderName = copy.friendRequestSender.username;
-  const requestReceiverName = copy.friendRequestReceiver.username;
-  delete copy.friendRequestSender;
-  delete copy.friendRequestReceiver;
+  const requestSenderName = copy.friendRequestSenderId.username;
+  const requestReceiverName = copy.friendRequestReceiverId.username;
+  delete copy.friendRequestSenderId;
+  delete copy.friendRequestReceiverId;
 
   return {
     ...copy,

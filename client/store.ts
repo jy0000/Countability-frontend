@@ -6,17 +6,36 @@ Vue.use(Vuex);
 
 /**
  * Storage for data that needs to be accessed from various components
+ * 
+ * States:
+ *  filter
+ *  posts
+ *  workSessions
+ *  outgoingFriendRequests
+ *  incomingFriendRequests
+ *  friendList
+ *  username
+ *  point
+ *  alerts
  */
 const store = new Vuex.Store({
   state: {
-    filter: null, // Username to filter shown posts by (null = show all)
-    friendFilter: 'Users you friend', // Condition to filter shown friends by
-    posts: [], // All posts created in the app
-    sessions: [], // All sessions created in the app
-    friends: [], // All friends created in the app
-    username: null, // Username of the logged in user
-    point: 0, // Point of the logged in user
-    alerts: {} // global success/error messages encountered during submissions to non-visible forms
+    // Post and post filtering
+    filter: null,
+    posts: [], // Frontend: (PostComponent -> PostPage) 
+
+    // Work session
+    WorkSessions: [], // Frontend: (SessionComponent -> SessionPage)
+
+    // Friend and friend requests
+    outgoingFriendRequests: [], // Frontend: (FriendRequestOutComponent -> FriendPage)
+    incomingFriendRequests: [], // Frontend: (FriendRequestInComponent -> FriendPage)
+    friendList: [],             // Frontend: (FriendListComponent -> FriendPage)
+
+    // User and user session (not work session, this is cookie!)
+    username: null,
+    point: 0,
+    alerts: {}
   },
   mutations: {
     alert(state, payload) {
@@ -49,13 +68,6 @@ const store = new Vuex.Store({
        */
       state.filter = filter;
     },
-    updateFriendFilter(state, filter) {
-      /**
-       * Update the stored posts filter to the specified one.
-       * @param filter - Username of the user to fitler posts by
-       */
-      state.friendFilter = filter;
-    },
     updatePosts(state, posts) {
       /**
        * Update the stored posts to the provided posts.
@@ -63,21 +75,13 @@ const store = new Vuex.Store({
        */
       state.posts = posts;
     },
-    updateSessions(state, sessions) {
+    updateWorkSessions(state, WorkSessions) {
       /**
-       * Update the stored sessions to the provided sessions.
-       * @param sessions - Sessions to store
+       * Update the stored WorkSessions to the provided WorkSessions.
+       * @param WorkSessions - WorkSessions to store
        */
-      state.sessions = sessions;
+      state.WorkSessions = WorkSessions;
     },
-    // updateFriends(state, friends) {
-    //   /**
-    //    * Update the stored friends to the provided posts.
-    //    * @param posts - Posts to store
-    //    */
-    //   state.friends = friends;
-    // },
-    /** Added this point */
     updatePoint(state, point) {
       /**
        * Update the stored posts filter to the specified one.
@@ -90,24 +94,34 @@ const store = new Vuex.Store({
       /**
        * Request the server for the currently available posts.
        */
-      if (state.filter === 'News' || state.filter === 'Fibe') {
-        const feedChannelURL = `/api/feedChannel?postType=${state.filter}`;
-        const res = await fetch(feedChannelURL).then(async r => r.json());
-        state.posts = res;
-      } else {
-        const url = state.filter ? `/api/users/${state.filter}/posts` : '/api/posts';
-        const res = await fetch(url).then(async r => r.json());
-        state.posts = res;
-      }
-    },
-    async refreshFriends(state) {
-      /**
-       * Request the server for the currently available friends.
-       */
-      const url = state.friendFilter ? `/api/friend?view=${state.friendFilter}` : '/api/friend?view=Users you friend';
+      const url = state.filter ? `/api/users/${state.filter}/posts` : '/api/posts';
       const res = await fetch(url).then(async r => r.json());
-      console.log('present', res, res.friendedUsers);
-      state.friends = res.friendedUsers;
+      state.posts = res;
+    },
+    // Friend and friend requests
+    async refreshOutFriendRequest(state) {
+      /**
+       * Get all currently outgoing friend requests.
+       */
+      const url = `/api/friendRequest?requestDirection=Out`;
+      const res = await fetch(url).then(async r => r.json());
+      state.outgoingFriendRequests = res.requests;
+    },
+    async refreshInFriendRequest(state) {
+      /**
+       * Get all currently incoming friend requests.
+       */
+      const url = `/api/friendRequest?requestDirection=In`;
+      const res = await fetch(url).then(async r => r.json());
+      state.incomingFriendRequests = res.requests;
+    },
+    async refreshFriendList(state) {
+      /**
+       * Get all currently made friends (users in a friendship with the current user)
+       */
+      const url = `/api/friendship/`;
+      const res = await fetch(url).then(async r => r.json());
+      state.friendList = res.friendships; // From router response
     }
   },
   // Store data across page refreshes, only discard on browser close

@@ -33,17 +33,14 @@ const isFriendRequestToSelf = async (req: Request, res: Response, next: NextFunc
  */
 const isFriendRequestMade = async (req: Request, res: Response, next: NextFunction) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const requestReceiver = req.body.username ? req.body.username : req.params.username;
-  const user = await UserCollection.findOneByUserId(req.session.userId);
+  const requestReceiverName = req.body.username ? req.body.username : req.params.username;
+  const requestReceiver = await UserCollection.findOneByUsername(requestReceiverName);
 
-  const friendRequestFromUserToReceiver = await FriendRequestCollection.findOne(user.username, requestReceiver);
-  const friendRequestFromReceiverToUser = await FriendRequestCollection.findOne(user.username, requestReceiver);
+  const friendRequest = await FriendRequestCollection.findAny(req.session.userId, requestReceiver._id);
 
-  if (friendRequestFromUserToReceiver || friendRequestFromReceiverToUser) {
+  if (friendRequest) {
     res.status(409).json({
-      error: {
-        followNotFound: 'Friend request already made.'
-      }
+      error: 'Friend request already made by you or the requested user'
     });
     return;
   }
@@ -52,23 +49,16 @@ const isFriendRequestMade = async (req: Request, res: Response, next: NextFuncti
 };
 
 /**
- * Ensures a user cannot make a request when one is already there, or if the user they are requesting friendship already sends them one
+ * Ensures there is a friend request available to allow for DELETE request.
  *
  * for delete (to ensure there is a request to delete)
  */
-const isFriendRequestNotMade = async (req: Request, res: Response, next: NextFunction) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const requestReceiver = req.body.username ? req.body.username : req.params.username;
-  const user = await UserCollection.findOneByUserId(req.session.userId);
+const isFriendRequestNotExist = async (req: Request, res: Response, next: NextFunction) => {
+  const friendRequest = await FriendRequestCollection.findOneById(req.params.friendRequestId);
 
-  const friendRequestFromUserToReceiver = await FriendRequestCollection.findOne(user.username, requestReceiver);
-  const friendRequestFromReceiverToUser = await FriendRequestCollection.findOne(user.username, requestReceiver);
-
-  if (!friendRequestFromUserToReceiver && !friendRequestFromReceiverToUser) {
+  if (!friendRequest) {
     res.status(409).json({
-      error: {
-        followNotFound: 'Friend request not found.'
-      }
+      error: 'No friend request found.'
     });
     return;
   }
@@ -80,10 +70,14 @@ const isFriendRequestNotMade = async (req: Request, res: Response, next: NextFun
  * Ensures a user cannot make a request if friendship between them and the request receiver exists already
  */
 const isFriendshipAlreadyExist = async (req: Request, res: Response, next: NextFunction) => {
-  const friend = await FriendshipCollection.findOne(req.body.friendshipId);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const requestReceiverName = req.body.username ? req.body.username : req.params.username;
+  const requestReceiver = await UserCollection.findOneByUsername(requestReceiverName);
+
+  const friend = await FriendshipCollection.findAny(req.session.userId, requestReceiver._id);
   if (friend) {
     res.status(409).json({
-      error: 'You have friended this user already.'
+      error: 'You are already friend with this user.'
     });
     return;
   }
@@ -100,7 +94,7 @@ const isFriendRequestReceiverValid = async (req: Request, res: Response, next: N
   const friendReceiver = await UserCollection.findOneByUsername(username);
   if (!friendReceiver) {
     res.status(404).json({
-      error: 'User you try to befriend does not exist.'
+      error: 'User you try to friend does not exist.'
     });
     return;
   }
@@ -113,5 +107,5 @@ export {
   isFriendRequestMade,
   isFriendshipAlreadyExist,
   isFriendRequestReceiverValid,
-  isFriendRequestNotMade
+  isFriendRequestNotExist
 };

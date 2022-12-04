@@ -1,7 +1,6 @@
 import type {HydratedDocument, Types} from 'mongoose';
 import type {FriendRequest} from './model';
 import FriendRequestModel from './model';
-import UserCollection from '../user/collection';
 
 /**
  * A class representing CRUD operations on a friend request.
@@ -9,7 +8,8 @@ import UserCollection from '../user/collection';
 class FriendRequestCollection {
   /** Operations
    *    addOne - Add a friend request made by user A to user B
-   *    findOne - Find a friend request made by user A to user B
+   *    findOneById - Find a friend request made by user A to user B
+   *    findAny - Find any friend request in which user A is involved with (sender or receiver)
    *    findAll - Find all friend requests in the database
    *    findAllSentByUserId - Find all requests sent by the user of username 'username'
    *    findAllReceivedByUserId - Find all requests received by the user of username 'username'
@@ -27,17 +27,17 @@ class FriendRequestCollection {
    * Operations:
    */
   static async addOne(
-    friendRequestSenderId: Types.ObjectId | string,
-    friendRequestReceiverId: Types.ObjectId | string
+    senderId: Types.ObjectId | string,
+    receiverId: Types.ObjectId | string
   ): Promise<HydratedDocument<FriendRequest>> {
     const dateCreated = new Date();
     const friendRequest = new FriendRequestModel({
-      friendRequestSenderId,
-      friendRequestReceiverId,
+      friendRequestSenderId: senderId,
+      friendRequestReceiverId: receiverId,
       dateCreated
     });
     await friendRequest.save(); // Saves friend to MongoDB
-    return friendRequest.populate(['friendRequestSenderId', 'friendRequestReceiverId']);
+    return friendRequest.populate('friendRequestReceiverId', 'friendRequestSenderId');
   }
 
   /**
@@ -45,10 +45,23 @@ class FriendRequestCollection {
    *
    * @return {Promise<HydratedDocument<FriendRequest>>} - An array of all friend requests
    */
-  static async findOne(senderName: string, receiverName: string): Promise<HydratedDocument<FriendRequest>> {
-    const sender = await UserCollection.findOneByUsername(senderName);
-    const receiver = await UserCollection.findOneByUsername(receiverName);
-    return FriendRequestModel.findOne({friendRequestSenderId: sender._id, friendRequestReceiverId: receiver._id}).sort({dateCreated: -1}).populate('dateCreated');
+  static async findOneById(friendRequestId: Types.ObjectId | string): Promise<HydratedDocument<FriendRequest>> {
+    return FriendRequestModel.findOne({_id: friendRequestId}).populate(['friendRequestSenderId', 'friendRequestReceiverId']);
+  }
+
+  /**
+   * Find any existing friend request with the sender or receiver
+   *
+   * @return {Promise<HydratedDocument<FriendRequest>>} - An array of all friend requests
+   */
+  static async findAny(senderId: Types.ObjectId | string, receiverId: Types.ObjectId | string): Promise<HydratedDocument<FriendRequest>> {
+    return FriendRequestModel.findOne({
+      $or: [{
+        friendRequestSenderId: senderId, friendRequestReceiverId: receiverId
+      }, {
+        friendRequestSenderId: receiverId, friendRequestReceiverId: senderId
+      }]
+    }).populate(['friendRequestSenderId', 'friendRequestReceiverId']);
   }
 
   /**
@@ -57,11 +70,11 @@ class FriendRequestCollection {
    * @return {Promise<HydratedDocument<FriendRequest>[]>} - An array of all friend requests
    */
   static async findAll(): Promise<Array<HydratedDocument<FriendRequest>>> {
-    return FriendRequestModel.find({}).sort({dateCreated: -1}).populate('friendRequestSenderId');
+    return FriendRequestModel.find({}).sort({dateCreated: -1}).populate(['friendRequestSenderId', 'friendRequestReceiverId']);
   }
 
   /**
-   * Find all friend requests made by a specific user name
+   * Find all outgoing friend requests made by user
    *
    * @param {string} username
    * @return {Promise<HydratedDocument<FriendRequest>[]>} - The friend relation between the two users.
@@ -69,11 +82,11 @@ class FriendRequestCollection {
   static async findAllSentByUserId(
     userId: Types.ObjectId | string
   ): Promise<Array<HydratedDocument<FriendRequest>>> {
-    return FriendRequestModel.find({friendRequestSenderId: userId}).sort({dateCreated: -1}).populate('friendRequestSenderId');
+    return FriendRequestModel.find({friendRequestSenderId: userId}).sort({dateCreated: -1}).populate(['friendRequestSenderId', 'friendRequestReceiverId']);
   }
 
   /**
-   * Find all friend requests made by a specific user name
+   * Find all incoming friend requests to user
    *
    * @param {string} username
    * @return {Promise<HydratedDocument<FriendRequest>[]>} - The friend relation between the two users.
@@ -81,7 +94,7 @@ class FriendRequestCollection {
   static async findAllReceivedByUserId(
     userId: Types.ObjectId | string
   ): Promise<Array<HydratedDocument<FriendRequest>>> {
-    return FriendRequestModel.find({friendRequestReceiverId: userId}).sort({dateCreated: -1}).populate('friendRequestSenderId');
+    return FriendRequestModel.find({friendRequestReceiverId: userId}).sort({dateCreated: -1}).populate(['friendRequestSenderId', 'friendRequestReceiverId']);
   }
 
   /**
@@ -109,6 +122,16 @@ class FriendRequestCollection {
     const deleteRequestsSentByUser = await FriendRequestModel.deleteMany({friendRequestSenderId: userId});
     const deleteRequestsReceivedByUser = await FriendRequestModel.deleteMany({friendRequestReceiverId: userId});
     return (deleteRequestsSentByUser !== null || deleteRequestsReceivedByUser !== null);
+  }
+
+  /**
+   * Clear the database for debugging purpose
+   *
+   * @return {Promise<FriendRequest>}
+   */
+  static async deleteEverything(
+  ) {
+    await FriendRequestModel.deleteMany({});
   }
 }
 

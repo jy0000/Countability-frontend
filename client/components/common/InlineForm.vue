@@ -55,7 +55,7 @@ input {
     min-width: 200px;
 }
 
-.button-89 {
+.input-form-box {
   --b: 3px;   /* border thickness */
   --s: .45em; /* size of the corner */
   --color: #373B44;

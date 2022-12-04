@@ -2,14 +2,20 @@
 
 <template>
   <main>
+    <header>
+      <h2 class="box">
+        Hi, @{{ $store.state.username }}!
+      </h2>
+    </header>
     <section v-if="$store.state.username">
       <header>
         <h2 class="box">
-          Find friends!
+          Add friend
         </h2>
       </header>
       <CreateFriendRequestForm />
     </section>
+
     <section v-else>
       <header>
         <h2 class="box">
@@ -20,7 +26,7 @@
         <h3>
           <router-link
             to="/login"
-            class="button-55"
+            class="uniform-button"
           >
             Sign in
           </router-link>
@@ -28,17 +34,58 @@
         </h3>
       </article>
     </section>
+
     <section v-if="$store.state.username">
       <article>
         <h2 class="box">
-          Users you friend
+          Outgoing friend requests
+        </h2>
+        <section
+          v-if="($store.state.outgoingFriendRequests.length && $store.state.outgoingFriendRequests.map(friend => friend.friendRequestSenderName).includes($store.state.username))"
+        >
+          <FriendRequestOut
+            v-for="friend in $store.state.outgoingFriendRequests"
+            :key="friend.id"
+            :friend="friend"
+          />
+        </section>
+        <article
+          v-else
+        >
+          <h3>No outgoing friend request.</h3>
+        </article>
+      </article>
+
+      <article>
+        <h2 class="box">
+          Incoming friend requests
+        </h2>
+        <section
+          v-if="($store.state.incomingFriendRequests.length && $store.state.incomingFriendRequests.map(friend => friend.friendRequestReceiverName).includes($store.state.username))"
+        >
+          <FriendRequestIn
+            v-for="friend in $store.state.incomingFriendRequests"
+            :key="friend.id"
+            :friend="friend"
+          />
+        </section>
+        <article
+          v-else
+        >
+          <h3>No incoming friend request.</h3>
+        </article>
+      </article>
+
+      <article>
+        <h2 class="box">
+          Your friend list
         </h2>
       </article>
       <section
-        v-if="$store.state.friends.length"
+        v-if="$store.state.friendList.length"
       >
-        <FriendComponent
-          v-for="friend in $store.state.friends"
+        <FriendListComponent
+          v-for="friend in $store.state.friendList"
           :key="friend.id"
           :friend="friend"
         />
@@ -46,20 +93,23 @@
       <article
         v-else
       >
-        <h3>No friend found.</h3>
+        <h3>No friend found yet, make friends!</h3>
       </article>
     </section>
   </main>
 </template>
 
 <script>
-// Components
-import FriendComponent from '@/components/Friend/FriendComponent.vue';
+
+// NOTE: Friend page set up has 1) create friendship, 2) friend request outgoing, 2) incoming friend request
+import FriendListComponent from '@/components/Friend/FriendListComponent.vue';
 import CreateFriendRequestForm from '@/components/Friend/CreateFriendRequestForm.vue';
+import FriendRequestIn from  '@/components/Friend/FriendRequestIn.vue';
+import FriendRequestOut from  '@/components/Friend/FriendRequestOut.vue';
 
 export default {
   name: 'FriendPage',
-  components: {FriendComponent, CreateFriendRequestForm},
+  components: {FriendListComponent, CreateFriendRequestForm, FriendRequestIn, FriendRequestOut},
   mounted() {
   }
 };
@@ -102,7 +152,7 @@ section .scrollbox {
   margin-bottom: 10px;
 }
 
-.button-55 {
+.uniform-button {
   align-self: center;
   background-color: #fff;
   background-position: 0 90%;
@@ -129,12 +179,12 @@ section .scrollbox {
   border-top-right-radius: 15px 225px;
 }
 
-.button-55:hover {
+.uniform-button:hover {
   box-shadow: rgba(0, 0, 0, .3) 2px 8px 8px -5px;
   transform: translate3d(0, 2px, 0);
 }
 
-.button-55:focus {
+.uniform-button:focus {
   box-shadow: rgba(0, 0, 0, .3) 2px 8px 4px -6px;
 }
 </style>

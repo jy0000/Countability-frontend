@@ -39,17 +39,7 @@
           </h2>
         </div>
         <!-- Added session feed channel selection-->
-        <div
-          class="right"
-        >
-          <SelectFeedChannel
-            ref="selectFeedChannel"
-            class="uniform-button"
-            value="sessionType"
-            placeholder="🔍 Type 'News' / 'Fibe' for selected feed channel sessions (optional)"
-            button="🔄 Get sessions"
-          />
-        </div>
+
         <!-- End of Added session feed channel selection-->
         <div class="right">
           <GetSessionsForm
@@ -94,20 +84,14 @@
 import SessionComponent from '@/components/Session/SessionComponent.vue';
 import CreateSessionForm from '@/components/Session/CreateSessionForm.vue';
 import GetSessionsForm from '@/components/Session/GetSessionsForm.vue';
-import SelectFeedChannel from '@/components/FeedChannel/SelectFeedChannel.vue';
 
 import CreatePostForm from '@/components/Post/CreatePostForm.vue';
 
 export default {
   name: 'SessionPage',
-  components: {SessionComponent, GetSessionsForm, CreateSessionForm, CreatePostForm, SelectFeedChannel},
+  components: {SessionComponent, GetSessionsForm, CreateSessionForm, CreatePostForm},
   mounted() {
-    // Primitive fix
-    if (this.$refs.selectFeedChannel) {
-      this.$refs.selectFeedChannel.submit(); // Added this for feed channel filtering
-    } else {
-      this.$refs.getSessionsForm.submit();
-    }
+    this.$refs.getSessionsForm.submit();
   }
 };
 </script>
@@ -149,7 +133,7 @@ section .scrollbox {
 }
 
 /** Cross box */
-.button-89 {
+.input-form-box {
   --b: 3px;   /* border thickness */
   --s: .45em; /* size of the corner */
   --color: #373B44;

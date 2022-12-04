@@ -38,7 +38,7 @@
       <section
         v-if="$store.state.friends.length"
       >
-        <FriendComponent
+        <FriendListComponent
           v-for="friend in $store.state.friends"
           :key="friend.id"
           :friend="friend"
@@ -55,12 +55,12 @@
 
 <script>
 // Components
-import FriendComponent from '@/components/Friend/FriendComponent.vue';
+import FriendListComponent from '@/components/Friend/FriendListComponent.vue';
 import CreateFriendRequestForm from '@/components/Friend/CreateFriendRequestForm.vue';
 
 export default {
   name: 'FriendPage',
-  components: {FriendComponent, CreateFriendRequestForm},
+  components: {FriendListComponent, CreateFriendRequestForm},
   mounted() {
   }
 };
