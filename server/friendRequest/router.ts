@@ -19,11 +19,11 @@ const router = express.Router();
 /**
  * Get all friend requests sent by the current user
  *
- * @name GET /api/friendRequest/
+ * @name GET /api/friendRequest?requestDirection=requestDirection
  * @throws {403} - If the user is not logged in
  */
 router.get(
-  '/:requestDirection?', // 'Send' or 'Receive'
+  '/',
   [
     userValidator.isUserLoggedIn
   ],
@@ -34,8 +34,8 @@ router.get(
     const user = await UserCollection.findOneByUserId(userId);
 
     const prefix = `You (username: ${user.username})`;
-    const msg = req.query.requestDirection === 'Send' ? `${prefix} have sent friend requests to:` : `${prefix} have received friend requests by:`;
-    const friendRequests = req.query.requestDirection === 'Send' ? await FriendRequestCollection.findAllSentByUserId(userId) : await FriendRequestCollection.findAllReceivedByUserId(userId);
+    const msg = req.query.requestDirection === 'Out' ? `${prefix} have sent friend requests to:` : `${prefix} have received friend requests by:`;
+    const friendRequests = req.query.requestDirection === 'Out' ? await FriendRequestCollection.findAllSentByUserId(userId) : await FriendRequestCollection.findAllReceivedByUserId(userId);
     const response = friendRequests.map(util.constructResponse);
     res.status(200).json({
       message: msg,
@@ -60,9 +60,9 @@ router.post(
   '/',
   [
     userValidator.isUserLoggedIn,
-    friendRequestValidator.isFriendRequestMade,
+    friendRequestValidator.isFriendRequestReceiverValid, // This should be placed before request made
     friendRequestValidator.isFriendRequestToSelf,
-    friendRequestValidator.isFriendRequestReceiverValid,
+    friendRequestValidator.isFriendRequestMade,
     friendRequestValidator.isFriendshipAlreadyExist
   ],
   async (req: Request, res: Response) => {
@@ -75,6 +75,7 @@ router.post(
     });
     // DELETE EVERYTHING ADDED because there was a bug about dangling removed object
     // await FriendRequestCollection.deleteEverything();
+    // await FriendshipCollection.deleteEverything();
   }
 );
 
@@ -89,10 +90,10 @@ router.post(
  */
 
 router.delete(
-  '/:friendRequestId?',
+  '/:friendRequestId?', // Define req.params here
   [
     userValidator.isUserLoggedIn,
-    friendRequestValidator.isFriendRequestNotMade
+    friendRequestValidator.isFriendRequestNotExist
   ],
   async (req: Request, res: Response) => {
     await FriendRequestCollection.deleteOne(req.params.friendRequestId);

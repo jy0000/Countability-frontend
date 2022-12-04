@@ -3,7 +3,7 @@
 
 <template>
   <article
-    class="post"
+    class="post" 
   >
     <header>
       <!-- Header and features (endorse, for example)-->
