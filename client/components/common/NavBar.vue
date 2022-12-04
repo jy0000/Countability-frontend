@@ -35,6 +35,13 @@
           Friend
         </span>
       </router-link>
+      <router-link 
+        v-if="$store.state.username"
+        to="/profile"> <!-- TODO link-->
+        <span class="subbar">
+          Profile
+        </span>
+      </router-link>
       <button
         class="button-55"
       >

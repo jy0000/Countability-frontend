@@ -2,7 +2,7 @@ import type {HydratedDocument, Types} from 'mongoose';
 import type {Drawing} from './model';
 import DrawingModel from './model';
 import UserCollection from '../user/collection';
-import FriendCollection from '../friend/collection';
+import FriendshipCollection from '../friendship/collection';
 
 /**
  * This files contains a class that has the functionality to explore drawings
@@ -81,14 +81,16 @@ class DrawingCollection {
   }
 
   /**
-   * Get all the drawings in by given type
+   * Get all posts by friends of the current user
    *
    * @param {string} currentUserId - The current user Id
-   * @return {Promise<HydratedDocument<Drawing>[]>} - An array of all of the drawings
+   * @return {Promise<HydratedDocument<Post>[]>} - An array of all of the posts
    */
-  static async findAllByFriendedUsers(currentUserId: string): Promise<Array<HydratedDocument<Drawing>>> {
-    const allFriends = await FriendCollection.findAllFriendGivenById(currentUserId);
-    const allFriendedUserIds = allFriends.map(friend => friend.friendReceiverId._id);
+  static async findAllByUserFriends(currentUserId: Types.ObjectId | string): Promise<Array<HydratedDocument<Drawing>>> {
+    // First get all friendships the user is involved with
+    const allFriendshipsOfUser = await FriendshipCollection.findAllFriendshipsOfUser(currentUserId);
+    // Then get all friend user id in each friendship, following the invariant that a user cannot friend themself
+    const allFriendedUserIds = allFriendshipsOfUser.map(friendship => friendship.userOneId === currentUserId ? friendship.userTwoId : friendship.userOneId);
     const drawingsFromFriendedUsers = await DrawingModel.find({authorId: {$in: allFriendedUserIds}}).sort({dateModified: -1}).populate('authorId');
     return drawingsFromFriendedUsers;
   }

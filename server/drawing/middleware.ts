@@ -20,7 +20,7 @@ const isDrawingPropertyComplete = async (req: Request, res: Response, next: Next
  * Checks if a drawing with drawingId is req.params exists
  */
 const isDrawingExists = async (req: Request, res: Response, next: NextFunction) => {
-  // eslNumber-disable-next-line @typescript-eslNumber/no-unsafe-assignment
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const drawingId = req.body.drawingId === undefined ? req.params.drawingId : req.body.drawingId;
   const validFormat = Types.ObjectId.isValid(drawingId);
   console.log(drawingId);
@@ -39,7 +39,7 @@ const isDrawingExists = async (req: Request, res: Response, next: NextFunction) 
  * Checks if the pixels of the drawing in req.body is valid, i.e not more than the points
  */
 const isValidDrawingContent = (req: Request, res: Response, next: NextFunction) => {
-  // const {pixels} = req.body as {pixels: string}; // Changed
+  // Const {pixels} = req.body as {pixels: string}; // Changed
   // if (!pixels.trim()) {
   //   res.status(400).json({
   //     error: 'Drawing pixels must be at least one character long.'

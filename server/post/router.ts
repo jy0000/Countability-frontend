@@ -65,7 +65,7 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     // Check if authorId query parameter was supplied
     const currentUserId = req.session.userId as string;
-    const friendedUsersPosts = await PostCollection.findAllByFriendedUsers(currentUserId);
+    const friendedUsersPosts = await PostCollection.findAllByUserFriends(currentUserId);
     const response = friendedUsersPosts.map(util.constructPostResponse);
     res.status(200).json(response);
   }

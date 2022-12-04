@@ -108,6 +108,15 @@ const store = new Vuex.Store({
         state.posts = res;
       }
     },
+    /** End of Added this point (frontend, call after made post request)*/ //TODO only refresh drawings of session user
+    async refreshDrawings(state) {
+      /**
+       * Request the server for the currently available posts.
+       */
+      const url = state.filter ? `/api/users/${state.filter}/drawings` : '/api/drawings';
+      const res = await fetch(url).then(async r => r.json());
+      state.posts = res;
+    },
     async refreshFriends(state) {
       /**
        * Request the server for the currently available friends.

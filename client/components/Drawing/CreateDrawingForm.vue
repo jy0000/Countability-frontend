@@ -3,20 +3,45 @@
 <template>
   <div id="app">
     <h1>Drawing with mousemove event</h1>
-    <canvas id="myCanvas" width="360" height="360" @mousedown="drawDot" @mousemove="keepDrawing" @mouseup="stopDrawing" />
+    <canvas id="myCanvas" width="360" height="360" @mousedown="drawDot" />
   </div>
 </template>
 
 <script lang="ts">
 export default {
   el: '#app',
+  
   data() {
     return {
-    x: 0,
-    y: 0,
-    isDrawing: false,
-    canvas: null
-    }
+      // x: 0,
+      // y: 0,
+      // isDrawing: false,
+      // canvas: null
+      height: 10, //TODO to be adjustable
+      width: 10,
+      pixels: []
+      // url: '/api/drawings',
+      // method: 'POST',
+      // hasBody: true,
+      // fields: [
+      //   // {id: 'content', label: 'Content', value: ''},
+      //   // {id: 'postType', label: 'Which type of post are you making?', value:'', placeholder: "Enter 'News' or 'Fibe' for News or Fibe post"},
+      //   // {id: 'sourceLink', label: "Enter a news source", value: ''},
+      //   // {id: 'emoji', label: "Enter an emoji (any one-word descriptive term you want, for now)", value: ''}
+      //   {id: 'photo', label: 'Photo', value: ''},
+      //   {id: 'caption', label: 'Post Caption', value:'', placeholder: ""},
+      //   {id: 'focusReflection', label: "How focused were you?", value: ''},
+      //   {id: 'progressReflection', label: "How much progress did you make", value: ''}
+      // ],
+      // title: 'Create a drawing',
+      // refreshDrawings: true,
+      // callback: () => {
+      //   const message = 'Successfully created a post!';
+      //   this.$set(this.alerts, message, 'success');
+      //   // Delete this success message after 3 seconds
+      //   setTimeout(() => this.$delete(this.alerts, message), 3000);
+      // },
+    };
   },
   mounted() {
     const c = document.getElementById("myCanvas");
@@ -25,6 +50,7 @@ export default {
     this.CANVAS_SIZE = 360;
     this.BOX_SIZE = this.CANVAS_SIZE / this.NUMBER_OF_POINTS;
     this.drawGreyLines(c);
+    this.pixels = [];
   },
   methods: {
     drawGreyLines() {
@@ -40,33 +66,33 @@ export default {
           }
       }
     },
-    keepDrawing(e) {
-      if (this.isDrawing === true) {
-        this.drawDot(e)
-      }
-    },
-    stopDrawing(e) {
-      if (this.isDrawing === true) {
-        this.x = 0;
-        this.y = 0;
-        this.isDrawing = false;
-      }
-    },
+    // keepDrawing(e) {
+    //   if (this.isDrawing === true) {
+    //     this.drawDot(e)
+    //   }
+    // },
+    // stopDrawing(e) {
+    //   if (this.isDrawing === true) {
+    //     this.x = 0;
+    //     this.y = 0;
+    //     this.isDrawing = false;
+    //   }
+    // },
     drawDot(e) {
       this.x = this.getCoord(e.offsetX, this.BOX_SIZE);
       this.y = this.getCoord(e.offsetY, this.BOX_SIZE);
       this.isDrawing = true;
       const context = this.canvas;
-
       // save original context settings before we translate and change colors
       context.save();
       
       // // get row, column
-      // const r = Math.round((y - BOX_SIZE/2)/BOX_SIZE); // 0-indexed
-      // const c = Math.round((x - BOX_SIZE/2)/BOX_SIZE); // 0-indexed
+      const r = Math.round((this.y - this.BOX_SIZE/2)/this.BOX_SIZE); // 0-indexed
+      const c = Math.round((this.x - this.BOX_SIZE/2)/this.BOX_SIZE); // 0-indexed
       // Next Steps: check if already drawn to => make white, then return a point
       //              keep track of what boxes are drawn too, connect with points
       //              store drawing to mongoDB with connection to user
+      
       context.strokeStyle = 'black';
       context.lineWidth = 2;
       context.moveTo(this.x, this.y);
@@ -80,20 +106,20 @@ export default {
       for (let i = 0.5; i < this.NUMBER_OF_POINTS; i++) {
           points.push(boxSize * i);
       }
-
       // https://stackoverflow.com/questions/8584902/get-the-closest-number-out-of-an-array
       const coord = points.reduce(function(prev, curr) {
           return (Math.abs(curr - coordinate) < Math.abs(prev - coordinate) ? curr : prev);
       });
-
       return coord;
   }
   }
 };
 </script>
 
+
 <style scoped>
   #myCanvas {
   border: 1px solid grey;
 }
 </style>
+

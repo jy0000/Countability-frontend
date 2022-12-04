@@ -50,23 +50,23 @@ router.get(
 );
 
 /**
- * Get drawings from friended users.
+ * Get drawings from friendshiped users.
  *
- * @name GET /api/drawings/friended
+ * @name GET /api/drawings/friendshiped
  *
  * @return {DrawingResponse[]} - An array of drawings created by user with id, authorId
  *
  */
 router.get(
-  '/friended',
+  '/friendship',
   [
     userValidator.isUserLoggedIn
   ],
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response) => {
     // Check if authorId query parameter was supplied
     const currentUserId = req.session.userId as string;
-    const friendedUsersDrawings = await DrawingCollection.findAllByFriendedUsers(currentUserId);
-    const response = friendedUsersDrawings.map(util.constructDrawingResponse);
+    const friendshipUsersDrawings = await DrawingCollection.findAllByUserFriends(currentUserId);
+    const response = friendshipUsersDrawings.map(util.constructDrawingResponse);
     res.status(200).json(response);
   }
 );

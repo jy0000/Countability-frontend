@@ -18,6 +18,7 @@ const routes = [
   {path: '/friend', name: 'Friend', component: FriendPage},
   {path: '/session', name: 'Session', component: SessionPage},
   {path: '/drawing', name: 'Drawing', component: DrawingPage},
+  {path: '/profile', name: 'Home', component: PostsPage},
 ];
 
 const router = new VueRouter({routes});

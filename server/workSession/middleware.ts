@@ -1,6 +1,6 @@
 import type {Request, Response, NextFunction} from 'express';
 import {Types} from 'mongoose';
-import SessionCollection from './collection';
+import WorkSessionCollection from './collection';
 
 /**
  * Checks if a string is a valid URL with schema (like https)
@@ -57,7 +57,7 @@ const isSessionExists = async (req: Request, res: Response, next: NextFunction) 
   const sessionId = req.body.sessionId === undefined ? req.params.sessionId : req.body.sessionId;
   const validFormat = Types.ObjectId.isValid(sessionId);
   console.log(sessionId);
-  const session = validFormat ? await SessionCollection.findOne(sessionId) : '';
+  const session = validFormat ? await WorkSessionCollection.findOne(sessionId) : '';
   if (!session) {
     res.status(404).json({
       error: `Session with session ID ${req.params.sessionId} does not exist.`
@@ -95,8 +95,8 @@ const isValidSessionContent = (req: Request, res: Response, next: NextFunction) 
  * Checks if the current user is the author of the session whose sessionId is in req.params
  */
 const isValidSessionModifier = async (req: Request, res: Response, next: NextFunction) => {
-  const session = await SessionCollection.findOne(req.params.sessionId);
-  const userId = session.authorId._id;
+  const session = await WorkSessionCollection.findOne(req.params.sessionId);
+  const userId = session.sessionOwnerId;
   if (req.session.userId !== userId.toString()) {
     res.status(403).json({
       error: 'Cannot modify other users\' sessions.'

@@ -71,6 +71,7 @@
       </article>
     </section>
     
+    <PointComponent />
     <CreateDrawingForm />
   </main>
 </template>
@@ -81,10 +82,18 @@ import DrawingComponent from '@/components/Drawing/DrawingComponent.vue';
 import GetDrawingsForm from '@/components/Drawing/GetDrawingsForm.vue';
 import SelectFeedChannel from '@/components/FeedChannel/SelectFeedChannel.vue';
 import CreateDrawingForm from '@/components/Drawing/CreateDrawingForm.vue';
+import PointComponent from '@/components/Point/PointComponent.vue';
 
 export default {
   name: 'DrawingPage',
-  components: {DrawingComponent, GetDrawingsForm, CreateDrawingForm, SelectFeedChannel},
+  components: 
+  {
+    DrawingComponent,
+    GetDrawingsForm,
+    CreateDrawingForm,
+    SelectFeedChannel,
+    PointComponent,
+  },
   mounted() {
     // Primitive fix
     if (this.$refs.selectFeedChannel) {
