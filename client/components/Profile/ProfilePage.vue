@@ -63,7 +63,14 @@
                 v-else>
                 <h3>No posts found.</h3>
               </article></tab>
-            <tab title="Drawings">Fill with drawings</tab>
+            <tab title="Drawings"><router-link 
+              v-if="$store.state.username"
+              to="/draw"> <!-- TODO link-->
+              <span class="subbar">
+                Make New Drawing!
+              </span>
+            </router-link>
+          </tab>
             <tab title="Friends">Show Friends</tab>
           </tabs>
         </div>
