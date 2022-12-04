@@ -31,6 +31,9 @@
       <h4>{{time}}</h4>
       <button @click='stopTimer'> Submit </button>
     </section>
+    <section>
+      <CreatePostForm></CreatePostForm>
+    </section>
   </main>
 </template>
 
