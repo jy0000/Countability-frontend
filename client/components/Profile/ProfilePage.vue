@@ -1,14 +1,13 @@
-<!-- Default page that also displays posts -->
-
+<!-- Default page that also displays sessions -->
 <template>
   <main>
     <section v-if="$store.state.username">
       <header>
         <h2 class="box">
-          Your profile
+          @{{ $store.state.username }}
         </h2>
       </header>
-      <CreateFriendRequestForm />
+      <CreateSessionForm />
     </section>
     <section v-else>
       <header>
@@ -19,21 +18,24 @@
       <article>
         <h3>
           <router-link
+            class="button-sign-in"
             to="/login"
-            class="uniform-button"
           >
             Sign in
           </router-link>
-          to check out your profile and create art!
+          to create, edit, and delete sessions.
         </h3>
       </article>
     </section>
 
+    <div class="left">
+      <img src="../../public/luffy.png">
+    </div>
     <section v-if="$store.state.username">
       <header>
         <div class="center">
           <h2>
-            3 Friends 
+            {{ $store.state.friends.length }} Friends 
             <span v-if="$store.state.filter">
               by @{{ $store.state.filter }}
             </span>
@@ -41,7 +43,7 @@
         </div>
         <div class="right">
           <h2>
-            4 Points 
+            {{ $store.state.point }} Points 
             <span v-if="$store.state.filter">
               by @{{ $store.state.filter }}
             </span>
@@ -68,8 +70,19 @@
                 v-else>
                 <h3>No posts found.</h3>
               </article></tab>
-            <tab title="Drawings">Fill with drawings</tab>
-            <tab title="Friends">Show Friends</tab>
+            <tab title="Drawings"><router-link 
+              v-if="$store.state.username"
+              to="/draw"> <!-- TODO bring in componenet-->
+              <span class="subbar">
+                <button class="box">
+                  Make New Drawing!
+                </button>
+              </span>
+            </router-link>
+          </tab>
+            <tab title="Friends">
+              <FriendPage></FriendPage>
+            </tab>
           </tabs>
         </div>
       </header>
@@ -79,13 +92,15 @@
 
 <script>
 // Components
+
 import PostComponent from '@/components/Post/PostComponent.vue';
 import GetPostsForm from '@/components/Profile/GetPostsForm.vue';
+import FriendPage from '@/components/Friend/FriendPage.vue';
 import Tab from './ProfileTab.vue'
 import Tabs from './ProfileTabs.vue'
 export default {
   name: 'PostPage',
-  components: {PostComponent, GetPostsForm, Tab, Tabs},
+  components: {PostComponent, GetPostsForm, Tab, Tabs, FriendPage},
   mounted() {
   }
 };
@@ -112,7 +127,6 @@ section .scrollbox {
   padding: 3%;
   overflow-y: scroll;
 }
-
 .box {
   background-color: #c2fbd7;
   border-radius: 5px;
@@ -128,7 +142,27 @@ section .scrollbox {
   margin-bottom: 10px;
 }
 
-.uniform-button {
+/** Cross box */
+.button-89 {
+  --b: 3px;   /* border thickness */
+  --s: .45em; /* size of the corner */
+  --color: #373B44;
+  
+  padding: calc(.5em + var(--s)) calc(.9em + var(--s));
+  color: var(--color);
+  --_p: var(--s);
+  background:
+    conic-gradient(from 90deg at var(--b) var(--b),#0000 90deg,var(--color) 0)
+    var(--_p) var(--_p)/calc(100% - var(--b) - 2*var(--_p)) calc(100% - var(--b) - 2*var(--_p));
+  transition: .3s linear, color 0s, background-color 0s;
+  outline: var(--b) solid #0000;
+  outline-offset: .6em;
+  font-size: 16px;
+
+  border: 0;
+  background-color: rgb(199, 193, 193, 0.45)
+}
+.button-sign-in {
   align-self: center;
   background-color: #fff;
   background-image: none;
@@ -141,7 +175,6 @@ section .scrollbox {
   box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
   box-sizing: border-box;
   color: #41403e;
-  cursor: pointer;
   display: inline-block;
   font-family: Neucha, sans-serif;
   font-size: 1.5rem;
@@ -149,22 +182,34 @@ section .scrollbox {
   outline: none;
   padding: .75rem;
   text-decoration: none;
-  transition: all 235ms ease-in-out;
   border-bottom-left-radius: 15px 255px;
   border-bottom-right-radius: 225px 15px;
   border-top-left-radius: 255px 15px;
   border-top-right-radius: 15px 225px;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
 }
-
-.uniform-button:hover {
-  box-shadow: rgba(0, 0, 0, .3) 2px 8px 8px -5px;
-  transform: translate3d(0, 2px, 0);
-}
-
-.uniform-button:focus {
-  box-shadow: rgba(0, 0, 0, .3) 2px 8px 4px -6px;
+.uniform-button {
+  align-self: center;
+  background-color: rgb(199, 193, 193, 0.45);
+  background-image: none;
+  background-position: 0 90%;
+  background-repeat: repeat no-repeat;
+  background-size: 4px 3px;
+  border-radius: 15px 225px 255px 15px 15px 255px 225px 15px;
+  border-style: solid;
+  border-width: 2px;
+  box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
+  box-sizing: border-box;
+  color: #41403e;
+  display: inline-block;
+  font-family: Neucha, sans-serif;
+  font-size: 1.5rem;
+  line-height: 23px;
+  outline: none;
+  padding: .75rem;
+  text-decoration: none;
+  border-bottom-left-radius: 15px 255px;
+  border-bottom-right-radius: 225px 15px;
+  border-top-left-radius: 255px 15px;
+  border-top-right-radius: 15px 225px;
 }
 </style>

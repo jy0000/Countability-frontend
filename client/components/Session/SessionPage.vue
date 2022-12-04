@@ -5,7 +5,7 @@
     <section v-if="$store.state.username">
       <header>
         <h2 class="box">
-          Welcome @{{ $store.state.username }}
+          @{{ $store.state.username }}
         </h2>
       </header>
       <CreateSessionForm />
@@ -29,10 +29,19 @@
       </article>
     </section>
     <section>
+
       <header>
-        <div class="left">
-          <h2 class="box">
-            📙 My feeds
+        <div class="center">
+          <h2>
+            {{ $store.state.friends.length }} Friends 
+            <span v-if="$store.state.filter">
+              by @{{ $store.state.filter }}
+            </span>
+          </h2>
+        </div>
+        <div class="right">
+          <h2>
+            {{ $store.state.point }} Points 
             <span v-if="$store.state.filter">
               by @{{ $store.state.filter }}
             </span>
@@ -85,6 +94,7 @@
         to create post -->
         <CreatePostForm />
       </article>
+
     </section>
   </main>
 </template>
