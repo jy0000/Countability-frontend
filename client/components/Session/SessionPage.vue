@@ -1,15 +1,20 @@
-<!-- Default page that also displays posts -->
+<!-- Default page that also displays sessions -->
 
 <template>
   <main>
     <section v-if="$store.state.username">
       <header>
         <h2 class="box">
-          Welcome @{{ $store.state.username }}
+          @{{ $store.state.username }}
         </h2>
       </header>
     </section>
     <section v-else>
+      <header>
+        <h2 class="box">
+          Welcome to Countability!
+        </h2>
+      </header>
       <article>
         <h3>
           <router-link
@@ -18,76 +23,82 @@
           >
             Sign in
           </router-link>
-          to create, edit, and delete posts.
+          to create, edit, and delete sessions.
         </h3>
       </article>
     </section>
-    <section v-if="$store.state.username">
-      <header>
-        <div class="left">
-          <h2 class="box">
-            📙 My feeds
-            <span v-if="$store.state.filter">
-              by @{{ $store.state.filter }}
-            </span>
-          </h2>
-        </div>
-        <!-- Added post feed channel selection-->
-        <div
-          class="right"
-        >
-          <SelectFeedChannel
-            ref="selectFeedChannel"
-            class="uniform-button"
-            value="caption"
-            placeholder="🔍 Type 'News' / 'Fibe' for selected feed channel posts (optional)"
-            button="🔄 Get posts"
-          />
-        </div>
-        <!-- End of Added post feed channel selection-->
-        <div class="right">
-          <GetPostsForm
-            ref="getPostsForm"
-            class="uniform-button"
-            value="author"
-            placeholder="🔍 Filter by author (optional)"
-            button="🔄 Get posts"
-          />
-        </div>
-      </header>
-      <section
-        v-if="$store.state.posts.length && $store.state.username"
-      >
-        <PostComponent
-          v-for="post in $store.state.posts"
-          :key="post.id"
-          :post="post"
-        />
-      </section>
-      <article
-        v-else
-      >
-        <h3>No posts found.</h3>
-      </article>
+    <section>
+      <h4>{{time}}</h4>
+      <button @click='stopTimer'> Submit </button>
     </section>
   </main>
 </template>
 
 <script>
 // Components
-import PostComponent from '@/components/Post/PostComponent.vue';
-import GetPostsForm from '@/components/Post/GetPostsForm.vue';
-import SelectFeedChannel from '@/components/FeedChannel/SelectFeedChannel.vue';
+import SessionComponent from '@/components/Session/SessionComponent.vue';
+import CreateSessionForm from '@/components/Session/CreateSessionForm.vue';
+import GetSessionsForm from '@/components/Session/GetSessionsForm.vue';
+
+import CreatePostForm from '@/components/Post/CreatePostForm.vue';
 
 export default {
-  name: 'PostPage',
-  components: {PostComponent, GetPostsForm, SelectFeedChannel},
+  name: 'SessionPage',
+  components: {SessionComponent, GetSessionsForm, CreateSessionForm, CreatePostForm},
   mounted() {
     // Primitive fix
-    if (this.$refs.selectFeedChannel) {
-      this.$refs.selectFeedChannel.submit(); // Added this for feed channel filtering
-    } else {
-      this.$refs.getPostsForm.submit();
+    this.runTimer();
+  },
+  data() {
+    return {
+      time: " ",
+      intervalId: ""
+    }
+  },
+  methods: {
+    async submitRequest() {
+      const url = `/api/sessions/a`;
+      console.log('asdfkj');
+      const params = {
+          method: 'GET',
+          message: 'Success!',
+          callback: () => {
+          // this.$set(this.alerts, params.message, 'success');
+          // setTimeout(() => this.$delete(this.alerts, params.message), 3000);
+
+          }
+      };
+      const options = {
+          method: params.method, 
+          headers: {'Content-Type': 'application/json'},
+          // body: JSON.stringify(
+          //   {
+          //     numChecks:1
+          //   }
+          // )
+      };
+      try {
+          const r = await fetch(url, options);
+          if (!r.ok) {
+              const res = await r.json();
+              throw new Error(res.error);
+          }
+          console.log(await r.json());
+          // params.callback();
+      } catch (e) {
+        console.log(e);
+          // this.$set(this.alerts, e, 'error');
+          // setTimeout(() => this.$delete(this.alerts, e), 3000);
+      }
+    },
+    runTimer() {
+      let page = this;
+      this.intervalId = setInterval(() => {
+        page.time = new Date().toLocaleTimeString();
+      }, 1000);
+    },
+    stopTimer() {
+      clearInterval(this.intervalId);
     }
   }
 };

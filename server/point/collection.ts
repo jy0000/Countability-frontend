@@ -10,17 +10,20 @@ import PostCollection from '../post/collection';
  * stored in MongoDB, including CRUD operations.
  */
 class PointCollection {
+  /** Operations:
+   *  addOne - Add point of the user (only in user creation)
+   *  findOne - Find current point object
+   *  updateOne - Update user's point
+   *  deleteOne - Delete user's point, called when the user profile is deleted too
+   */
+
+
   /**
    * Add point of the user (only in user creation).
    *
    * @param {string} currentusername - The id of the current user
    * @return {Promise<HydratedDocument<Point>>} - The new point associated with this user.
    *
-   * Operations:
-   *  addOne
-   *  findOne
-   *  updateOne
-   *  deleteOne
    */
   static async addOne(
     currentUsername: string
