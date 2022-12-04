@@ -30,11 +30,10 @@ class PointCollection {
 
     const userPoint = new PointModel({
       point: 0, // Starts at 0
-      username: currentUsername,
-      privileges: allowedPriviledges
+      username: currentUsername
     });
     await userPoint.save(); // Saves point to MongoDB
-    return userPoint.populate(['point', 'username', 'privileges']);
+    return userPoint.populate(['point', 'username']);
   }
 
   /**
@@ -65,6 +64,7 @@ class PointCollection {
     console.log(delta);
     userPoint.point += delta;
     await userPoint.save();
+    return userPoint.populate(['point', 'username']);
     return userPoint;
   }
 

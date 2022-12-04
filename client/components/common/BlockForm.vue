@@ -72,6 +72,7 @@ export default {
       hasBody: false, // Whether or not form request has a body
       setUsername: false, // Whether or not stored username should be updated after form submission
       setPoint: false,
+      refreshPoint: false,
       refreshFriend: false,
       refreshPosts: false, // Whether or not stored posts should be updated after form submission
       alerts: {}, // Displays success/error messages encountered during form submission
@@ -137,6 +138,19 @@ export default {
             throw new Error(res.error);
           } else {
             this.$store.commit('setPoint', res.requestResponse.currentPoint); // frontend update 
+          }
+        }
+        if (this.refreshPoint) {
+          // Also update the point (backend fetch)
+          options.method = 'GET';
+          options.body = null; // GET request MUST not have body, so muyst clear
+          const r = await fetch('/api/point', options); // secondary call, don't change this.url
+          const res = await r.json();
+          if (!r.ok) {
+            // If response is not okay, we throw an error and enter the catch block
+            throw new Error(res.error);
+          } else {
+            this.$store.commit('refreshPoint'); // frontend update 
           }
         }
 

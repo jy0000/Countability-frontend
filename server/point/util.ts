@@ -4,9 +4,7 @@ import type {Point} from './model';
 type PointResponse = {
   _id: string;
   username: string;
-  currentPoint: number;
-  canEndorse: boolean;
-  canUpvote: boolean;
+  point: number;
 };
 
 /**
@@ -25,10 +23,8 @@ const constructPointResponse = (point: HydratedDocument<Point>): PointResponse =
 
   return {
     _id: pointCopy._id.toString(),
-    username: pointCopy.username,
-    currentPoint: pointCopy.point,
-    canEndorse: point.privileges.get('canEndorse'),
-    canUpvote: point.privileges.get('canUpvote')
+    point: pointCopy.point,
+    username: pointCopy.username
   };
 };
 

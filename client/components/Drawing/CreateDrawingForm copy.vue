@@ -1,58 +1,11 @@
+<!-- from https://codepen.io/reiallenramos/pen/MWaEmpw -->
+
 <template>
   <div id="app">
     <h1>Drawing with mousemove event</h1>
     <canvas id="myCanvas" width="360" height="360" @mousedown="drawDot" />
-    <form
-      class="button-89"
-      @submit.prevent="submit"
-    >
-      <h3>{{ title }}</h3>
-      <article
-        v-if="fields.length"
-      >
-        <div
-          v-for="field in fields"
-          :key="field.id"
-        >
-          <label :for="field.id">{{ field.label }}:</label>
-          <!-- Input type (text box, input) -->
-          <textarea
-            v-if="field.id === 'content'"
-            :name="field.id"
-            :value="field.value"
-            @input="field.value = $event.target.value"
-          />
-          <input
-            v-else
-            :type="field.id === 'password' ? 'password' : 'text'"
-            :name="field.id"
-            :value="field.value"
-            @input="field.value = $event.target.value"
-          >
-        </div>
-      </article>
-      <article v-else>
-        <p>{{ content }}</p>
-      </article>
-      <button
-        type="submit"
-      >
-        {{ title }}
-      </button>
-      <section class="alerts">
-        <article
-          v-for="(status, alert, index) in alerts"
-          :key="index"
-          :class="status"
-        >
-          <p>{{ alert }}</p>
-        </article>
-      </section>
-    </form>
   </div>
-</template><!-- from https://codepen.io/reiallenramos/pen/MWaEmpw -->
-
-
+</template>
 
 <script lang="ts">
 export default {
@@ -60,6 +13,34 @@ export default {
   
   data() {
     return {
+      // x: 0,
+      // y: 0,
+      // isDrawing: false,
+      // canvas: null
+      height: 10, //TODO to be adjustable
+      width: 10,
+      pixels: []
+      // url: '/api/drawings',
+      // method: 'POST',
+      // hasBody: true,
+      // fields: [
+      //   // {id: 'content', label: 'Content', value: ''},
+      //   // {id: 'postType', label: 'Which type of post are you making?', value:'', placeholder: "Enter 'News' or 'Fibe' for News or Fibe post"},
+      //   // {id: 'sourceLink', label: "Enter a news source", value: ''},
+      //   // {id: 'emoji', label: "Enter an emoji (any one-word descriptive term you want, for now)", value: ''}
+      //   {id: 'photo', label: 'Photo', value: ''},
+      //   {id: 'caption', label: 'Post Caption', value:'', placeholder: ""},
+      //   {id: 'focusReflection', label: "How focused were you?", value: ''},
+      //   {id: 'progressReflection', label: "How much progress did you make", value: ''}
+      // ],
+      // title: 'Create a drawing',
+      // refreshDrawings: true,
+      // callback: () => {
+      //   const message = 'Successfully created a post!';
+      //   this.$set(this.alerts, message, 'success');
+      //   // Delete this success message after 3 seconds
+      //   setTimeout(() => this.$delete(this.alerts, message), 3000);
+      // },
     };
   },
   mounted() {
@@ -130,96 +111,7 @@ export default {
           return (Math.abs(curr - coordinate) < Math.abs(prev - coordinate) ? curr : prev);
       });
       return coord;
-  },
-  async submit() {
-      /**
-        * Submits a form with the specified options from data().
-        */
-      const options = {
-        method: this.method,
-        headers: {'Content-Type': 'application/json'},
-        credentials: 'same-origin' // Sends express-session credentials with request
-      };
-      if (this.hasBody) {
-        options.body = JSON.stringify(Object.fromEntries(
-          // Go over each field, checkbox value is not extracted
-          this.fields.map(field => {
-            let {id, value} = field;
-            // Return which is selected and return that value 
-            if (field.type === 'radio') {
-              for (const c of field.choices) {
-                if (c.isSelected) {
-                  value = c.value;
-                  field.value = '';
-                }
-              }
-            }
-            field.value = '';
-            return [id, value];
-          })
-        ));
-      }
-
-      try {
-        const r = await fetch(this.url, options);
-        if (!r.ok) {
-          // If response is not okay, we throw an error and enter the catch block
-          const res = await r.json();
-          throw new Error(res.error);
-        }
-
-        if (this.setUsername) {
-          // Different response totally
-          const text = await r.text();
-          const res = text ? JSON.parse(text) : {user: null};
-          this.$store.commit('refreshFriends');
-          this.$store.commit('setUsername', res.user ? res.user.username : null);
-          this.$store.commit('setPoint', 0);
-          // }
-        }
-
-        if (this.setPoint) {
-          // Also update the point (backend fetch)
-          options.method = 'GET';
-          options.body = null; // GET request MUST not have body, so muyst clear
-          const r = await fetch('/api/point', options); // secondary call, don't change this.url
-          const res = await r.json();
-          if (!r.ok) {
-            // If response is not okay, we throw an error and enter the catch block
-            throw new Error(res.error);
-          } else {
-            this.$store.commit('setPoint', res.requestResponse.currentPoint); // frontend update 
-          }
-        }
-
-        if (this.refreshPosts) {
-          // Also update the point (backend fetch)
-          options.method = 'GET';
-          options.body = null; // GET request MUST not have body, so muyst clear
-          const r = await fetch('/api/point/', options); // secondary call, don't change this.url
-          const res = await r.json();
-          if (!r.ok) {
-            // If response is not okay, we throw an error and enter the catch block
-            throw new Error(res.error);
-          } else {
-            this.$store.commit('setPoint', res.requestResponse.currentPoint); // frontend update 
-          }
-          this.$store.commit('refreshPosts'); // frontend update
-        }
-
-        if (this.refreshFriend) {
-          // Also update the point (backend fetch)
-          this.$store.commit('refreshFriends'); // frontend update
-        }
-
-        if (this.callback) {
-          this.callback();
-        }
-      } catch (e) {
-        this.$set(this.alerts, e, 'error');
-        setTimeout(() => this.$delete(this.alerts, e), 3000);
-      }
-    }
+  }
   }
 };
 </script>
@@ -229,58 +121,5 @@ export default {
   #myCanvas {
   border: 1px solid grey;
 }
-
-form {
-  border: 1px solid #111;
-  padding: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin-bottom: 14px;
-  position: relative;
-}
-
-article > div {
-  display: flex;
-  flex-direction: column;
-}
-
-form > article p {
-  margin: 0;
-}
-
-form h3,
-form > * {
-  margin: 0.3em 0;
-}
-
-form h3 {
-  margin-top: 0;
-}
-
-textarea {
-   font-family: inherit;
-   font-size: inherit;
-}
-
-/* CSS */
-.button-89 {
-  --b: 3px;   /* border thickness */
-  --s: .45em; /* size of the corner */
-  --color: #373B44;
-  
-  padding: calc(.5em + var(--s)) calc(.9em + var(--s));
-  color: var(--color);
-  --_p: var(--s);
-  background:
-    conic-gradient(from 90deg at var(--b) var(--b),#0000 90deg,var(--color) 0)
-    var(--_p) var(--_p)/calc(100% - var(--b) - 2*var(--_p)) calc(100% - var(--b) - 2*var(--_p));
-  transition: .3s linear, color 0s, background-color 0s;
-  outline: var(--b) solid #0000;
-  outline-offset: .6em;
-  font-size: 16px;
-
-  border: 0;
-  background-color: rgb(199, 193, 193, 0.45)
-}
 </style>
+

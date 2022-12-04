@@ -86,12 +86,37 @@ const store = new Vuex.Store({
     //   state.friends = friends;
     // },
     /** Added this point */
-    updatePoint(state, point) {
+    async updatePoint(state, delta) {
       /**
        * Update the stored posts filter to the specified one.
        * @param filter - Username of the user to fitler posts by
        */
-      state.point = point;
+      const url = `/api/point`;
+      // /:{delta}`
+      const res = await fetch(url, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          delta: delta
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        }})
+        .then(async r => r.json());
+      state.point = res.point;
+    },
+    async refreshPoint(state) {
+      /**
+       * Update the points
+       * @param filter - Username of the user to fitler posts by
+       */
+       const url = '/api/point';
+       const res = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        }}).then(async r => r.json());
+       console.log(res);
+       state.point = res.point;
     },
     /** End of Added this point (frontend, call after made post request)*/
     async refreshPosts(state) {

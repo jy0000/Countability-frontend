@@ -8,13 +8,17 @@ import UserCollection from '../user/collection';
  */
 const isPointExists = async (req: Request, res: Response, next: NextFunction) => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const pointId = req.body.pointId === undefined ? req.params.pointId : req.body.pointId;
-  const validFormat = Types.ObjectId.isValid(pointId);
-  console.log(pointId);
-  const point = validFormat ? await PointCollection.findOne(pointId) : '';
+  // const pointId = req.body.pointId === undefined ? req.params.pointId : req.body.pointId;
+  // const validFormat = Types.ObjectId.isValid(pointId);
+  // console.log(pointId);
+  // const point = validFormat ? await PointCollection.findOne(pointId) : '';
+  const currentUserId = req.session.userId as string;
+  const user = await UserCollection.findOneByUserId(currentUserId);
+  const point = await PointCollection.findOne(user.point._id);
+  console.log('Point', point._id);
   if (!point) {
     res.status(404).json({
-      error: `Point with point ID ${req.params.pointId} does not exist.`
+      error: `Point with username ${String(req.body.username)} does not exist.`
     });
     return;
   }
@@ -23,14 +27,14 @@ const isPointExists = async (req: Request, res: Response, next: NextFunction) =>
 };
 
 /**
- * Checks if the photo of the point in req.body is valid, i.e not a stream of empty
+ * Checks if point in req.body is valid, i.e not a stream of empty
  * spaces and not more than 140 characters
  */
 const isValidPointDelta = async (req: Request, res: Response, next: NextFunction) => {
-  const delta = Number(req.params.delta);
+  const delta = Number(req.body.delta);
   const currentUserId = req.session.userId as string;
   const user = await UserCollection.findOneByUserId(currentUserId);
-  const point = await PointCollection.updateOne(user.point._id, Number(req.params.delta));
+  const point = await PointCollection.findOne(user.point._id);
   if (point.point + delta < 0) {
     res.status(403).json({
       error: 'Cannot use more points than you have.'
@@ -45,7 +49,10 @@ const isValidPointDelta = async (req: Request, res: Response, next: NextFunction
  * Checks if the current user is the author of the point whose pointId is in req.params
  */
 const isValidPointModifier = async (req: Request, res: Response, next: NextFunction) => {
-  const point = await PointCollection.findOne(req.params.pointId);
+  // Const {point} = await UserCollection.findOneByUsername(req.body.username);
+  const currentUserId = req.session.userId as string;
+  const user = await UserCollection.findOneByUserId(currentUserId);
+  const point = await PointCollection.findOne(user.point._id);
   const userId = (await UserCollection.findOneByUsername(point.username))._id;
   if (req.session.userId !== userId.toString()) {
     res.status(403).json({

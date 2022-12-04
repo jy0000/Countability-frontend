@@ -36,7 +36,7 @@ export default {
       url: '/api/point',
       method: 'GET',
       hasBody: false,
-      refreshPosts: true,
+      refreshPoint: true,
     };
   }
 };

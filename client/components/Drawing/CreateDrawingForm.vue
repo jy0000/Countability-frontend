@@ -19,7 +19,8 @@ export default {
       // canvas: null
       height: 10, //TODO to be adjustable
       width: 10,
-      pixels: []
+      pixels: [],
+      hasBody: true
       // url: '/api/drawings',
       // method: 'POST',
       // hasBody: true,
@@ -51,6 +52,7 @@ export default {
     this.BOX_SIZE = this.CANVAS_SIZE / this.NUMBER_OF_POINTS;
     this.drawGreyLines(c);
     this.pixels = [];
+    this.tempPoints = this.$store.point;
   },
   methods: {
     drawGreyLines() {
@@ -78,7 +80,22 @@ export default {
     //     this.isDrawing = false;
     //   }
     // },
-    drawDot(e) {
+    async drawDot(e) {
+      // this.fields.map(field => {
+      //       let {id, value} = field;
+      //       // Return which is selected and return that value 
+      //       if (field.type === 'radio') {
+      //         for (const c of field.choices) {
+      //           if (c.isSelected) {
+      //             value = c.value;
+      //             field.value = '';
+      //           }
+      //         }
+      //       }
+      //       field.value = '';
+      //       return [id, value];
+      //     });
+
       this.x = this.getCoord(e.offsetX, this.BOX_SIZE);
       this.y = this.getCoord(e.offsetY, this.BOX_SIZE);
       this.isDrawing = true;
@@ -87,19 +104,46 @@ export default {
       context.save();
       
       // // get row, column
-      const r = Math.round((this.y - this.BOX_SIZE/2)/this.BOX_SIZE); // 0-indexed
-      const c = Math.round((this.x - this.BOX_SIZE/2)/this.BOX_SIZE); // 0-indexed
+      const row = Math.round((this.y - this.BOX_SIZE/2)/this.BOX_SIZE); // 0-indexed
+      const col = Math.round((this.x - this.BOX_SIZE/2)/this.BOX_SIZE); // 0-indexed
       // Next Steps: check if already drawn to => make white, then return a point
       //              keep track of what boxes are drawn too, connect with points
       //              store drawing to mongoDB with connection to user
-      
-      context.strokeStyle = 'black';
-      context.lineWidth = 2;
-      context.moveTo(this.x, this.y);
-      context.strokeRect(this.x-this.BOX_SIZE/2,this.y-this.BOX_SIZE/2, this.BOX_SIZE, this.BOX_SIZE);
-      context.fillRect(this.x-this.BOX_SIZE/2,this.y-this.BOX_SIZE/2, this.BOX_SIZE, this.BOX_SIZE);
-      
-      context.restore();
+      // this.$store.commit('refreshPoint');
+      this.$store.commit('updatePoint', 7);
+      // this.$store.commit('refreshPoint');
+      // this.$store.commit('refreshPoint');
+      console.log(this.pixels);
+      console.log(this.$store.point);
+
+      try {
+        const delta = this.pixels.has(i)? 1: -1
+        console.log(this.$store.point, delta)
+        this.$store.commit('updatePoint', this.$store.point, delta); 
+
+        const i = row*this.width + col
+        if (this.pixels.has(i)){
+          context.strokeStyle = 'white';
+          context.lineWidth = 2;
+          context.moveTo(this.x, this.y);
+          context.strokeRect(this.x-this.BOX_SIZE/2,this.y-this.BOX_SIZE/2, this.BOX_SIZE, this.BOX_SIZE);
+          context.fillRect(this.x-this.BOX_SIZE/2,this.y-this.BOX_SIZE/2, this.BOX_SIZE, this.BOX_SIZE);
+        }
+        else{
+          context.strokeStyle = 'black';
+          context.lineWidth = 2;
+          context.moveTo(this.x, this.y);
+          context.strokeRect(this.x-this.BOX_SIZE/2,this.y-this.BOX_SIZE/2, this.BOX_SIZE, this.BOX_SIZE);
+          context.fillRect(this.x-this.BOX_SIZE/2,this.y-this.BOX_SIZE/2, this.BOX_SIZE, this.BOX_SIZE);
+        }
+        
+
+      } catch (e) {
+        this.$set(this.alerts, e, 'error');
+        setTimeout(() => this.$delete(this.alerts, e), 3000);
+      }
+        
+    context.restore();
     },
     getCoord(coordinate, boxSize) {
       const points = [];

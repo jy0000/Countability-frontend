@@ -47,7 +47,7 @@ router.get(
  * @throws {413} - If the point photo is more than 140 characters long
  */
 router.patch(
-  '/:delta?',
+  '/',
   [
     userValidator.isUserLoggedIn,
     pointValidator.isPointExists,
@@ -57,7 +57,8 @@ router.patch(
   async (req: Request, res: Response) => {
     const currentUserId = req.session.userId as string;
     const user = await UserCollection.findOneByUserId(currentUserId);
-    const point = await PointCollection.updateOne(user.point._id, Number(req.params.delta));
+    const delta = (req.body.delta) ? Number(req.body.delta) : undefined;
+    const point = await PointCollection.updateOne(user.point._id, delta);
     res.status(200).json({
       message: 'Your point was updated successfully.',
       point: util.constructPointResponse(point)
