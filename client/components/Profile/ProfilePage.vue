@@ -30,37 +30,62 @@
     </section>
 
     <section v-if="$store.state.username">
-      <article>
-        <h2 class="box">
-          Users you friend
-        </h2>
-      </article>
-      <section
-        v-if="$store.state.friends.length"
-      >
-        <FriendComponent
-          v-for="friend in $store.state.friends"
-          :key="friend.id"
-          :friend="friend"
-        />
-      </section>
-      <article
-        v-else
-      >
-        <h3>No friend found.</h3>
-      </article>
+      <header>
+        <div class="center">
+          <h2>
+            3 Friends 
+            <span v-if="$store.state.filter">
+              by @{{ $store.state.filter }}
+            </span>
+          </h2>
+        </div>
+        <div class="right">
+          <h2>
+            4 Points 
+            <span v-if="$store.state.filter">
+              by @{{ $store.state.filter }}
+            </span>
+          </h2>
+        </div>
+        <!-- Added post feed channel selection-->
+
+        <!-- End of Added post feed channel selection-->
+      </header>
+      <header>
+        <div>
+          <tabs>
+            <tab title="Sessions">
+              <section
+                v-if="$store.state.posts.length && $store.state.username">
+                <PostComponent
+                  v-for="post in $store.state.posts"
+                  v-if="$store.state.username === post.author"
+                  :key="post.id"
+                  :post="post"
+                />
+              </section>
+              <article
+                v-else>
+                <h3>No posts found.</h3>
+              </article></tab>
+            <tab title="Drawings">Fill with drawings</tab>
+            <tab title="Friends">Show Friends</tab>
+          </tabs>
+        </div>
+      </header>
     </section>
   </main>
 </template>
 
 <script>
 // Components
-import FriendComponent from '@/components/Friend/FriendComponent.vue';
-import CreateFriendRequestForm from '@/components/Friend/CreateFriendRequestForm.vue';
-
+import PostComponent from '@/components/Post/PostComponent.vue';
+import GetPostsForm from '@/components/Profile/GetPostsForm.vue';
+import Tab from './ProfileTab.vue'
+import Tabs from './ProfileTabs.vue'
 export default {
-  name: 'FriendPage',
-  components: {FriendComponent, CreateFriendRequestForm},
+  name: 'PostPage',
+  components: {PostComponent, GetPostsForm, Tab, Tabs},
   mounted() {
   }
 };
