@@ -7,7 +7,6 @@
           @{{ $store.state.username }}
         </h2>
       </header>
-      <CreateSessionForm />
     </section>
     <section v-else>
       <header>
