@@ -28,33 +28,8 @@
       <header>
         <div class="left">
           <h2 class="box">
-            📙 My feeds
-            <span v-if="$store.state.filter">
-              by @{{ $store.state.filter }}
-            </span>
+            📙 Productivity drawings across the community
           </h2>
-        </div>
-        <!-- Added drawing feed channel selection-->
-        <div
-          class="right"
-        >
-          <SelectFeedChannel
-            ref="selectFeedChannel"
-            class="button-55"
-            value="caption"
-            placeholder="🔍 Type 'News' / 'Fibe' for selected feed channel drawings (optional)"
-            button="🔄 Get drawings"
-          />
-        </div>
-        <!-- End of Added drawing feed channel selection-->
-        <div class="right">
-          <GetDrawingsForm
-            ref="getDrawingsForm"
-            class="button-55"
-            value="author"
-            placeholder="🔍 Filter by author (optional)"
-            button="🔄 Get drawings"
-          />
         </div>
       </header>
       <section
@@ -72,15 +47,12 @@
         <h3>No drawings found.</h3>
       </article>
     </section>
-    
   </main>
 </template>
 
 <script>
 // Components
 import DrawingComponent from '@/components/Drawing/DrawingComponent.vue';
-import GetDrawingsForm from '@/components/Drawing/GetDrawingsForm.vue';
-import SelectFeedChannel from '@/components/FeedChannel/SelectFeedChannel.vue';
 import CreateDrawingForm from '@/components/Drawing/CreateDrawingForm.vue';
 import PointComponent from '@/components/Point/PointComponent.vue';
 
@@ -89,20 +61,13 @@ export default {
   components: 
   {
     DrawingComponent,
-    GetDrawingsForm,
     CreateDrawingForm,
-    SelectFeedChannel,
     PointComponent,
   },
   mounted() {
     // Primitive fix
     this.$store.commit('refreshPoint');
     this.$store.commit('refreshDrawings');
-    if (this.$refs.selectFeedChannel) {
-      this.$refs.selectFeedChannel.submit(); // Added this for feed channel filtering
-    } else {
-      this.$refs.getDrawingsForm.submit();
-    }
   }
 };
 </script>

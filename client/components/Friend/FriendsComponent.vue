@@ -1,18 +1,12 @@
-<!-- Reusable component representing a single post and its actions -->
-<!-- We've tagged some elements with classes; consider writing CSS using those classes to style them... -->
-
 <template>
-  <article
-    class="friend"
-  >
+  <article class="friend">
     <header>
-      <!-- Header and features (endorse, for example)-->
-      <h3 class="author">
-        @{{ friend.friendReceiver }}
-      </h3>
       <!-- If the user signs in, they get to see this-->
+      <h3 class="friend-font">
+        Friendship between @{{ friend.userOne }} and @{{ friend.userTwo }}
+      </h3>
       <div
-        v-if="$store.state.username === friend.friendGiver"
+        v-if="$store.state.username"
         class="actions"
       >
         <button @click="deleteFriend">
@@ -22,13 +16,8 @@
       <!-- If the user signs in, they get to see above-->
     </header>
     <!-- Content starts here, if editing, else show content -->
-    <!-- Added descriptive post -->
     <p class="info">
-      Friended by you: @{{ friend.friendGiver }}
-    </p>
-    <!-- End of Added descriptive post -->
-    <p class="info">
-      Friended on: {{ friend.dateFriended }}
+      Your friend since: {{ friend.dateCreated }}
     </p>
     <section class="alerts">
       <article
@@ -44,7 +33,7 @@
 
 <script>
 export default {
-  name: 'FriendComponent',
+  name: 'FriendsComponent',
   props: {
     // Data from the stored post
     friend: {
@@ -67,11 +56,12 @@ export default {
         method: 'DELETE', headers: {'Content-Type': 'application/json'}
       };
       try {
-      const r = await fetch(`/api/friend/${this.friend.friendReceiver}`, options);
+      const r = await fetch(`/api/friendship/${this.friend._id}`, options);
       if (!r.ok) {
           const res = await r.json();
           throw new Error(res.error);
         }
+        console.log('Call refreshFriend from friends component');
         this.$store.commit('refreshFriends');
 
         this.$store.commit('alert', {
@@ -86,6 +76,9 @@ export default {
 </script>
 
 <style scoped>
+.friend-font {
+  color: #fff;
+}
 .friend {
   background-color: #13aa52;
   border: 1px solid #13aa52;

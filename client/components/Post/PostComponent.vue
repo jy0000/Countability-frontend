@@ -3,7 +3,7 @@
 
 <template>
   <article
-    class="post"
+    class="post" 
   >
     <header>
       <!-- Header and features (endorse, for example)-->
@@ -62,9 +62,6 @@
         v-else-if="post.caption == 'Fibe'"
         class="fibePost"
       >  @{{ post.author }} is feeling {{ post.progressReflection }}</i>
-    </p>
-    <p class="info">
-      <b>Post type: A {{ post.caption }} post.</b>
     </p>
     <!-- End of Added descriptive post -->
     <p class="info">

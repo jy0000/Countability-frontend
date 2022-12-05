@@ -30,13 +30,9 @@
 // import DrawingForm from '@/Drawing/DrawingForm.vue';
 
 export default {
-  el: '#app',
+  name: 'DrawingForm',
   data() {
     return {
-      // x: 0,
-      // y: 0,
-      // isDrawing: false,
-      // canvas: null
       method: 'POST',
       height: 10, //TODO to be adjustable
       width: 10,
@@ -44,27 +40,7 @@ export default {
       hasBody: true,
       tempPoints: this.$store.state.point,
       alerts: {}, // Displays success/error messages encountered during form submission
-      // url: '/api/drawings',
-      // method: 'POST',
-      // hasBody: true,
-      // fields: [
-      //   // {id: 'content', label: 'Content', value: ''},
-      //   // {id: 'postType', label: 'Which type of post are you making?', value:'', placeholder: "Enter 'News' or 'Fibe' for News or Fibe post"},
-      //   // {id: 'sourceLink', label: "Enter a news source", value: ''},
-      //   // {id: 'emoji', label: "Enter an emoji (any one-word descriptive term you want, for now)", value: ''}
-      //   {id: 'photo', label: 'Photo', value: ''},
-      //   {id: 'caption', label: 'Post Caption', value:'', placeholder: ""},
-      //   {id: 'focusReflection', label: "How focused were you?", value: ''},
-      //   {id: 'progressReflection', label: "How much progress did you make", value: ''}
-      // ],
-      // title: 'Create a drawing',
-      // refreshDrawings: true,
-      // callback: () => {
-      //   const message = 'Successfully created a post!';
-      //   this.$set(this.alerts, message, 'success');
-      //   // Delete this success message after 3 seconds
-      //   setTimeout(() => this.$delete(this.alerts, message), 3000);
-      // },
+
     };
   },
   mounted() {
@@ -82,7 +58,6 @@ export default {
     //   this.onSubmit();
     // },
     async submit() {
-      // this.$store.commit('updatePoint', -30); //TODO
       this.$store.commit('refreshPoint');
       this.$store.commit('updatePoint', this.tempPoints - this.$store.state.point); //TODO
       this.$store.commit('refreshPoint');
@@ -91,7 +66,7 @@ export default {
       // /:{delta}`
       if (this.method == 'POST')
       {
-        const res = await fetch(url, {
+        await fetch(url, {
           method: 'POST',
           body: JSON.stringify({
             pixels: this.pixels,
@@ -102,22 +77,11 @@ export default {
             'Content-type': 'application/json; charset=UTF-8',
           }})
           .then(async r => r.json());
-          console.log('updatePoint', res);
       }
 
       this.$store.commit('refreshDrawings'); 
-
       //reset variables
       this.pixels = [];
-      
-      // this.$store.commit('setPoints', );
-
-      // this.$store.commit('refreshPoint');
-      // this.$store.commit('refreshPoint');
-      // this.tempPoints = this.$store.state.point;
-      // this.$store.commit('refreshPoint');
-      // this.tempPoints = this.tempPoints;
-      // const c = document.getElementById("myCanvas");
       
       this.canvas.clearRect(0, 0, this.c.width, this.c.height);
       this.drawGreyLines(this.c);
@@ -136,8 +100,6 @@ export default {
       }
     },
     async drawDot(e) {
-
-      // this.$store.commit('updatePoint', 30); //TODO
       this.x = this.getCoord(e.offsetX, this.BOX_SIZE);
       this.y = this.getCoord(e.offsetY, this.BOX_SIZE);
       this.isDrawing = true;
@@ -148,24 +110,9 @@ export default {
       // // get row, column
       const row = Math.round((this.y - this.BOX_SIZE/2)/this.BOX_SIZE); // 0-indexed
       const col = Math.round((this.x - this.BOX_SIZE/2)/this.BOX_SIZE); // 0-indexed
-      // Next Steps: check if already drawn to => make white, then return a point
-      //              keep track of what boxes are drawn too, connect with points
-      //              store drawing to mongoDB with connection to user
-      // this.$store.commit('refreshPoint');
-      // this.$store.commit('updatePoint', 1);
-      // this.$store.commit('refreshPoint');
       this.$store.commit('refreshPoint');
-      console.log('Pixels', this.pixels);
-      console.log('Point', this.$store.point);
-      console.log('TempPoint', this.tempPoints);
-
       const i = row*10 + col
-      console.log('ROWCOL', row, col, i)
-      // try {
       const delta = this.pixels.includes(i)? 1: -1
-      console.log(this.$store.point, delta)
-      // this.$store.commit('updatePoint', this.$store.point, delta); 
-      // this.$store.commit('refreshPoint');
       
       if (this.pixels.includes(i)){
         this.tempPoints += 1;
@@ -192,12 +139,6 @@ export default {
         this.$set(this.alerts, e, 'error');
         setTimeout(() => this.$delete(this.alerts, e), 800);
       }
-        
-
-      // } catch (e) {
-      //   this.$set(this.alerts, e, 'error');
-      //   setTimeout(() => this.$delete(this.alerts, e), 3000);
-      // }
         
     context.restore();
     },

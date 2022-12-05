@@ -41,7 +41,7 @@ body {
   margin: 0;
   font-size: 1.2em;
   font-family: Neucha, sans-serif;
-  background-color: rgb(255, 255, 255);
+  background-color: rgb(232, 246, 232);
 }
 
 main {

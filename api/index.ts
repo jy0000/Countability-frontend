@@ -11,8 +11,8 @@ import * as userValidator from '../server/user/middleware';
 import {userRouter} from '../server/user/router';
 import {postRouter} from '../server/post/router';
 import {sessionRouter} from '../server/workSession/router';
-// A import {feedChannelRouter} from '../server/feedChannel/router';
-// import {friendRouter} from '../server/friend/router';
+import {friendshipRouter} from '../server/friendship/router';
+import {friendRequestRouter} from '../server/friendRequest/router';
 import {pointRouter} from '../server/point/router';
 // A import {profileRouter} from '../server/post/router';
 import {drawingRouter} from '../server/drawing/router';
@@ -78,9 +78,10 @@ app.use(userValidator.isCurrentSessionUserExists);
 app.use('/api/users', userRouter);
 app.use('/api/posts', postRouter);
 app.use('/api/sessions', sessionRouter);
-// A app.use('/api/feedChannel', feedChannelRouter);
-// A app.use('/api/friend', friendRouter);
+app.use('/api/friendship', friendshipRouter);
+app.use('/api/friendRequest', friendRequestRouter);
 app.use('/api/point', pointRouter);
+app.use('/api/profile', postRouter);
 app.use('/api/drawings', drawingRouter);
 
 // Catch all the other routes and display error message

@@ -34,6 +34,13 @@
       </router-link>
 
       <!-- TODO In router.ts, add profile link if not there, create a ProfilePage under client/Profile-->
+      <router-link to="/drawing">
+        <button
+          class="uniform-button"
+        >
+          Draw
+        </button>
+      </router-link>
       <router-link to="/profile">
         <button
           class="uniform-button"
@@ -41,44 +48,11 @@
           Profile
         </button>
       </router-link>
-
-      <router-link 
-        v-if="$store.state.username"
-        to="/drawing"
-      >
-        <!-- TODO link-->
-        <span class="subbar">
-          Draw!
-        </span>
-      </router-link>
-      
-      <!-- User (Account/login management = DONE)-->
-      <router-link
-        v-if="$store.state.username"
-        to="/friend"
-      >
-        <!-- TODO link-->
-        <span class="subbar">
-          Friend
-        </span>
-      </router-link>
-      <router-link 
-        v-if="$store.state.username"
-        to="/profile"
-      >
-        <!-- TODO link-->
-        <span class="subbar">
-          Profile
-        </span>
-      </router-link>
-      <router-link
-        v-else
-        to="/login"
-      >
+      <router-link to="/account">
         <button
           class="uniform-button"
         >
-          Login
+          Account
         </button>
       </router-link>
     </div>

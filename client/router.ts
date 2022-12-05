@@ -9,6 +9,7 @@ import LoginPage from './components/Login/LoginPage.vue';
 import FriendPage from './components/Friend/FriendPage.vue';
 import SessionPage from './components/Session/SessionPage.vue';
 import DrawingPage from './components/Drawing/DrawingsPage.vue';
+import ProfilePage from './components/Profile/ProfilePage.vue';
 
 Vue.use(VueRouter);
 
@@ -20,7 +21,7 @@ const routes = [
   {path: '/friend', name: 'Friends', component: FriendPage},
   {path: '/session', name: 'Session', component: SessionPage},
   {path: '/drawing', name: 'Drawing', component: DrawingPage},
-  {path: '/profile', name: 'Home', component: PostsPage},
+  {path: '/profile', name: 'Profile', component: ProfilePage},
 ];
 
 const router = new VueRouter({routes});

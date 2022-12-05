@@ -1,13 +1,8 @@
-<!-- Reusable component representing a single post and its actions -->
-<!-- We've tagged some elements with classes; consider writing CSS using those classes to style them... -->
-
 <template>
   <article
     class="point"
   >
     <section>
-      <!-- Header and features -->
-      <!-- If the user signs in, they get to see this -->
       <header>
         <h2 class="box">
           Points

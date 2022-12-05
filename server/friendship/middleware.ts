@@ -14,7 +14,7 @@ const isFriendshipAlreadyExist = async (req: Request, res: Response, next: NextF
   const friend = await FriendshipCollection.findOne(req.body.friendshipId);
   if (friend) {
     res.status(409).json({
-      error: 'You have friended this user already.'
+      error: 'You are already friend with this user.'
     });
     return;
   }
@@ -26,7 +26,7 @@ const isFriendshipAlreadyExist = async (req: Request, res: Response, next: NextF
  * Checks if a friend not exists. (for delete request, friendship removal)
  */
 const isFriendshipNotExist = async (req: Request, res: Response, next: NextFunction) => {
-  const friend = await FriendshipCollection.findOne(req.body.friendshipId);
+  const friend = await FriendshipCollection.findOne(req.params.friendshipId);
   if (!friend) {
     res.status(409).json({
       error: 'You have never friended this user.'

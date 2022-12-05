@@ -32,10 +32,10 @@ const constructResponse = (friendship: HydratedDocument<Friendship>): response =
   };
 
   // Avoid mutation and aliasing
-  const userOneName = copy.userOne.username;
-  const userTwoName = copy.userTwo.username;
-  delete copy.userOne;
-  delete copy.userTwo;
+  const userOneName = copy.userOneId.username;
+  const userTwoName = copy.userTwoId.username;
+  delete copy.userOneId;
+  delete copy.userTwoId;
 
   return {
     ...copy,

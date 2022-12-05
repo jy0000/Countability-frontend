@@ -106,7 +106,6 @@ export default {
   },
     drawDot() {
       for (const i of this.drawing.pixels) { // draw grey lines
-        console.log('i', i)
         const context = this.canvas;
         context.save();
         const r = Math.floor(i/10);
@@ -218,7 +217,6 @@ export default {
           // If response is not okay, we throw an error and enter the catch block
           throw new Error(res.error);
         } else {
-          console.log(res, res.requestResponse.currentPoint)
           this.$store.commit('setPoint', res.requestResponse.currentPoint); // frontend update 
         }
         this.$store.commit('refreshDrawings');
