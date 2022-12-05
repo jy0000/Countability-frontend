@@ -140,16 +140,16 @@ export default {
         }
         if (this.refreshPoint) {
           // Also update the point (backend fetch)
-          options.method = 'GET';
-          options.body = null; // GET request MUST not have body, so muyst clear
-          const r = await fetch('/api/point', options); // secondary call, don't change this.url
-          const res = await r.json();
-          if (!r.ok) {
-            // If response is not okay, we throw an error and enter the catch block
-            throw new Error(res.error);
-          } else {
-            this.$store.commit('refreshPoint'); // frontend update 
-          }
+          // options.method = 'GET';
+          // options.body = null; // GET request MUST not have body, so muyst clear
+          // const r = await fetch('/api/point', options); // secondary call, don't change this.url
+          // const res = await r.json();
+          // if (!r.ok) {
+          //   // If response is not okay, we throw an error and enter the catch block
+          //   throw new Error(res.error);
+          // } else {
+          this.$store.commit('refreshPoint'); // frontend update 
+          // }
         }
   
         // FRIENDS AND FRIEND REQUESTS
