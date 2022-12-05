@@ -28,9 +28,11 @@
     </section>
 
     <div class="left">
-      <img src="../../public/luffy.png"
-      height="300"
-      width="300">
+      <img
+        src="../../public/luffy.png"
+        height="300"
+        width="300"
+      >
     </div>
     <section v-if="$store.state.username">
       <header>
@@ -67,7 +69,7 @@
             <tab title="Drawings">
               <router-link 
                 v-if="$store.state.username"
-                to="/draw"
+                to="/drawing"
               >
                 <!-- TODO bring in componenet-->
                 <span class="subbar">
