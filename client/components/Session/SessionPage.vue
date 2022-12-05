@@ -40,6 +40,11 @@
             <button @click='submitImage'>Submit Image</button>
             <button @click='skipCheck'>Skip Check</button>
           </div>
+          <div class="slider">
+            Focus Level:
+            <input type="range" min="0" max="10" value="5" oninput="rangeValue.innerText = this.value">
+            <p id="rangeValue">5</p>
+            </div>
         </div>
         <h4 v-else>Checking user every 5 seconds (beta only)</h4>
         <button @click='endSession'> End Session </button>
@@ -279,6 +284,8 @@ section .scrollbox {
   padding: 3%;
   overflow-y: scroll;
 }
+
+
 .box {
   background-color: #c2fbd7;
   border-radius: 5px;
@@ -293,6 +300,7 @@ section .scrollbox {
   font-size: 30px;
   margin-bottom: 10px;
 }
+
 
 /** Cross box */
 .input-form-box {
