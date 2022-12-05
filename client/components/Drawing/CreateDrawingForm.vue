@@ -58,12 +58,13 @@ export default {
     //   this.onSubmit();
     // },
     async submit() {
+      if (this.pixels.length != 0)
+      {
       this.$store.commit('refreshPoint');
       this.$store.commit('updatePoint', this.tempPoints - this.$store.state.point); //TODO
       this.$store.commit('refreshPoint');
       
       const url = `/api/drawings`;
-      // /:{delta}`
       if (this.method == 'POST')
       {
         await fetch(url, {
@@ -80,11 +81,16 @@ export default {
       }
 
       this.$store.commit('refreshDrawings'); 
-      //reset variables
       this.pixels = [];
       
       this.canvas.clearRect(0, 0, this.c.width, this.c.height);
       this.drawGreyLines(this.c);
+    }
+    else{
+        const e = 'Cannot submit a drawing with no pixels colored in';
+        this.$set(this.alerts, e, 'error');
+        setTimeout(() => this.$delete(this.alerts, e), 800);
+      }
     },
     drawGreyLines() {
       for (let r = 0.5; r < this.NUMBER_OF_POINTS; r++) { // draw grey lines
@@ -117,7 +123,7 @@ export default {
       if (this.pixels.includes(i)){
         this.tempPoints += 1;
         this.pixels.splice(this.pixels.indexOf(i), 1);
-        context.fillStyle = 'white';
+        context.fillStyle = `rgba(232, 246, 232)`;
         // context.strokeStyle = 'grey';
         context.lineWidth = 2;
         context.moveTo(this.x, this.y);
