@@ -119,6 +119,7 @@ section .scrollbox {
 }
 
 img {
+  border: 3px solid #555;
   border-radius: 50%;
 }
 
