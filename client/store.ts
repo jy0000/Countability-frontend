@@ -35,7 +35,7 @@ const store = new Vuex.Store({
     // User and user session (not work session, this is cookie!)
     username: null,
     point: 0,
-    alerts: {}
+    alerts: {},
     drawings: [],
   },
   mutations: {

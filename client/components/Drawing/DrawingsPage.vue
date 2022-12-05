@@ -33,17 +33,6 @@
           </h2>
         </div>
         <!-- Added drawing feed channel selection-->
-        <div
-          class="right"
-        >
-          <SelectFeedChannel
-            ref="selectFeedChannel"
-            class="button-55"
-            value="caption"
-            placeholder="🔍 Type 'News' / 'Fibe' for selected feed channel drawings (optional)"
-            button="🔄 Get drawings"
-          />
-        </div>
         <!-- End of Added drawing feed channel selection-->
         <div class="right">
           <GetDrawingsForm
@@ -79,7 +68,7 @@
 // Components
 import DrawingComponent from '@/components/Drawing/DrawingComponent.vue';
 import GetDrawingsForm from '@/components/Drawing/GetDrawingsForm.vue';
-import SelectFeedChannel from '@/components/FeedChannel/SelectFeedChannel.vue';
+// import SelectFeedChannel from '@/components/FeedChannel/SelectFeedChannel.vue';
 import CreateDrawingForm from '@/components/Drawing/CreateDrawingForm.vue';
 
 export default {
