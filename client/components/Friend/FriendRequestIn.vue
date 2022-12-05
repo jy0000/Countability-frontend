@@ -68,7 +68,7 @@ export default {
         // Refresh on-screen display
         this.$store.commit('refreshInFriendRequest');
         this.$store.commit('alert', {
-          message: 'Successfully deleted friend!', status: 'success'
+          message: 'Successfully removed friend request!', status: 'success'
         });
       } catch (e) {
         this.$set(this.alerts, e, 'error');
@@ -78,21 +78,25 @@ export default {
     async addFriend() {
       /**
        * Accept the friend request received and add the request sender as friend
+       * 
+       * Also delete the incoming friend request as they are already friends now
        */
+      await this.deleteFriendRequest();
       const options = {
         method: 'POST', headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({username: this.friend.friendRequestSenderName})
       };
       try {
-      const r = await fetch(`/api/friendship/`, options);
+      const r = await fetch(`/api/friendship`, options);
       if (!r.ok) {
           const res = await r.json();
           throw new Error(res.error);
         }
         // Refresh on-screen display
-        this.$store.commit('refreshFriendList');
+        console.log('Call refreshFriend from ADD In friendsrequest');
+        this.$store.commit('refreshFriends');
         this.$store.commit('alert', {
-          message: 'Successfully add friend!', status: 'success'
+          message: 'Successfully added new friend!', status: 'success'
         });
       } catch (e) {
         this.$set(this.alerts, e, 'error');

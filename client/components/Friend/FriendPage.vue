@@ -45,6 +45,7 @@
         >
           <FriendRequestOut
             v-for="friend in $store.state.outgoingFriendRequests"
+            ref="FriendRequestOut"
             :key="friend.id"
             :friend="friend"
           />
@@ -82,10 +83,10 @@
         </h2>
       </article>
       <section
-        v-if="(5 === 2)"
+        v-if="$store.state.friends && ($store.state.friends.map(friend => friend.userOne).includes($store.state.username) || $store.state.friends.map(friend => friend.userTwo).includes($store.state.username))"
       >
-        <FriendListComponent
-          v-for="friend in $store.state.friendList"
+        <FriendsComponent
+          v-for="friend in $store.state.friends"
           :key="friend.id"
           :friend="friend"
         />
@@ -93,7 +94,7 @@
       <article
         v-else
       >
-        <h3>No friend found yet, make friends!</h3>
+        <h3>No friend found yet, make friends! </h3>
       </article>
     </section>
   </main>
@@ -102,14 +103,14 @@
 <script>
 
 // NOTE: Friend page set up has 1) create friendship, 2) friend request outgoing, 2) incoming friend request
-import FriendListComponent from '@/components/Friend/FriendListComponent.vue';
+import FriendsComponent from '@/components/Friend/FriendsComponent.vue';
 import CreateFriendRequestForm from '@/components/Friend/CreateFriendRequestForm.vue';
 import FriendRequestIn from  '@/components/Friend/FriendRequestIn.vue';
 import FriendRequestOut from  '@/components/Friend/FriendRequestOut.vue';
 
 export default {
   name: 'FriendPage',
-  components: {FriendListComponent, CreateFriendRequestForm, FriendRequestIn, FriendRequestOut},
+  components: {FriendsComponent, CreateFriendRequestForm, FriendRequestIn, FriendRequestOut},
   mounted() {
   }
 };

@@ -13,7 +13,7 @@ Vue.use(Vuex);
  *  workSessions
  *  outgoingFriendRequests
  *  incomingFriendRequests
- *  friendList
+ *  friends
  *  username
  *  point
  *  alerts
@@ -30,7 +30,7 @@ const store = new Vuex.Store({
     // Friend and friend requests
     outgoingFriendRequests: [], // Frontend: (FriendRequestOutComponent -> FriendPage)
     incomingFriendRequests: [], // Frontend: (FriendRequestInComponent -> FriendPage)
-    friendList: [],             // Frontend: (FriendListComponent -> FriendPage)
+    friends: [],             // Frontend: (FriendsComponent -> FriendPage)
 
     // User and user session (not work session, this is cookie!)
     username: null,
@@ -38,6 +38,7 @@ const store = new Vuex.Store({
     alerts: {}
   },
   mutations: {
+    /** SET (for refresh persist @blockform) */
     alert(state, payload) {
       /**
        * Add a new message to the global alerts.
@@ -61,6 +62,8 @@ const store = new Vuex.Store({
        */
       state.point = point;
     },
+
+    /** UPDATE (MIGHT NOT BE NEEDED) */
     updateFilter(state, filter) {
       /**
        * Update the stored posts filter to the specified one.
@@ -89,7 +92,8 @@ const store = new Vuex.Store({
        */
       state.point = point;
     },
-    /** End of Added this point (frontend, call after made post request)*/
+
+    /** REFRESH **/
     async refreshPosts(state) {
       /**
        * Request the server for the currently available posts.
@@ -115,13 +119,14 @@ const store = new Vuex.Store({
       const res = await fetch(url).then(async r => r.json());
       state.incomingFriendRequests = res.requests;
     },
-    async refreshFriendList(state) {
+    async refreshFriends(state) {
       /**
        * Get all currently made friends (users in a friendship with the current user)
        */
-      const url = `/api/friendship/`;
+      console.log('can I see store? YES')
+      const url = `/api/friendship`;
       const res = await fetch(url).then(async r => r.json());
-      state.friendList = res.friendships; // From router response
+      state.friends = res.friendships; // From router response
     }
   },
   // Store data across page refreshes, only discard on browser close

@@ -55,7 +55,7 @@ class FriendshipCollection {
    * @return {Promise<HydratedDocument<Friendship>[]>} - An array of all of friends
    */
   static async findAll(): Promise<Array<HydratedDocument<Friendship>>> {
-    return FriendshipModel.find({}).sort({dateFriendshiped: -1});
+    return FriendshipModel.find({}).sort({dateFriendshiped: -1}).populate(['userOneId', 'userTwoId']);
   }
 
   /**
@@ -71,7 +71,7 @@ class FriendshipCollection {
       }, {
         userTwoId: currentUserId
       }]
-    });
+    }).populate(['userOneId', 'userTwoId']);
     return friendships;
   }
 

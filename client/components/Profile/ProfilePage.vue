@@ -45,6 +45,7 @@
         <!-- Added post feed channel selection-->
 
         <!-- End of Added post feed channel selection-->
+        <!--             v-if="$store.state.username === post.author" -->
       </header>
       <header>
         <div>
@@ -55,8 +56,6 @@
               >
                 <PostComponent
                   v-for="post in $store.state.posts"
-
-                  v-if="$store.state.username === post.author"
                   :key="post.id"
                   :post="post"
                 />

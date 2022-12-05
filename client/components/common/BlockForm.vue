@@ -75,7 +75,7 @@ export default {
 
       refreshOutFriendRequest: false,
       refreshInFriendRequest: false,
-      refreshFriendList: false,
+      refreshFriends: false,
       
       alerts: {}, // No change needed
       callback: null // No change needed
@@ -117,9 +117,12 @@ export default {
           const res = text ? JSON.parse(text) : {user: null};
           this.$store.commit('setPoint', 0); // Initialize points
           this.$store.commit('setUsername', res.user ? res.user.username : null);
-          this.$store.commit('refreshOutFriendRequest');
-          this.$store.commit('refreshInFriendRequest');
-          this.$store.commit('refreshFriendList');
+          if (res.user) {
+            this.$store.commit('refreshOutFriendRequest');
+            this.$store.commit('refreshInFriendRequest');
+            this.$store.commit('refreshFriends');
+            console.log('call from init in blockform')
+          }
         }
 
         if (this.setPoint) {
@@ -149,9 +152,9 @@ export default {
         }
 
         // (Done) Update currently displayed friend list
-        if (this.refreshFriendList) {
+        if (this.refreshFriends) {
           console.log('list')
-          this.$store.commit('refreshFriendList');
+          this.$store.commit('refreshFriends');
         }
 
         if (this.refreshPosts) {

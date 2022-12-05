@@ -31,9 +31,8 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     // Get current session user
     const userId = req.session.userId as string;
-    const user = await UserCollection.findOneByUserId(userId);
 
-    const friendships = await FriendshipCollection.findAllFriendshipsOfUser(user.username);
+    const friendships = await FriendshipCollection.findAllFriendshipsOfUser(userId);
     const response = friendships.map(util.constructResponse);
     res.status(200).json({
       message: 'Your friends:',
@@ -63,10 +62,10 @@ router.post(
   async (req: Request, res: Response) => {
     const userOneId = (req.session.userId as string);
     const userTwo = await UserCollection.findOneByUsername(req.body.username);
-    const newFriendRequest = await FriendshipCollection.addOne(userOneId, userTwo._id);
+    const newFriendship = await FriendshipCollection.addOne(userOneId, userTwo._id);
     res.status(201).json({
       message: 'Hooray, you have added this user as friend',
-      friendships: util.constructResponse(newFriendRequest)
+      friendships: util.constructResponse(newFriendship)
     });
   }
 );
