@@ -4,7 +4,7 @@
     <section v-if="$store.state.username">
       <header>
         <h2 class="box">
-          @{{ $store.state.username }}
+          My profile @{{ $store.state.username }}
         </h2>
       </header>
     </section>
@@ -27,22 +27,18 @@
       </article>
     </section>
 
-    <div class="left">
-      <img
-        src="../../public/luffy.png"
-        height="300"
-        width="300"
-      >
-    </div>
     <section v-if="$store.state.username">
       <header>
-        <div class="center">
-          <h2>
+        <div class="position">
+          <img
+            src="../../public/luffy.png"
+            height="300"
+            width="300"
+          >
+          <h2 class="uniform-button">
             {{ $store.state.friends.length }} Friends 
           </h2>
-        </div>
-        <div class="right">
-          <h2>
+          <h2 class="uniform-button">
             {{ $store.state.point }} Points 
           </h2>
         </div>
@@ -50,6 +46,9 @@
       <header>
         <div>
           <tabs>
+            <tab title="Account Management">
+              <AccountPage />
+            </tab>
             <tab title="Sessions">
               <section
                 v-if="$store.state.posts.length && $store.state.username"
@@ -67,17 +66,7 @@
               </article>
             </tab>
             <tab title="Drawings">
-              <router-link 
-                v-if="$store.state.username"
-                to="/drawing"
-              >
-                <!-- TODO bring in componenet-->
-                <span class="subbar">
-                  <button class="box">
-                    Make New Drawing!
-                  </button>
-                </span>
-              </router-link>
+              <DrawingPage />
             </tab>
             <tab title="Friends">
               <FriendPage />
@@ -94,12 +83,14 @@
 
 import PostComponent from '@/components/Post/PostComponent.vue';
 import FriendPage from '@/components/Friend/FriendPage.vue';
+import AccountPage from '@/components/Account/AccountPage.vue';
+import DrawingPage from '@/components/Drawing/DrawingsPage.vue';
 import Tab from './ProfileTab.vue'
 import Tabs from './ProfileTabs.vue'
 export default {
 
   name: 'PostPage',
-  components: {PostComponent, Tab, Tabs, FriendPage},
+  components: {PostComponent, Tab, Tabs, FriendPage, AccountPage, DrawingPage},
   mounted() {
   }
 };
@@ -125,6 +116,15 @@ section .scrollbox {
   flex: 1 0 50vh;
   padding: 3%;
   overflow-y: scroll;
+}
+
+img {
+  border-radius: 50%;
+}
+
+.position {
+  display: flex;
+  justify-content: flex-start;
 }
 .box {
   background-color: #c2fbd7;
@@ -188,7 +188,7 @@ section .scrollbox {
 }
 .uniform-button {
   align-self: center;
-  background-color: rgb(199, 193, 193, 0.45);
+  background-color: white;
   background-image: none;
   background-position: 0 90%;
   background-repeat: repeat no-repeat;

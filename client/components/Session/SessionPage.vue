@@ -55,10 +55,6 @@ export default {
   mounted() {
     // Primitive fix
     this.$store.commit('refreshInSession');
-    if (this.$store.inSession) {
-      // this.runTimer();
-      this.waitForCheck();
-    }
   },
   data() {
     return {
@@ -69,10 +65,6 @@ export default {
       showUpload: false,
       previewImage:null,
     }
-  },
-  mounted() {
-    // Primitive fix
-    this.runTimer();
   },
   methods: {
     async submitRequest() {
