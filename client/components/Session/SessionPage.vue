@@ -64,6 +64,7 @@ export default {
       checkIntervalId: "",
       showUpload: false,
       previewImage:null,
+      numChecks: 0,
     }
   },
   methods: {
@@ -171,6 +172,9 @@ export default {
           // setTimeout(() => this.$delete(this.alerts, params.message), 3000);
             this.$store.commit('refreshInSession');
             this.stopTimer();
+            this.$store.commit('updatePoint', this.numChecks);
+            this.numChecks = 0;
+            this.$store.commit('refreshPoint');
           }
       };
       const options = {
@@ -211,6 +215,7 @@ export default {
       if (!this.previewImage) {
         return;
       }
+      this.numChecks += 1;
       const url = `/api/sessions/check`;
       const params = {
           method: 'PATCH',
