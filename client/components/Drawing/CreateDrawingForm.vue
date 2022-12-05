@@ -2,25 +2,48 @@
 
 <template>
   <div id="app">
-    <h1>Drawing with mousemove event</h1>
-    <canvas id="myCanvas" width="360" height="360" @mousedown="drawDot" />
+    <h3 class="uniform-button">
+      Your temporary points left: {{ tempPoints }}
+      These will not be spent until you save your drawing
+    </h3>
+    <h1>Drawing</h1>
+    <canvas
+      id="myCanvas"
+      width="360"
+      height="360"
+      @mousedown="drawDot"
+    />
+    <button v-on:click="submit">Submit</button>
+    <section class="alerts">
+      <article
+        v-for="(status, alert, index) in alerts"
+        :key="index"
+        :class="status"
+      >
+        <p>{{ alert }}</p>
+      </article>
+    </section>
   </div>
 </template>
 
 <script lang="ts">
+// import DrawingForm from '@/Drawing/DrawingForm.vue';
+
 export default {
   el: '#app',
-  
   data() {
     return {
       // x: 0,
       // y: 0,
       // isDrawing: false,
       // canvas: null
+      method: 'POST',
       height: 10, //TODO to be adjustable
       width: 10,
       pixels: [],
-      hasBody: true
+      hasBody: true,
+      tempPoints: this.$store.state.point,
+      alerts: {}, // Displays success/error messages encountered during form submission
       // url: '/api/drawings',
       // method: 'POST',
       // hasBody: true,
@@ -45,16 +68,60 @@ export default {
     };
   },
   mounted() {
-    const c = document.getElementById("myCanvas");
-    this.canvas = c.getContext('2d');
+    this.c = document.getElementById("myCanvas");
+    this.canvas = this.c.getContext('2d');
     this.NUMBER_OF_POINTS = 10;
     this.CANVAS_SIZE = 360;
     this.BOX_SIZE = this.CANVAS_SIZE / this.NUMBER_OF_POINTS;
-    this.drawGreyLines(c);
+    this.drawGreyLines(this.c);
     this.pixels = [];
-    this.tempPoints = this.$store.point;
+    this.tempPoints = this.$store.state.point;
   },
   methods: {
+    // submit: function (e){
+    //   this.onSubmit();
+    // },
+    async submit() {
+      // this.$store.commit('updatePoint', -30); //TODO
+      this.$store.commit('refreshPoint');
+      this.$store.commit('updatePoint', this.tempPoints - this.$store.state.point); //TODO
+      this.$store.commit('refreshPoint');
+      
+      const url = `/api/drawings`;
+      // /:{delta}`
+      if (this.method == 'POST')
+      {
+        const res = await fetch(url, {
+          method: 'POST',
+          body: JSON.stringify({
+            pixels: this.pixels,
+            height: this.height,
+            width: this.width
+          }),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          }})
+          .then(async r => r.json());
+          console.log('updatePoint', res);
+    }
+
+      this.$store.commit('refreshDrawings'); 
+
+      //reset variables
+      this.pixels = [];
+      
+      // this.$store.commit('setPoints', );
+
+      // this.$store.commit('refreshPoint');
+      // this.$store.commit('refreshPoint');
+      // this.tempPoints = this.$store.state.point;
+      // this.$store.commit('refreshPoint');
+      // this.tempPoints = this.tempPoints;
+      // const c = document.getElementById("myCanvas");
+      
+      this.canvas.clearRect(0, 0, this.c.width, this.c.height);
+      this.drawGreyLines(this.c);
+    },
     drawGreyLines() {
       for (let r = 0.5; r < this.NUMBER_OF_POINTS; r++) { // draw grey lines
           for (let c = 0.5; c < this.NUMBER_OF_POINTS; c++) {
@@ -68,34 +135,9 @@ export default {
           }
       }
     },
-    // keepDrawing(e) {
-    //   if (this.isDrawing === true) {
-    //     this.drawDot(e)
-    //   }
-    // },
-    // stopDrawing(e) {
-    //   if (this.isDrawing === true) {
-    //     this.x = 0;
-    //     this.y = 0;
-    //     this.isDrawing = false;
-    //   }
-    // },
     async drawDot(e) {
-      // this.fields.map(field => {
-      //       let {id, value} = field;
-      //       // Return which is selected and return that value 
-      //       if (field.type === 'radio') {
-      //         for (const c of field.choices) {
-      //           if (c.isSelected) {
-      //             value = c.value;
-      //             field.value = '';
-      //           }
-      //         }
-      //       }
-      //       field.value = '';
-      //       return [id, value];
-      //     });
 
+      // this.$store.commit('updatePoint', 30); //TODO
       this.x = this.getCoord(e.offsetX, this.BOX_SIZE);
       this.y = this.getCoord(e.offsetY, this.BOX_SIZE);
       this.isDrawing = true;
@@ -110,38 +152,51 @@ export default {
       //              keep track of what boxes are drawn too, connect with points
       //              store drawing to mongoDB with connection to user
       // this.$store.commit('refreshPoint');
-      this.$store.commit('updatePoint', 7);
+      // this.$store.commit('updatePoint', 1);
       // this.$store.commit('refreshPoint');
+      this.$store.commit('refreshPoint');
+      console.log('Pixels', this.pixels);
+      console.log('Point', this.$store.point);
+      console.log('TempPoint', this.tempPoints);
+
+      const i = row*this.width + col
+      // try {
+      const delta = this.pixels.includes(i)? 1: -1
+      console.log(this.$store.point, delta)
+      // this.$store.commit('updatePoint', this.$store.point, delta); 
       // this.$store.commit('refreshPoint');
-      console.log(this.pixels);
-      console.log(this.$store.point);
-
-      try {
-        const delta = this.pixels.has(i)? 1: -1
-        console.log(this.$store.point, delta)
-        this.$store.commit('updatePoint', this.$store.point, delta); 
-
-        const i = row*this.width + col
-        if (this.pixels.has(i)){
-          context.strokeStyle = 'white';
-          context.lineWidth = 2;
-          context.moveTo(this.x, this.y);
-          context.strokeRect(this.x-this.BOX_SIZE/2,this.y-this.BOX_SIZE/2, this.BOX_SIZE, this.BOX_SIZE);
-          context.fillRect(this.x-this.BOX_SIZE/2,this.y-this.BOX_SIZE/2, this.BOX_SIZE, this.BOX_SIZE);
-        }
-        else{
-          context.strokeStyle = 'black';
-          context.lineWidth = 2;
-          context.moveTo(this.x, this.y);
-          context.strokeRect(this.x-this.BOX_SIZE/2,this.y-this.BOX_SIZE/2, this.BOX_SIZE, this.BOX_SIZE);
-          context.fillRect(this.x-this.BOX_SIZE/2,this.y-this.BOX_SIZE/2, this.BOX_SIZE, this.BOX_SIZE);
-        }
+      
+      if (this.pixels.includes(i)){
+        this.tempPoints += 1;
+        this.pixels.splice(this.pixels.indexOf(i), 1);
+        context.fillStyle = 'white';
+        // context.strokeStyle = 'grey';
+        context.lineWidth = 2;
+        context.moveTo(this.x, this.y);
+        // context.strokeRect(this.x-this.BOX_SIZE/2,this.y-this.BOX_SIZE/2, this.BOX_SIZE, this.BOX_SIZE);
+        context.fillRect(this.x-this.BOX_SIZE/2+1,this.y-this.BOX_SIZE/2+1, this.BOX_SIZE-2, this.BOX_SIZE-2);
+        context.fillStyle = 'black';
+      }
+      else if (this.tempPoints + delta >= 0){
+        this.tempPoints -= 1;
+        this.pixels.push(i);
+        // context.strokeStyle = 'black';
+        context.lineWidth = 2;
+        context.moveTo(this.x, this.y);
+        // context.strokeRect(this.x-this.BOX_SIZE/2,this.y-this.BOX_SIZE/2, this.BOX_SIZE, this.BOX_SIZE);
+        context.fillRect(this.x-this.BOX_SIZE/2+1,this.y-this.BOX_SIZE/2+1, this.BOX_SIZE-2, this.BOX_SIZE-2);
+      }
+      else {
+        e = 'Not Enough Points';
+        this.$set(this.alerts, e, 'error');
+        setTimeout(() => this.$delete(this.alerts, e), 800);
+      }
         
 
-      } catch (e) {
-        this.$set(this.alerts, e, 'error');
-        setTimeout(() => this.$delete(this.alerts, e), 3000);
-      }
+      // } catch (e) {
+      //   this.$set(this.alerts, e, 'error');
+      //   setTimeout(() => this.$delete(this.alerts, e), 3000);
+      // }
         
     context.restore();
     },

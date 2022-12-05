@@ -61,7 +61,7 @@ router.patch(
     const point = await PointCollection.updateOne(user.point._id, delta);
     res.status(200).json({
       message: 'Your point was updated successfully.',
-      point: util.constructPointResponse(point)
+      requestResponse: util.constructPointResponse(point)
     });
   }
 );

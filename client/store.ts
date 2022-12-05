@@ -102,7 +102,9 @@ const store = new Vuex.Store({
           'Content-type': 'application/json; charset=UTF-8',
         }})
         .then(async r => r.json());
-      state.point = res.point;
+        console.log('updatePoint', res);
+      state.point = res.requestResponse.point;//.point;
+      //  this.refreshPoint()
     },
     async refreshPoint(state) {
       /**
@@ -115,8 +117,8 @@ const store = new Vuex.Store({
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
         }}).then(async r => r.json());
-       console.log(res);
-       state.point = res.point;
+       console.log('refresh point', res);
+       state.point = res.requestResponse.point;//.point;
     },
     /** End of Added this point (frontend, call after made post request)*/
     async refreshPosts(state) {
@@ -138,9 +140,14 @@ const store = new Vuex.Store({
       /**
        * Request the server for the currently available posts.
        */
-      const url = state.filter ? `/api/users/${state.filter}/drawings` : '/api/drawings';
-      const res = await fetch(url).then(async r => r.json());
-      state.posts = res;
+      const url = '/api/drawings';
+      const res = await fetch(url, {
+       method: 'GET',
+       headers: {
+         'Content-type': 'application/json; charset=UTF-8',
+       }}).then(async r => r.json());
+      console.log('refresh drawings', res);
+      state.drawings = res;
     },
     async refreshFriends(state) {
       /**

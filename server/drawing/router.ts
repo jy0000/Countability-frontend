@@ -79,14 +79,12 @@ router.get(
  * @param {string} pixels - The pixels of the drawing
  * @return {DrawingResponse} - The created drawing
  * @throws {403} - If the user is not logged in
- * @throws {400} - If the drawing pixels is empty or a stream of empty spaces
- * @throws {413} - If the drawing pixels is more than 140 characters long
+ * @throws {412} - If the drawing pixels does not have height or weight
  */
 router.post(
   '/',
   [
     userValidator.isUserLoggedIn,
-    drawingValidator.isValidDrawingContent,
     drawingValidator.isDrawingPropertyComplete
   ],
   async (req: Request, res: Response) => {
@@ -143,8 +141,7 @@ router.patch(
   [
     userValidator.isUserLoggedIn,
     drawingValidator.isDrawingExists,
-    drawingValidator.isValidDrawingModifier,
-    drawingValidator.isValidDrawingContent
+    drawingValidator.isValidDrawingModifier
   ],
   async (req: Request, res: Response) => {
     const drawing = await DrawingCollection.updateOne(req.params.drawingId, req.body.pixels);

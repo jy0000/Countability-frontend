@@ -7,7 +7,7 @@ import PostsPage from './components/Post/PostsPage.vue';
 import AccountPage from './components/Account/AccountPage.vue';
 import LoginPage from './components/Login/LoginPage.vue';
 import FriendPage from './components/Friend/FriendPage.vue';
-import SessionPage from './components/Session/SessionsPage.vue';
+import SessionPage from './components/Session/SessionPage.vue';
 import DrawingPage from './components/Drawing/DrawingsPage.vue';
 
 Vue.use(VueRouter);

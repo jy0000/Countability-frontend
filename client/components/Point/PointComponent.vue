@@ -19,12 +19,6 @@
         <h3 class="uniform-button">
           Your points: {{ $store.state.point }}
         </h3>
-        <h3 class="uniform-button">
-          -
-        </h3>
-        <h3 class="uniform-button">
-          +
-        </h3>
       </div>
       <!-- If the user signs in, they get to see above-->
     </section>

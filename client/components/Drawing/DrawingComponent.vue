@@ -2,6 +2,7 @@
 <!-- We've tagged some elements with classes; consider writing CSS using those classes to style them... -->
 
 <template>
+  
   <article
     class="drawing"
   >
@@ -10,6 +11,12 @@
       <h3 class="author">
         @{{ drawing.author }}
       </h3>
+      <canvas
+        id="this.drawing._id"
+        width="360"
+        height="360"
+        @mousedown="drawDot"
+      />
       <!-- If the user signs in, they get to see this-->
       <div
         v-if="$store.state.username === drawing.author"
@@ -39,38 +46,12 @@
       </div>
       <!-- If the user signs in, they get to see above-->
     </header>
-    <!-- Content starts here, if editing, else show photo -->
-    <textarea
-      v-if="editing"
-      class="photo"
-      :value="draft"
-      @input="draft = $event.target.value"
-    />
-    <p
-      v-else
-      class="photo"
-    >
-      {{ drawing.photo }}
-    </p>
-    <!-- Added descriptive drawing -->
+    
     <p class="info">
-      <i
-        v-if="drawing.caption == 'News'"
-        class="newsDrawing"
-      > Source: {{ drawing.focusReflection }}</i>
-      <i
-        v-else-if="drawing.caption == 'Fibe'"
-        class="fibeDrawing"
-      >  @{{ drawing.author }} is feeling {{ drawing.progressReflection }}</i>
-    </p>
-    <p class="info">
-      <b>Drawing type: A {{ drawing.caption }} drawing.</b>
-    </p>
-    <!-- End of Added descriptive drawing -->
-    <p class="info">
-      Drawinged at {{ drawing.dateModified }}
+      Drawn at {{ drawing.dateModified }}
       <i v-if="drawing.edited">(edited)</i>
     </p>
+    
     <section class="alerts">
       <article
         v-for="(status, alert, index) in alerts"
@@ -100,7 +81,55 @@ export default {
       alerts: {} // Displays success/error messages encountered during drawing modification
     };
   },
+  mounted() {
+    this.c = document.getElementById("this.drawing._id");
+    this.canvas = this.c.getContext('2d');
+    this.NUMBER_OF_POINTS = 10;
+    this.CANVAS_SIZE = 360;
+    this.BOX_SIZE = this.CANVAS_SIZE / this.NUMBER_OF_POINTS;
+    this.drawGreyLines(this.c);
+    this.drawDot();
+    this.pixels = [];
+    this.tempPoints = this.$store.state.point;
+  },
   methods: {
+    getCoord(coordinate, boxSize) {
+      const points = [];
+      for (let i = 0.5; i < this.NUMBER_OF_POINTS; i++) {
+          points.push(boxSize * i);
+      }
+      // https://stackoverflow.com/questions/8584902/get-the-closest-number-out-of-an-array
+      const coord = points.reduce(function(prev, curr) {
+          return (Math.abs(curr - coordinate) < Math.abs(prev - coordinate) ? curr : prev);
+      });
+      return coord;
+  },
+    drawDot() {
+      for (const i of this.drawing.pixels) { // draw grey lines
+        const context = this.canvas;
+        context.save();
+        const r = Math.floor(i/this.drawing.width);
+        const c = i - this.drawing.width*r;
+        context.translate(this.BOX_SIZE * c, this.BOX_SIZE * r);
+        context.strokeStyle = 'black';
+        context.lineWidth = 2;
+        // context.strokeRect(this.x-this.BOX_SIZE/2,this.y-this.BOX_SIZE/2, this.BOX_SIZE, this.BOX_SIZE);
+        context.fillRect(1,1, this.BOX_SIZE-2, this.BOX_SIZE-2);
+      }
+    },
+    drawGreyLines() {
+      for (let r = 0.5; r < this.NUMBER_OF_POINTS; r++) { // draw grey lines
+          for (let c = 0.5; c < this.NUMBER_OF_POINTS; c++) {
+              const context = this.canvas;
+              context.save();
+              context.translate(this.BOX_SIZE * c, this.BOX_SIZE * r);
+              context.strokeStyle = 'grey';
+              context.lineWidth = 1;
+              context.strokeRect(-this.BOX_SIZE/2, -this.BOX_SIZE/2, this.BOX_SIZE, this.BOX_SIZE);
+              context.restore();
+          }
+      }
+    },
     startEditing() {
       /**
        * Enables edit mode on this drawing.
@@ -234,4 +263,10 @@ export default {
   margin-bottom: 15px;
 }
 
+  #this.drawing._id {
+  border: 1px solid grey;
+  /* position: absolute; */
+  z-index: 1000;
+}
 </style>
+

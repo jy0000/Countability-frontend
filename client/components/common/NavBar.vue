@@ -44,7 +44,9 @@
 
       <router-link 
         v-if="$store.state.username"
-        to="/drawing"> <!-- TODO link-->
+        to="/drawing"
+      >
+        <!-- TODO link-->
         <span class="subbar">
           Draw!
         </span>
@@ -53,26 +55,21 @@
       <!-- User (Account/login management = DONE)-->
       <router-link
         v-if="$store.state.username"
-        to="/friend"> <!-- TODO link-->
+        to="/friend"
+      >
+        <!-- TODO link-->
         <span class="subbar">
           Friend
         </span>
       </router-link>
       <router-link 
         v-if="$store.state.username"
-        to="/profile"> <!-- TODO link-->
+        to="/profile"
+      >
+        <!-- TODO link-->
         <span class="subbar">
           Profile
         </span>
-      </router-link>
-      <button
-        class="button-55"
-      >
-        <button
-          class="uniform-button"
-        >
-          Account
-        </button>
       </router-link>
       <router-link
         v-else

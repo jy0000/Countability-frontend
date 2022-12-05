@@ -23,6 +23,8 @@
       </article>
     </section>
     <section v-if="$store.state.username">
+      <PointComponent />
+      <CreateDrawingForm />
       <header>
         <div class="left">
           <h2 class="box">
@@ -71,8 +73,6 @@
       </article>
     </section>
     
-    <PointComponent />
-    <CreateDrawingForm />
   </main>
 </template>
 
@@ -96,6 +96,8 @@ export default {
   },
   mounted() {
     // Primitive fix
+    this.$store.commit('refreshPoint');
+    this.$store.commit('refreshDrawings');
     if (this.$refs.selectFeedChannel) {
       this.$refs.selectFeedChannel.submit(); // Added this for feed channel filtering
     } else {

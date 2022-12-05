@@ -36,16 +36,16 @@ export default {
           // Go over each field, checkbox value is not extracted
           this.fields.map(field => {
             let {id, value} = field;
-            // // Return which is selected and return that value 
-            // if (field.type === 'radio') {
-            //   for (const c of field.choices) {
-            //     if (c.isSelected) {
-            //       value = c.value;
-            //       field.value = '';
-            //     }
-            //   }
-            // }
-            // field.value = '';
+            // Return which is selected and return that value 
+            if (field.type === 'radio') {
+              for (const c of field.choices) {
+                if (c.isSelected) {
+                  value = c.value;
+                  field.value = '';
+                }
+              }
+            }
+            field.value = '';
             return [id, value];
           })
         ));
@@ -60,7 +60,7 @@ export default {
         }
 
         if (this.refreshDrawings) {
-          this.$store.commit('refreshPosts'); // frontend update
+          this.$store.commit('refreshDrawings'); // frontend update
         }
 
         if (this.callback) {

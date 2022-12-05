@@ -81,6 +81,7 @@ app.use('/api/sessions', sessionRouter);
 // A app.use('/api/feedChannel', feedChannelRouter);
 // A app.use('/api/friend', friendRouter);
 app.use('/api/point', pointRouter);
+app.use('/api/drawings', drawingRouter);
 
 // Catch all the other routes and display error message
 app.all('*', (req: Request, res: Response) => {

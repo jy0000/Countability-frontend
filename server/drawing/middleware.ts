@@ -8,7 +8,7 @@ import DrawingCollection from './collection';
 const isDrawingPropertyComplete = async (req: Request, res: Response, next: NextFunction) => {
   if (!req.body.height || !req.body.width) {
     res.status(412).json({
-      error: 'Fibe drawing needs a height and width.' // Added this for error
+      error: 'drawing needs a height and width.' // Added this for error
     });
     return;
   }
@@ -36,28 +36,6 @@ const isDrawingExists = async (req: Request, res: Response, next: NextFunction) 
 };
 
 /**
- * Checks if the pixels of the drawing in req.body is valid, i.e not more than the points
- */
-const isValidDrawingContent = (req: Request, res: Response, next: NextFunction) => {
-  // Const {pixels} = req.body as {pixels: string}; // Changed
-  // if (!pixels.trim()) {
-  //   res.status(400).json({
-  //     error: 'Drawing pixels must be at least one character long.'
-  //   });
-  //   return;
-  // }
-
-  // if (pixels.length > 140) {
-  //   res.status(413).json({
-  //     error: 'Drawing pixels must be no more than 140 characters.'
-  //   });
-  //   return;
-  // }
-
-  next();
-};
-
-/**
  * Checks if the current user is the author of the drawing whose drawingId is in req.params
  */
 const isValidDrawingModifier = async (req: Request, res: Response, next: NextFunction) => {
@@ -75,7 +53,6 @@ const isValidDrawingModifier = async (req: Request, res: Response, next: NextFun
 
 export {
   isDrawingPropertyComplete,
-  isValidDrawingContent,
   isDrawingExists,
   isValidDrawingModifier
 };
