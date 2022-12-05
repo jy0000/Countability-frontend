@@ -103,7 +103,7 @@ export default {
           }})
           .then(async r => r.json());
           console.log('updatePoint', res);
-    }
+      }
 
       this.$store.commit('refreshDrawings'); 
 
@@ -159,7 +159,8 @@ export default {
       console.log('Point', this.$store.point);
       console.log('TempPoint', this.tempPoints);
 
-      const i = row*this.width + col
+      const i = row*10 + col
+      console.log('ROWCOL', row, col, i)
       // try {
       const delta = this.pixels.includes(i)? 1: -1
       console.log(this.$store.point, delta)

@@ -11,12 +11,16 @@
       <h3 class="author">
         @{{ drawing.author }}
       </h3>
-      <canvas
-        :id="this.drawing._id"
+      <canvas 
+        id = "hidden"
+        hidden= "hidden"
         width="360"
         height="360"
         @mousedown="drawDot"
       />
+      <div id="result">
+        <p>Result via &lt;img&gt;:</p>
+      </div>
       <!-- If the user signs in, they get to see this-->
       <div
         v-if="$store.state.username === drawing.author"
@@ -82,7 +86,7 @@ export default {
     };
   },
   mounted() {
-    this.c = document.getElementById(this.drawing._id);
+    this.c = document.getElementById("hidden");
     this.canvas = this.c.getContext('2d');
     this.NUMBER_OF_POINTS = 10;
     this.CANVAS_SIZE = 360;
@@ -118,12 +122,12 @@ export default {
         // context.strokeRect(this.x-this.BOX_SIZE/2,this.y-this.BOX_SIZE/2, this.BOX_SIZE, this.BOX_SIZE);
         context.fillRect(x-this.BOX_SIZE/2+1,y-this.BOX_SIZE/2+1, this.BOX_SIZE-2, this.BOX_SIZE-2);
       }
-      // var target = new Image();
-      // target.src = this.c.toDataURL();
-      // // //https://stackoverflow.com/questions/10257781/can-i-get-image-from-canvas-element-and-use-it-in-img-src-tag
-      // // document.getElementById('result').appendChild(target);
-      // // this.canvas.clearRect(0, 0, this.c.width, this.c.height);
-      // // this.drawGreyLines(this.c);
+      var target = new Image();
+      target.src = this.c.toDataURL();
+      //https://stackoverflow.com/questions/10257781/can-i-get-image-from-canvas-element-and-use-it-in-img-src-tag
+      document.getElementById('result').appendChild(target);
+      this.canvas.clearRect(0, 0, this.c.width, this.c.height);
+      this.drawGreyLines(this.c);
     },
     drawGreyLines() {
       for (let r = 0.5; r < this.NUMBER_OF_POINTS; r++) { // draw grey lines
@@ -247,34 +251,12 @@ export default {
   background-color: rgb(199, 193, 193, 0.35)
 }
 
-.newsDrawing{
-  font-size: 16px;
-  letter-spacing: 2px;
-  text-decoration: none;
-  color: #000;
-  cursor: pointer;
-  background-color: #3c97f8;
-  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-  padding: 0.25em 0.5em;
-  margin-bottom: 15px;
-}
-
-.fibeDrawing{
-  font-size: 16px;
-  letter-spacing: 2px;
-  text-decoration: none;
-  color: #000;
-  cursor: pointer;
-  background-color:  #FFDD00;
-  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-  padding: 0.25em 0.5em;
-  margin-bottom: 15px;
-}
-
-  /* #this.drawing._id {
+  #hidden {
   border: 1px solid grey;
   /* position: absolute; */
-  /* z-index: 1000;
-} */ 
+  z-index: 1000;
+}
+
+
 </style>
 
