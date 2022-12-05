@@ -10,12 +10,12 @@ export default {
     return {
       url: '/api/users/session',
       method: 'DELETE',
-      setUsername: true,
+      setUsername: true, // Set to null
       title: 'Sign out',
       fields: [],
       content: 'Taking a break? See you later.',
       callback: () => {
-        this.$router.push({name: 'Home'}); // Goes to Home page after signing out
+        this.$router.push({name: 'Home'}); // Go to Home page after signing out
         this.$store.commit('alert', {
           message: 'You are now signed out!', status: 'success'
         });

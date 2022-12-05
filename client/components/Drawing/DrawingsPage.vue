@@ -1,4 +1,4 @@
-<!-- Default page that also displays posts -->
+<!-- Default page that also displays drawings -->
 
 <template>
   <main>
@@ -18,43 +18,33 @@
           >
             Sign in
           </router-link>
-          to create, edit, and delete posts.
+          to create, edit, and delete drawings.
         </h3>
       </article>
     </section>
     <section v-if="$store.state.username">
+      <PointComponent />
+      <CreateDrawingForm />
       <header>
         <div class="left">
           <h2 class="box">
-            📙 My feed
-            <span v-if="$store.state.filter">
-              by @{{ $store.state.filter }}
-            </span>
+            📙 Productivity drawings across the community
           </h2>
-        </div>
-        <div class="right">
-          <GetPostsForm
-            ref="getPostsForm"
-            class="uniform-button"
-            value="author"
-            placeholder="🔍 Filter by author (optional)"
-            button="🔄 Get posts"
-          />
         </div>
       </header>
       <section
-        v-if="$store.state.posts.length && $store.state.username"
+        v-if="$store.state.drawings.length && $store.state.username"
       >
-        <PostComponent
-          v-for="post in $store.state.posts"
-          :key="post.id"
-          :post="post"
+        <DrawingComponent
+          v-for="drawing in $store.state.drawings"
+          :key="drawing.id"
+          :drawing="drawing"
         />
       </section>
       <article
         v-else
       >
-        <h3>No posts found.</h3>
+        <h3>No drawings found.</h3>
       </article>
     </section>
   </main>
@@ -62,14 +52,22 @@
 
 <script>
 // Components
-import PostComponent from '@/components/Post/PostComponent.vue';
-import GetPostsForm from '@/components/Post/GetPostsForm.vue';
+import DrawingComponent from '@/components/Drawing/DrawingComponent.vue';
+import CreateDrawingForm from '@/components/Drawing/CreateDrawingForm.vue';
+import PointComponent from '@/components/Point/PointComponent.vue';
 
 export default {
-  name: 'PostPage',
-  components: {PostComponent, GetPostsForm},
+  name: 'DrawingPage',
+  components: 
+  {
+    DrawingComponent,
+    CreateDrawingForm,
+    PointComponent,
+  },
   mounted() {
-    // this.$refs.getPostsForm.submit();
+    // Primitive fix
+    this.$store.commit('refreshPoint');
+    this.$store.commit('refreshDrawings');
   }
 };
 </script>
@@ -111,7 +109,7 @@ section .scrollbox {
 }
 
 /** Cross box */
-.input-form-box {
+.button-89 {
   --b: 3px;   /* border thickness */
   --s: .45em; /* size of the corner */
   --color: #373B44;
@@ -155,7 +153,7 @@ section .scrollbox {
   border-top-left-radius: 255px 15px;
   border-top-right-radius: 15px 225px;
 }
-.uniform-button {
+.button-55 {
   align-self: center;
   background-color: rgb(199, 193, 193, 0.45);
   background-image: none;
@@ -181,3 +179,4 @@ section .scrollbox {
   border-top-right-radius: 15px 225px;
 }
 </style>
+

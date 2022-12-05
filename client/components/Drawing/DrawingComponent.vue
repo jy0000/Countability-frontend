@@ -1,18 +1,25 @@
-<!-- Reusable component representing a single post and its actions -->
+<!-- Reusable component representing a single drawing and its actions -->
 <!-- We've tagged some elements with classes; consider writing CSS using those classes to style them... -->
 
 <template>
+  
   <article
-    class="post" 
+    class="drawing"
   >
     <header>
       <!-- Header and features (endorse, for example)-->
       <h3 class="author">
-        @{{ post.author }}
+        @{{ drawing.author }}
       </h3>
+      <canvas
+        :id="this.drawing._id"
+        width="360"
+        height="360"
+        @mousedown="drawDot"
+      />
       <!-- If the user signs in, they get to see this-->
       <div
-        v-if="$store.state.username === post.author"
+        v-if="$store.state.username === drawing.author"
         class="actions"
       >
         <button
@@ -33,41 +40,18 @@
         >
           ✏️ Edit
         </button>
-        <button @click="deletePost">
+        <button @click="deleteDrawing">
           🗑️ Delete
         </button>
       </div>
       <!-- If the user signs in, they get to see above-->
     </header>
-    <!-- Content starts here, if editing, else show photo -->
-    <textarea
-      v-if="editing"
-      class="photo"
-      :value="draft"
-      @input="draft = $event.target.value"
-    />
-    <p
-      v-else
-      class="photo"
-    >
-      {{ post.photo }}
-    </p>
-    <!-- Added descriptive post -->
+    
     <p class="info">
-      <i
-        v-if="post.caption == 'News'"
-        class="newsPost"
-      > Source: {{ post.focusReflection }}</i>
-      <i
-        v-else-if="post.caption == 'Fibe'"
-        class="fibePost"
-      >  @{{ post.author }} is feeling {{ post.progressReflection }}</i>
+      Drawn at {{ drawing.dateModified }}
+      <i v-if="drawing.edited">(edited)</i>
     </p>
-    <!-- End of Added descriptive post -->
-    <p class="info">
-      Posted at {{ post.dateModified }}
-      <i v-if="post.edited">(edited)</i>
-    </p>
+    
     <section class="alerts">
       <article
         v-for="(status, alert, index) in alerts"
@@ -82,45 +66,100 @@
 
 <script>
 export default {
-  name: 'PostComponent',
+  name: 'DrawingComponent',
   props: {
-    // Data from the stored post
-    post: {
+    // Data from the stored drawing
+    drawing: {
       type: Object,
       required: true
     }
   },
   data() {
     return {
-      editing: false, // Whether or not this post is in edit mode
-      draft: this.post.photo, // Potentially-new photo for this post
-      alerts: {} // Displays success/error messages encountered during post modification
+      editing: false, // Whether or not this drawing is in edit mode
+      draft: this.drawing.photo, // Potentially-new photo for this drawing
+      alerts: {} // Displays success/error messages encountered during drawing modification
     };
   },
+  mounted() {
+    this.c = document.getElementById(this.drawing._id);
+    this.canvas = this.c.getContext('2d');
+    this.NUMBER_OF_POINTS = 10;
+    this.CANVAS_SIZE = 360;
+    this.BOX_SIZE = this.CANVAS_SIZE / this.NUMBER_OF_POINTS;
+    this.drawGreyLines(this.c);
+    this.drawDot();
+    this.pixels = [];
+    this.tempPoints = this.$store.state.point;
+  },
   methods: {
+    getCoord(coordinate, boxSize) {
+      const points = [];
+      for (let i = 0.5; i < this.NUMBER_OF_POINTS; i++) {
+          points.push(boxSize * i);
+      }
+      // https://stackoverflow.com/questions/8584902/get-the-closest-number-out-of-an-array
+      const coord = points.reduce(function(prev, curr) {
+          return (Math.abs(curr - coordinate) < Math.abs(prev - coordinate) ? curr : prev);
+      });
+      return coord;
+  },
+    drawDot() {
+      for (const i of this.drawing.pixels) { // draw grey lines
+        const context = this.canvas;
+        context.save();
+        const r = Math.floor(i/10);
+        const c = i - 10*r;
+        const x = c*this.BOX_SIZE + this.BOX_SIZE/2
+        const y = r*this.BOX_SIZE + this.BOX_SIZE/2
+        context.lineWidth = 2;
+        context.moveTo(x, y);
+        // context.strokeRect(this.x-this.BOX_SIZE/2,this.y-this.BOX_SIZE/2, this.BOX_SIZE, this.BOX_SIZE);
+        context.fillRect(x-this.BOX_SIZE/2+1,y-this.BOX_SIZE/2+1, this.BOX_SIZE-2, this.BOX_SIZE-2);
+      }
+      // var target = new Image();
+      // target.src = this.c.toDataURL();
+      // // //https://stackoverflow.com/questions/10257781/can-i-get-image-from-canvas-element-and-use-it-in-img-src-tag
+      // // document.getElementById('result').appendChild(target);
+      // // this.canvas.clearRect(0, 0, this.c.width, this.c.height);
+      // // this.drawGreyLines(this.c);
+    },
+    drawGreyLines() {
+      for (let r = 0.5; r < this.NUMBER_OF_POINTS; r++) { // draw grey lines
+          for (let c = 0.5; c < this.NUMBER_OF_POINTS; c++) {
+              const context = this.canvas;
+              context.save();
+              context.translate(this.BOX_SIZE * c, this.BOX_SIZE * r);
+              context.strokeStyle = 'grey';
+              context.lineWidth = 1;
+              context.strokeRect(-this.BOX_SIZE/2, -this.BOX_SIZE/2, this.BOX_SIZE, this.BOX_SIZE);
+              context.restore();
+          }
+      }
+    },
     startEditing() {
       /**
-       * Enables edit mode on this post.
+       * Enables edit mode on this drawing.
        */
-      this.editing = true; // Keeps track of if a post is being edited
-      this.draft = this.post.photo; // The photo of our current "draft" while being edited
+      this.editing = true; // Keeps track of if a drawing is being edited
+      this.draft = this.drawing.photo; // The photo of our current "draft" while being edited
     },
     stopEditing() {
       /**
-       * Disables edit mode on this post.
+       * Disables edit mode on this drawing.
        */
       this.editing = false;
-      this.draft = this.post.photo;
+      this.draft = this.drawing.photo;
     },
-    deletePost() {
+    deleteDrawing() {
       /**
-       * Deletes this post.
+       * Deletes this drawing.
        */
       const params = {
         method: 'DELETE',
         callback: () => {
           this.$store.commit('alert', {
-            message: 'Successfully deleted post!', status: 'success'
+            message: 'Successfully deleted drawing!', status: 'success'
           });
         }
       };
@@ -128,10 +167,10 @@ export default {
     },
     submitEdit() {
       /**
-       * Updates post to have the submitted draft photo.
+       * Updates drawing to have the submitted draft photo.
        */
-      if (this.post.photo === this.draft) {
-        const error = 'Error: Edited post photo should be different than current post photo.';
+      if (this.drawing.photo === this.draft) {
+        const error = 'Error: Edited drawing photo should be different than current drawing photo.';
         this.$set(this.alerts, error, 'error'); // Set an alert to be the error text, timeout of 3000 ms
         setTimeout(() => this.$delete(this.alerts, error), 3000);
         return;
@@ -139,7 +178,7 @@ export default {
 
       const params = {
         method: 'PATCH',
-        message: 'Successfully edited post!',
+        message: 'Successfully edited drawing!',
         body: JSON.stringify({photo: this.draft}),
         callback: () => {
           this.$set(this.alerts, params.message, 'success');
@@ -150,7 +189,7 @@ export default {
     },
     async request(params) {
       /**
-       * Submits a request to the post's endpoint
+       * Submits a request to the drawing's endpoint
        * @param params - Options for the requxest
        * @param params.body - Body for the request, if it exists
        * @param params.callback - Function to run if the the request succeeds
@@ -163,7 +202,7 @@ export default {
       }
 
       try {
-        let r = await fetch(`/api/posts/${this.post._id}`, options);
+        let r = await fetch(`/api/drawings/${this.drawing._id}`, options);
         if (!r.ok) {
           const res = await r.json();
           throw new Error(res.error);
@@ -178,10 +217,9 @@ export default {
           // If response is not okay, we throw an error and enter the catch block
           throw new Error(res.error);
         } else {
-          console.log(res, res.requestResponse.currentPoint)
           this.$store.commit('setPoint', res.requestResponse.currentPoint); // frontend update 
         }
-        this.$store.commit('refreshPosts');
+        this.$store.commit('refreshDrawings');
 
         params.callback();
       } catch (e) {
@@ -195,7 +233,7 @@ export default {
 
 <style scoped>
 /* CSS */
-.post {
+.drawing {
   font-size: 16px;
   letter-spacing: 2px;
   text-decoration: none;
@@ -207,7 +245,7 @@ export default {
   background-color: rgb(199, 193, 193, 0.35)
 }
 
-.newsPost{
+.newsDrawing{
   font-size: 16px;
   letter-spacing: 2px;
   text-decoration: none;
@@ -219,7 +257,7 @@ export default {
   margin-bottom: 15px;
 }
 
-.fibePost{
+.fibeDrawing{
   font-size: 16px;
   letter-spacing: 2px;
   text-decoration: none;
@@ -231,4 +269,10 @@ export default {
   margin-bottom: 15px;
 }
 
+  /* #this.drawing._id {
+  border: 1px solid grey;
+  /* position: absolute; */
+  /* z-index: 1000;
+} */ 
 </style>
+

@@ -246,3 +246,4 @@ Here is a list of documentation you may want to consult while working with Vue:
 **Throws**
 
 - `403` if the user is not logged in
+

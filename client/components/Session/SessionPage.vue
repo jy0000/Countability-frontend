@@ -70,6 +70,10 @@ export default {
       previewImage:null,
     }
   },
+  mounted() {
+    // Primitive fix
+    this.runTimer();
+  },
   methods: {
     async submitRequest() {
       const url = `/api/sessions/check`;
@@ -293,7 +297,7 @@ section .scrollbox {
 }
 
 /** Cross box */
-.button-89 {
+.input-form-box {
   --b: 3px;   /* border thickness */
   --s: .45em; /* size of the corner */
   --color: #373B44;

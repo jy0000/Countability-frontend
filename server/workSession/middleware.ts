@@ -15,7 +15,6 @@ function isUrl(s: string) {
  * Checks if a session has the resource needed for its session type
  */
 const isSessionPropertyComplete = async (req: Request, res: Response, next: NextFunction) => {
-
   if (req.body.sessionType !== 'News' && req.body.sessionType !== 'Fibe') {
     res.status(412).json({
       error: 'Please provide a valid Session type: News or Fibe.'
@@ -78,12 +77,12 @@ const isSessionOwnerExists = async (req: Request, res: Response, next: NextFunct
   } else {
     res.status(401).json({error: 'Username does not exist.'});
   }
-}
+};
 
 /**
  * Checks if the provided numChecks is valid
  */
- const isValidSessionNumChecks = async (req: Request, res: Response, next: NextFunction) => {
+const isValidSessionNumChecks = async (req: Request, res: Response, next: NextFunction) => {
   if (req.body.numChecks as number < 0) {
     res.status(400).json({
       error: 'Number of checks must be a nonnegative integer.'
@@ -97,7 +96,7 @@ const isSessionOwnerExists = async (req: Request, res: Response, next: NextFunct
 /**
  * Checks if logged in user is already in a session
  */
- const isAlreadyInSession = async (req: Request, res: Response, next: NextFunction) => {
+const isAlreadyInSession = async (req: Request, res: Response, next: NextFunction) => {
   const user = await UserCollection.findOneByUserId(req.session.userId);
   const sessions = await WorkSessionCollection.findAllByUsername(user.username);
   for (let i = 0; i < sessions.length; i++) {
@@ -116,7 +115,7 @@ const isSessionOwnerExists = async (req: Request, res: Response, next: NextFunct
 /**
  * Checks if logged in user is not in a session
  */
- const isNotInSession = async (req: Request, res: Response, next: NextFunction) => {
+const isNotInSession = async (req: Request, res: Response, next: NextFunction) => {
   const user = await UserCollection.findOneByUserId(req.session.userId);
   const sessions = await WorkSessionCollection.findAllByUsername(user.username);
   for (let i = 0; i < sessions.length; i++) {
@@ -126,10 +125,10 @@ const isSessionOwnerExists = async (req: Request, res: Response, next: NextFunct
       return;
     }
   }
+
   res.status(409).json({
     error: 'User is currently not in a session.'
   });
-  return;
 };
 
 /**
@@ -137,7 +136,7 @@ const isSessionOwnerExists = async (req: Request, res: Response, next: NextFunct
  */
 const isValidSessionModifier = async (req: Request, res: Response, next: NextFunction) => {
   const session = await WorkSessionCollection.findOne(req.params.sessionId);
-  const userId = session.sessionOwnerId;
+  const userId = session.sessionOwnerId._id;
   if (req.session.userId !== userId.toString()) {
     res.status(403).json({
       error: 'Cannot modify other users\' sessions.'

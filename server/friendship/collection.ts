@@ -1,7 +1,6 @@
 import type {HydratedDocument, Types} from 'mongoose';
 import type {Friendship} from './model';
 import FriendshipModel from './model';
-import UserCollection from '../user/collection';
 
 /**
  * A class representing CRUD operations on a friendship.
@@ -11,6 +10,7 @@ class FriendshipCollection {
    *    addOne - Establish a friendship (after two users confirm their intent to befriend each other)
    *    findOneById - Find a friendship by ID
    *    findAll - Find all friendships in the database
+   *    findAny - Find any existing friendship given two users, used to check existing friendships
    *    findAllFriendshipsOfUser - Find all friendships of a user (by username)
    *    deleteOne - Delete a friendship between two users (by friendship ID)
    *    deleteAllFriendshipOfUser - Delete all friendships where user is involved; used when deleting the user account
@@ -55,7 +55,7 @@ class FriendshipCollection {
    * @return {Promise<HydratedDocument<Friendship>[]>} - An array of all of friends
    */
   static async findAll(): Promise<Array<HydratedDocument<Friendship>>> {
-    return FriendshipModel.find({}).sort({dateFriendshiped: -1});
+    return FriendshipModel.find({}).sort({dateFriendshiped: -1}).populate(['userOneId', 'userTwoId']);
   }
 
   /**
@@ -71,8 +71,24 @@ class FriendshipCollection {
       }, {
         userTwoId: currentUserId
       }]
-    });
+    }).populate(['userOneId', 'userTwoId']);
     return friendships;
+  }
+
+  /**
+   * Find any existing friendship with user A and user B
+   *
+   * @param {Types.ObjectId | string} currentUserId
+   * @return {Promise<HydratedDocument<Friendship>[]> | Promise<null>}
+   */
+  static async findAny(IdOne: Types.ObjectId | string, IdTwo: Types.ObjectId | string): Promise<Array<HydratedDocument<Friendship>>> {
+    return FriendshipModel.findOne({
+      $or: [{
+        userOneId: IdOne, userTwoId: IdTwo
+      }, {
+        userOneId: IdTwo, userTwoId: IdOne
+      }]
+    }).populate(['userOneId', 'userTwoId']); // Tricky bug: find returns a cursor instead of null
   }
 
   /**
@@ -100,6 +116,16 @@ class FriendshipCollection {
     // This redundancy should be ok because of the unique nature of a friendship
     await FriendshipModel.deleteMany({userOneId: userId});
     await FriendshipModel.deleteMany({userTwoId: userId});
+  }
+
+  /**
+   * Clear the database for debugging purpose
+   *
+   * @return
+   */
+  static async deleteEverything(
+  ) {
+    await FriendshipModel.deleteMany({});
   }
 }
 

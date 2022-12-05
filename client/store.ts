@@ -6,20 +6,40 @@ Vue.use(Vuex);
 
 /**
  * Storage for data that needs to be accessed from various components
+ * 
+ * States:
+ *  filter
+ *  posts
+ *  workSessions
+ *  outgoingFriendRequests
+ *  incomingFriendRequests
+ *  friends
+ *  username
+ *  point
+ *  alerts
  */
 const store = new Vuex.Store({
   state: {
-    filter: null, // Username to filter shown posts by (null = show all)
-    friendFilter: 'Users you friend', // Condition to filter shown friends by
-    posts: [], // All posts created in the app
-    sessions: [], // All sessions created in the app
-    friends: [], // All friends created in the app
-    username: null, // Username of the logged in user
-    point: 0, // Point of the logged in user
+    filter: null,
+    posts: [], // Frontend: (PostComponent -> PostPage) 
     inSession: false, // if user is in a session
-    alerts: {} // global success/error messages encountered during submissions to non-visible forms
+
+    // Work session
+    workSessions: [], // Frontend: (SessionComponent -> SessionPage)
+
+    // Friend and friend requests
+    outgoingFriendRequests: [], // Frontend: (FriendRequestOutComponent -> FriendPage)
+    incomingFriendRequests: [], // Frontend: (FriendRequestInComponent -> FriendPage)
+    friends: [],             // Frontend: (FriendsComponent -> FriendPage)
+
+    // User and user session (not work session, this is cookie!)
+    username: null,
+    point: 0,
+    alerts: {},
+    drawings: [],
   },
   mutations: {
+    /** SET (for refresh persist @blockform) */
     alert(state, payload) {
       /**
        * Add a new message to the global alerts.
@@ -53,13 +73,6 @@ const store = new Vuex.Store({
        */
       state.filter = filter;
     },
-    updateFriendFilter(state, filter) {
-      /**
-       * Update the stored posts filter to the specified one.
-       * @param filter - Username of the user to fitler posts by
-       */
-      state.friendFilter = filter;
-    },
     updatePosts(state, posts) {
       /**
        * Update the stored posts to the provided posts.
@@ -67,51 +80,102 @@ const store = new Vuex.Store({
        */
       state.posts = posts;
     },
-    updateSessions(state, sessions) {
+    updateDrawings(state, drawings) {//TODO Where use??
       /**
-       * Update the stored sessions to the provided sessions.
-       * @param sessions - Sessions to store
+       * Update the stored drawings to the provided drawings.
+       * @param drawings - Posts to store
        */
-      state.sessions = sessions;
+      state.drawings = drawings;
     },
-    // updateFriends(state, friends) {
-    //   /**
-    //    * Update the stored friends to the provided posts.
-    //    * @param posts - Posts to store
-    //    */
-    //   state.friends = friends;
-    // },
-    /** Added this point */
-    updatePoint(state, point) {
+    updateSessions(state, workSessions) {
+      /**
+       * Update the stored workSessions to the provided workSessions.
+       * @param workSessions - workSessions to store
+       */
+      state.workSessions = workSessions;
+    },
+    async updatePoint(state, delta) {
       /**
        * Update the stored posts filter to the specified one.
        * @param filter - Username of the user to fitler posts by
        */
-      state.point = point;
+      const url = `/api/point`;
+      // /:{delta}`
+      const res = await fetch(url, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          delta: delta
+        }),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        }})
+        .then(async r => r.json());
+        console.log('updatePoint', res);
+      state.point = res.requestResponse.point;//.point;
     },
-    /** End of Added this point (frontend, call after made post request)*/
+    async refreshPoint(state) {
+      /**
+       * Update the points
+       * @param filter - Username of the user to fitler posts by
+       */
+       const url = '/api/point';
+       const res = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        }}).then(async r => r.json());
+       console.log('refresh point', res);
+       state.point = res.requestResponse.point;
+    },
+
+    /** REFRESH **/
     async refreshPosts(state) {
       /**
        * Request the server for the currently available posts.
        */
-      if (state.filter === 'News' || state.filter === 'Fibe') {
-        const feedChannelURL = `/api/feedChannel?postType=${state.filter}`;
-        const res = await fetch(feedChannelURL).then(async r => r.json());
-        state.posts = res;
-      } else {
-        const url = state.filter ? `/api/users/${state.filter}/posts` : '/api/posts';
-        const res = await fetch(url).then(async r => r.json());
-        state.posts = res;
-      }
+      const url = state.filter ? `/api/users/${state.filter}/posts` : '/api/posts';
+      const res = await fetch(url).then(async r => r.json());
+      state.posts = res;
+    },
+    // Friend and friend requests
+    async refreshOutFriendRequest(state) {
+      /**
+       * Get all currently outgoing friend requests.
+       */
+      const url = `/api/friendRequest?requestDirection=Out`;
+      const res = await fetch(url).then(async r => r.json());
+      state.outgoingFriendRequests = res.requests;
+    },
+    async refreshInFriendRequest(state) {
+      /**
+       * Get all currently incoming friend requests.
+       */
+      const url = `/api/friendRequest?requestDirection=In`;
+      const res = await fetch(url).then(async r => r.json());
+      state.incomingFriendRequests = res.requests;
+    },
+    /** End of Added this point (frontend, call after made post request)*/ //TODO only refresh drawings of session user
+    async refreshDrawings(state) {
+      /**
+       * Request the server for the currently available posts.
+       */
+      const url = '/api/drawings';
+      const res = await fetch(url, {
+       method: 'GET',
+       headers: {
+         'Content-type': 'application/json; charset=UTF-8',
+       }}).then(async r => r.json());
+      console.log('refresh drawings', res);
+      state.drawings = res;
     },
     async refreshFriends(state) {
       /**
-       * Request the server for the currently available friends.
+       * Get all currently made friends (users in a friendship with the current user)
        */
-      const url = state.friendFilter ? `/api/friend?view=${state.friendFilter}` : '/api/friend?view=Users you friend';
+      console.log('can I see store? YES')
+      const url = `/api/friendship`;
       const res = await fetch(url).then(async r => r.json());
-      console.log('present', res, res.friendedUsers);
-      state.friends = res.friendedUsers;
+      state.friends = res.friendships; // From router response
     },
     async refreshInSession(state) {
       const url = `/api/sessions/${state.username}`;
