@@ -13,7 +13,9 @@
       height="360"
       @mousedown="drawDot"
     />
-    <button v-on:click="submit">Submit</button>
+    <button @click="submit">
+      Submit
+    </button>
     <section class="alerts">
       <article
         v-for="(status, alert, index) in alerts"
@@ -29,6 +31,8 @@
 <script lang="ts">
 // import DrawingForm from '@/Drawing/DrawingForm.vue';
 
+// import { callbackify } from 'util';
+
 export default {
   name: 'DrawingForm',
   data() {
@@ -39,8 +43,14 @@ export default {
       pixels: [],
       hasBody: true,
       tempPoints: this.$store.state.point,
+      callback:null,
+      // callback: () => {
+      //   const message = 'Successfully created a post!';
+      //   this.$set(this.alerts, message, 'success');
+      //   // Delete this success message after 3 seconds
+      //   setTimeout(() => this.$delete(this.alerts, message), 3000);
+      // },
       alerts: {}, // Displays success/error messages encountered during form submission
-
     };
   },
   mounted() {
@@ -96,14 +106,20 @@ export default {
       this.pixels = [];
       this.canvas.clearRect(0, 0, this.c.width, this.c.height);
       this.drawGreyLines(this.c);
+      // if (this.callback)
+      // {
+      //   this.callback();
+      // }
+      // const message = 'Successfully created a post!';
+      // this.$set(this.alerts, message, 'success');
+      // // Delete this success message after 3 seconds
+      // setTimeout(() => this.$delete(this.alerts, message), 3000);
     }
     else{
         const e = 'Cannot submit a drawing with no pixels colored in';
         this.$set(this.alerts, e, 'error');
         setTimeout(() => this.$delete(this.alerts, e), 800);
       }
-    console.log('REFRESH SHOULD REACH HERE');
-    this.$store.commit('refreshDrawings');
     },
     drawGreyLines() {
       for (let r = 0.5; r < this.NUMBER_OF_POINTS; r++) { // draw grey lines
@@ -122,8 +138,8 @@ export default {
       
       // this.$store.commit('updatePoint', 30);
       this.$store.commit('refreshPoint');
-      this.x = this.getCoord(e.offsetX, this.BOX_SIZE);
-      this.y = this.getCoord(e.offsetY, this.BOX_SIZE);
+      this.x = this.getCoord(e.offsetX);
+      this.y = this.getCoord(e.offsetY);
       this.isDrawing = true;
       const context = this.canvas;
       // save original context settings before we translate and change colors
@@ -160,13 +176,12 @@ export default {
         this.$set(this.alerts, e, 'error');
         setTimeout(() => this.$delete(this.alerts, e), 800);
       }
-        
     context.restore();
     },
-    getCoord(coordinate, boxSize) {
+    getCoord(coordinate) {
       const points = [];
       for (let i = 0.5; i < this.NUMBER_OF_POINTS; i++) {
-          points.push(boxSize * i);
+          points.push(this.BOX_SIZE * i);
       }
       // https://stackoverflow.com/questions/8584902/get-the-closest-number-out-of-an-array
       const coord = points.reduce(function(prev, curr) {

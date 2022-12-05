@@ -2,7 +2,6 @@
 <!-- We've tagged some elements with classes; consider writing CSS using those classes to style them... -->
 
 <template>
-  
   <article
     class="drawing"
   >
@@ -22,7 +21,7 @@
         v-if="$store.state.username === drawing.author"
         class="actions"
       >
-        <button
+        <!-- <button
           v-if="editing"
           @click="submitEdit"
         >
@@ -39,7 +38,7 @@
           @click="startEditing"
         >
           ✏️ Edit
-        </button>
+        </button> -->
         <button @click="deleteDrawing">
           🗑️ Delete
         </button>
@@ -49,7 +48,7 @@
     
     <p class="info">
       Drawn at {{ drawing.dateModified }}
-      <i v-if="drawing.edited">(edited)</i>
+      <!-- <i v-if="drawing.edited">(edited)</i> -->
     </p>
     
     <section class="alerts">
@@ -76,25 +75,34 @@ export default {
   },
   data() {
     return {
-      editing: false, // Whether or not this drawing is in edit mode
-      draft: this.drawing.photo, // Potentially-new photo for this drawing
-      alerts: {} // Displays success/error messages encountered during drawing modification
+      // editing: false, // Whether or not this drawing is in edit mode
+      alerts: {}, // Displays success/error messages encountered during drawing modification
+      canvas: this.getCanvas(), // canvas for this drawing
     };
   },
   mounted() {
     // this.$store.commit('refreshPoint');
     this.$store.commit('refreshDrawings'); 
-    this.c = document.getElementById(this.drawing._id);
-    this.canvas = this.c.getContext('2d');
     this.NUMBER_OF_POINTS = 10;
     this.CANVAS_SIZE = 360;
     this.BOX_SIZE = this.CANVAS_SIZE / this.NUMBER_OF_POINTS;
-    this.drawGreyLines(this.c);
-    this.drawDot();
-    this.pixels = [];
-    this.tempPoints = this.$store.state.point;
+    this.canvas = this.getCanvas();
+    
   },
   methods: {
+    getCanvas(){
+      const c = document.getElementById(this.drawing._id);  //this.canvas;
+      if (!c){
+        
+        console.log('TYPE of C', typeof c, c);
+      }
+      console.log('TYPE of C', typeof c, c);
+      const context = c.getContext('2d');
+      console.log('TYPE of context', typeof context, context);
+      this.drawGreyLines(context);
+      this.drawDot(context); 
+      return c
+    },
     getCoord(coordinate, boxSize) {
       const points = [];
       for (let i = 0.5; i < this.NUMBER_OF_POINTS; i++) {
@@ -106,9 +114,8 @@ export default {
       });
       return coord;
   },
-    drawDot() {
+    drawDot(context) {
       for (const i of this.drawing.pixels) { // draw grey lines
-        const context = this.canvas;
         context.save();
         const r = Math.floor(i/10);
         const c = i - 10*r;
@@ -118,6 +125,7 @@ export default {
         context.moveTo(x, y);
         // context.strokeRect(this.x-this.BOX_SIZE/2,this.y-this.BOX_SIZE/2, this.BOX_SIZE, this.BOX_SIZE);
         context.fillRect(x-this.BOX_SIZE/2+1,y-this.BOX_SIZE/2+1, this.BOX_SIZE-2, this.BOX_SIZE-2);
+        context.save();
       }
       // var target = new Image();
       // target.src = this.c.toDataURL();
@@ -126,10 +134,9 @@ export default {
       // // this.canvas.clearRect(0, 0, this.c.width, this.c.height);
       // // this.drawGreyLines(this.c);
     },
-    drawGreyLines() {
+    drawGreyLines(context) {
       for (let r = 0.5; r < this.NUMBER_OF_POINTS; r++) { // draw grey lines
           for (let c = 0.5; c < this.NUMBER_OF_POINTS; c++) {
-              const context = this.canvas;
               context.save();
               context.translate(this.BOX_SIZE * c, this.BOX_SIZE * r);
               context.strokeStyle = 'grey';
@@ -138,21 +145,22 @@ export default {
               context.restore();
           }
       }
+      context.save();
     },
-    startEditing() {
-      /**
-       * Enables edit mode on this drawing.
-       */
-      this.editing = true; // Keeps track of if a drawing is being edited
-      this.draft = this.drawing.photo; // The photo of our current "draft" while being edited
-    },
-    stopEditing() {
-      /**
-       * Disables edit mode on this drawing.
-       */
-      this.editing = false;
-      this.draft = this.drawing.photo;
-    },
+    // startEditing() {
+    //   /**
+    //    * Enables edit mode on this drawing.
+    //    */
+    //   this.editing = true; // Keeps track of if a drawing is being edited
+    //   this.draft = this.drawing.photo; // The photo of our current "draft" while being edited
+    // },
+    // stopEditing() {
+    //   /**
+    //    * Disables edit mode on this drawing.
+    //    */
+    //   this.editing = false;
+    //   this.draft = this.drawing.photo;
+    // },
     deleteDrawing() {
       /**
        * Deletes this drawing.
@@ -167,28 +175,28 @@ export default {
       };
       this.request(params);
     },
-    submitEdit() {
-      /**
-       * Updates drawing to have the submitted draft photo.
-       */
-      if (this.drawing.photo === this.draft) {
-        const error = 'Error: Edited drawing photo should be different than current drawing photo.';
-        this.$set(this.alerts, error, 'error'); // Set an alert to be the error text, timeout of 3000 ms
-        setTimeout(() => this.$delete(this.alerts, error), 3000);
-        return;
-      }
+    // submitEdit() {
+    //   /**
+    //    * Updates drawing to have the submitted draft photo.
+    //    */
+    //   if (this.drawing.photo === this.draft) {
+    //     const error = 'Error: Edited drawing photo should be different than current drawing photo.';
+    //     this.$set(this.alerts, error, 'error'); // Set an alert to be the error text, timeout of 3000 ms
+    //     setTimeout(() => this.$delete(this.alerts, error), 3000);
+    //     return;
+    //   }
 
-      const params = {
-        method: 'PATCH',
-        message: 'Successfully edited drawing!',
-        body: JSON.stringify({photo: this.draft}),
-        callback: () => {
-          this.$set(this.alerts, params.message, 'success');
-          setTimeout(() => this.$delete(this.alerts, params.message), 3000);
-        }
-      };
-      this.request(params);
-    },
+    //   const params = {
+    //     method: 'PATCH',
+    //     message: 'Successfully edited drawing!',
+    //     body: JSON.stringify({photo: this.draft}),
+    //     callback: () => {
+    //       this.$set(this.alerts, params.message, 'success');
+    //       setTimeout(() => this.$delete(this.alerts, params.message), 3000);
+    //     }
+    //   };
+    //   this.request(params);
+    // },
     async request(params) {
       /**
        * Submits a request to the drawing's endpoint
@@ -210,7 +218,7 @@ export default {
           throw new Error(res.error);
         }
 
-        this.editing = false;
+        // this.editing = false;
         options.method = 'GET';
         options.body = null; // GET request MUST not have body, so muyst clear
         r = await fetch('/api/point/', options); // secondary call, don't change this.url
