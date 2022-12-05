@@ -56,7 +56,7 @@ export default {
     // Primitive fix
     this.$store.commit('refreshInSession');
     if (this.$store.inSession) {
-      this.runTimer();
+      // this.runTimer();
       this.waitForCheck();
     }
   },
@@ -133,6 +133,7 @@ export default {
       clearInterval(this.timerIntervalId);
     },
     async startSession() {
+      this.timeElapsed = "00:00:00";
       const url = `/api/sessions`;
       const params = {
           method: 'POST',
