@@ -26,24 +26,14 @@
       <header>
         <div class="left">
           <h2 class="box">
-            📙 My feeds
+            📙 My feed
             <span v-if="$store.state.filter">
               by @{{ $store.state.filter }}
             </span>
           </h2>
         </div>
         <!-- Added post feed channel selection-->
-        <div
-          class="right"
-        >
-          <SelectFeedChannel
-            ref="selectFeedChannel"
-            class="uniform-button"
-            value="caption"
-            placeholder="🔍 Type 'News' / 'Fibe' for selected feed channel posts (optional)"
-            button="🔄 Get posts"
-          />
-        </div>
+
         <!-- End of Added post feed channel selection-->
         <div class="right">
           <GetPostsForm
@@ -77,18 +67,12 @@
 // Components
 import PostComponent from '@/components/Post/PostComponent.vue';
 import GetPostsForm from '@/components/Post/GetPostsForm.vue';
-import SelectFeedChannel from '@/components/FeedChannel/SelectFeedChannel.vue';
 
 export default {
   name: 'PostPage',
-  components: {PostComponent, GetPostsForm, SelectFeedChannel},
+  components: {PostComponent, GetPostsForm},
   mounted() {
-    // Primitive fix
-    if (this.$refs.selectFeedChannel) {
-      this.$refs.selectFeedChannel.submit(); // Added this for feed channel filtering
-    } else {
-      this.$refs.getPostsForm.submit();
-    }
+    // this.$refs.getPostsForm.submit();
   }
 };
 </script>
@@ -130,7 +114,7 @@ section .scrollbox {
 }
 
 /** Cross box */
-.button-89 {
+.input-form-box {
   --b: 3px;   /* border thickness */
   --s: .45em; /* size of the corner */
   --color: #373B44;

@@ -35,52 +35,52 @@
         <div class="center">
           <h2>
             {{ $store.state.friends.length }} Friends 
-            <span v-if="$store.state.filter">
-              by @{{ $store.state.filter }}
-            </span>
           </h2>
         </div>
         <div class="right">
           <h2>
             {{ $store.state.point }} Points 
-            <span v-if="$store.state.filter">
-              by @{{ $store.state.filter }}
-            </span>
           </h2>
         </div>
         <!-- Added post feed channel selection-->
 
         <!-- End of Added post feed channel selection-->
+        <!--             v-if="$store.state.username === post.author" -->
       </header>
       <header>
         <div>
           <tabs>
             <tab title="Sessions">
               <section
-                v-if="$store.state.posts.length && $store.state.username">
+                v-if="$store.state.posts.length && $store.state.username"
+              >
                 <PostComponent
                   v-for="post in $store.state.posts"
-                  v-if="$store.state.username === post.author"
                   :key="post.id"
                   :post="post"
                 />
               </section>
               <article
-                v-else>
+                v-else
+              >
                 <h3>No posts found.</h3>
-              </article></tab>
-            <tab title="Drawings"><router-link 
-              v-if="$store.state.username"
-              to="/draw"> <!-- TODO bring in componenet-->
-              <span class="subbar">
-                <button class="box">
-                  Make New Drawing!
-                </button>
-              </span>
-            </router-link>
-          </tab>
+              </article>
+            </tab>
+            <tab title="Drawings">
+              <router-link 
+                v-if="$store.state.username"
+                to="/draw"
+              >
+                <!-- TODO bring in componenet-->
+                <span class="subbar">
+                  <button class="box">
+                    Make New Drawing!
+                  </button>
+                </span>
+              </router-link>
+            </tab>
             <tab title="Friends">
-              <FriendPage></FriendPage>
+              <FriendPage />
             </tab>
           </tabs>
         </div>
@@ -93,13 +93,13 @@
 // Components
 
 import PostComponent from '@/components/Post/PostComponent.vue';
-import GetPostsForm from '@/components/Profile/GetPostsForm.vue';
 import FriendPage from '@/components/Friend/FriendPage.vue';
 import Tab from './ProfileTab.vue'
 import Tabs from './ProfileTabs.vue'
 export default {
+
   name: 'PostPage',
-  components: {PostComponent, GetPostsForm, Tab, Tabs, FriendPage},
+  components: {PostComponent, Tab, Tabs, FriendPage},
   mounted() {
   }
 };

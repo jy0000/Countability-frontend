@@ -15,8 +15,8 @@ export type Friendship = {
 
 export type PopulatedFriendship = {
   _id: Types.ObjectId;
-  userOne: User;
-  userTwo: User;
+  userOneId: User;
+  userTwoId: User;
   dateCreated: Date;
 };
 

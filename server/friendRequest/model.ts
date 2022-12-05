@@ -15,8 +15,8 @@ export type FriendRequest = {
 
 export type PopulatedFriendRequest = {
   _id: Types.ObjectId;
-  friendRequestSender: User;
-  friendRequestReceiver: User;
+  friendRequestSenderId: User;
+  friendRequestReceiverId: User;
   dateCreated: Date;
 };
 
