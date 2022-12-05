@@ -3,19 +3,16 @@
 
 <template>
   <main>
-
     <section>
-
+      <LogoutForm />
       <ChangeUsernameForm />
       <ChangePasswordForm />
-      <LogoutForm />
       <DeleteAccountForm />
     </section>
   </main>
 </template>
 
 <script>
-import PointComponent from '@/components/Point/PointComponent.vue';
 import ChangeUsernameForm from '@/components/Account/ChangeUsernameForm.vue';
 import ChangePasswordForm from '@/components/Account/ChangePasswordForm.vue';
 import DeleteAccountForm from '@/components/Account/DeleteAccountForm.vue';
@@ -28,7 +25,6 @@ export default {
     ChangePasswordForm,
     DeleteAccountForm,
     LogoutForm,
-    PointComponent,
   }
 };
 </script>

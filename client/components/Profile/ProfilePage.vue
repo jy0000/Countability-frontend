@@ -4,7 +4,7 @@
     <section v-if="$store.state.username">
       <header>
         <h2 class="box">
-          @{{ $store.state.username }}
+          My profile @{{ $store.state.username }}
         </h2>
       </header>
     </section>
@@ -27,22 +27,18 @@
       </article>
     </section>
 
-    <div class="left">
-      <img
-        src="../../public/luffy.png"
-        height="300"
-        width="300"
-      >
-    </div>
     <section v-if="$store.state.username">
       <header>
-        <div class="center">
-          <h2>
+        <div class="position">
+          <img
+            src="../../public/luffy.png"
+            height="300"
+            width="300"
+          >
+          <h2 class="uniform-button">
             {{ $store.state.friends.length }} Friends 
           </h2>
-        </div>
-        <div class="right">
-          <h2>
+          <h2 class="uniform-button">
             {{ $store.state.point }} Points 
           </h2>
         </div>
@@ -50,6 +46,9 @@
       <header>
         <div>
           <tabs>
+            <tab title="Account Management">
+              <AccountPage />
+            </tab>
             <tab title="Sessions">
               <section
                 v-if="$store.state.posts.length && $store.state.username"
@@ -71,9 +70,6 @@
             </tab>
             <tab title="Friends">
               <FriendPage />
-            </tab>
-            <tab title="Account Management">
-              <AccountPage />
             </tab>
           </tabs>
         </div>
@@ -124,6 +120,11 @@ section .scrollbox {
 
 img {
   border-radius: 50%;
+}
+
+.position {
+  display: flex;
+  justify-content: flex-start;
 }
 .box {
   background-color: #c2fbd7;
@@ -187,7 +188,7 @@ img {
 }
 .uniform-button {
   align-self: center;
-  background-color: rgb(199, 193, 193, 0.45);
+  background-color: white;
   background-image: none;
   background-position: 0 90%;
   background-repeat: repeat no-repeat;
