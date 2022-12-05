@@ -10,6 +10,14 @@
       <h3 class="author">
         @{{ post.author }}
       </h3>
+
+      <img
+      class="photo"
+      :src="post.photo"
+      id="base64image"
+      width="200"
+      height="200"
+    />
       <!-- If the user signs in, they get to see this-->
       <div
         v-if="$store.state.username === post.author"
@@ -46,12 +54,9 @@
       :value="draft"
       @input="draft = $event.target.value"
     />
-    <p
-      v-else
-      class="photo"
-    >
-      {{ post.photo }}
-    </p>
+    
+
+
     <!-- Added descriptive post -->
     <p class="info">
       <i

@@ -28,7 +28,9 @@
     </section>
 
     <div class="left">
-      <img src="../../public/luffy.png">
+      <img src="../../public/luffy.png"
+      height="300"
+      width="300">
     </div>
     <section v-if="$store.state.username">
       <header>

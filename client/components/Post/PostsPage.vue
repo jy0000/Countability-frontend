@@ -69,7 +69,7 @@ export default {
   name: 'PostPage',
   components: {PostComponent, GetPostsForm},
   mounted() {
-    // this.$refs.getPostsForm.submit();
+    this.$refs.getPostsForm.submit();
   }
 };
 </script>
