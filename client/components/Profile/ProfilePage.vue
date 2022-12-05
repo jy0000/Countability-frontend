@@ -67,17 +67,7 @@
               </article>
             </tab>
             <tab title="Drawings">
-              <router-link 
-                v-if="$store.state.username"
-                to="/drawing"
-              >
-                <!-- TODO bring in componenet-->
-                <span class="subbar">
-                  <button class="box">
-                    Make New Drawing!
-                  </button>
-                </span>
-              </router-link>
+              <DrawingPage />
             </tab>
             <tab title="Friends">
               <FriendPage />
@@ -98,12 +88,13 @@
 import PostComponent from '@/components/Post/PostComponent.vue';
 import FriendPage from '@/components/Friend/FriendPage.vue';
 import AccountPage from '@/components/Account/AccountPage.vue';
+import DrawingPage from '@/components/Drawing/DrawingsPage.vue';
 import Tab from './ProfileTab.vue'
 import Tabs from './ProfileTabs.vue'
 export default {
 
   name: 'PostPage',
-  components: {PostComponent, Tab, Tabs, FriendPage, AccountPage},
+  components: {PostComponent, Tab, Tabs, FriendPage, AccountPage, DrawingPage},
   mounted() {
   }
 };
