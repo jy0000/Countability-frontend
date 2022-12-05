@@ -8,7 +8,7 @@ type WorkSessionResponse = {
   endDate: string;
   sessionOwner: string;
   numChecks: number;
-  checks: string;
+  checks: string[];
 };
 
 /**
@@ -41,7 +41,7 @@ const constructWorkSessionResponse = (session: HydratedDocument<WorkSession>): W
     endDate: formatDate(session.endDate),
     sessionOwner: sessionOwnerUsername,
     numChecks: sessionCopy.numChecks,
-    checks: sessionCopy.checks.toString()
+    checks: sessionCopy.checks
   };
   if (!sessionCopy.endDate) {
     delete toReturn.endDate;

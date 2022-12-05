@@ -5,7 +5,7 @@
     <section v-if="$store.state.username">
       <header>
         <h2 class="box">
-          Welcome @{{ $store.state.username }}
+          Let's get to work, @{{ $store.state.username }}!
         </h2>
       </header>
     </section>
@@ -27,40 +27,54 @@
         </h3>
       </article>
     </section>
-    <section>
-      <h4>{{time}}</h4>
-      <button @click='stopTimer'> Submit </button>
+    <section v-if="$store.state.username">
+      <article v-if="!$store.state.inSession">
+        <button @click='startSession'> Start Session </button>
+      </article>
+      <article v-else>
+        <h4>Time Elapsed: {{timeElapsed}}</h4>
+        <div v-if="showUpload">
+          <img :src="previewImage" class="uploading-image" />
+          <input type="file" accept="image/jpeg" @change=uploadImage>
+          <div>
+            <button @click='submitImage'>Submit Image</button>
+            <button @click='skipCheck'>Skip Check</button>
+          </div>
+        </div>
+        <h4 v-else>Checking user every 5 seconds (beta only)</h4>
+        <button @click='endSession'> End Session </button>
+      </article>
     </section>
   </main>
 </template>
 
 <script>
-// Components
-import SessionComponent from '@/components/Session/SessionComponent.vue';
-import CreateSessionForm from '@/components/Session/CreateSessionForm.vue';
-import GetSessionsForm from '@/components/Session/GetSessionsForm.vue';
-
-import CreatePostForm from '@/components/Post/CreatePostForm.vue';
 
 export default {
   name: 'SessionPage',
-  components: {SessionComponent, GetSessionsForm, CreateSessionForm, CreatePostForm},
   mounted() {
     // Primitive fix
-    this.runTimer();
+    this.$store.commit('refreshInSession');
+    if (this.$store.inSession) {
+      this.runTimer();
+      this.waitForCheck();
+    }
   },
   data() {
     return {
-      time: " ",
-      intervalId: ""
+      startTime: "",
+      timeElapsed: "00:00:00",
+      timerIntervalId: "",
+      checkIntervalId: "",
+      showUpload: false,
+      previewImage:null,
     }
   },
   methods: {
     async submitRequest() {
-      const url = `/api/sessions/a`;
-      console.log('asdfkj');
+      const url = `/api/sessions/check`;
       const params = {
-          method: 'GET',
+          method: 'PATCH',
           message: 'Success!',
           callback: () => {
           // this.$set(this.alerts, params.message, 'success');
@@ -71,11 +85,12 @@ export default {
       const options = {
           method: params.method, 
           headers: {'Content-Type': 'application/json'},
-          // body: JSON.stringify(
-          //   {
-          //     numChecks:1
-          //   }
-          // )
+          body: JSON.stringify(
+            {
+              check:'test',
+              numChecks: 0
+            }
+          )
       };
       try {
           const r = await fetch(url, options);
@@ -93,12 +108,149 @@ export default {
     },
     runTimer() {
       let page = this;
-      this.intervalId = setInterval(() => {
-        page.time = new Date().toLocaleTimeString();
+      this.startTime = new Date();
+      let startTime = new Date()
+      this.timerIntervalId = setInterval(() => {
+        let time = new Date() - startTime;
+        function pad(n) {
+          return ('00' + n).slice(-2);
+        }
+        const ms = time % 1000;
+        time = (time-ms)/1000;
+        const s = time % 60;
+        time = (time-s)/60;
+        const m = time % 60;
+        time = (time-m)/60;
+        const hr = time;
+        page.timeElapsed = pad(hr) + ":" + pad(m) + ":" + pad(s);
       }, 1000);
     },
     stopTimer() {
-      clearInterval(this.intervalId);
+      clearInterval(this.timerIntervalId);
+    },
+    async startSession() {
+      const url = `/api/sessions`;
+      const params = {
+          method: 'POST',
+          message: 'Success!',
+          callback: () => {
+          // this.$set(this.alerts, params.message, 'success');
+          // setTimeout(() => this.$delete(this.alerts, params.message), 3000);
+            this.$store.commit('refreshInSession');
+            this.runTimer();
+            this.waitForCheck();
+          }
+      };
+      const options = {
+          method: params.method, 
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(
+            {
+              numChecks: 0
+            }
+          )
+      };
+      try {
+          const r = await fetch(url, options);
+          if (!r.ok) {
+              const res = await r.json();
+              throw new Error(res.error);
+          }
+          console.log(await r.json());
+          params.callback();
+      } catch (e) {
+        console.log(e);
+          // this.$set(this.alerts, e, 'error');
+          // setTimeout(() => this.$delete(this.alerts, e), 3000);
+      }
+    },
+    async endSession() {
+      const url = `/api/sessions/end`;
+      const params = {
+          method: 'POST',
+          message: 'Success!',
+          callback: () => {
+          // this.$set(this.alerts, params.message, 'success');
+          // setTimeout(() => this.$delete(this.alerts, params.message), 3000);
+            this.$store.commit('refreshInSession');
+            this.stopTimer();
+          }
+      };
+      const options = {
+          method: params.method, 
+          headers: {'Content-Type': 'application/json'}
+      };
+      try {
+          const r = await fetch(url, options);
+          if (!r.ok) {
+              const res = await r.json();
+              throw new Error(res.error);
+          }
+          console.log(await r.json());
+          params.callback();
+      } catch (e) {
+        console.log(e);
+          // this.$set(this.alerts, e, 'error');
+          // setTimeout(() => this.$delete(this.alerts, e), 3000);
+      }
+    },
+    waitForCheck() {
+      const page = this;
+      this.checkIntervalId = setInterval(() => {
+        page.showUpload = true;
+      }, 5000)
+    },
+    uploadImage(e){
+        const image = e.target.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(image);
+        console.log(image);
+        reader.onload = e =>{
+            this.previewImage = e.target.result;
+            console.log(this.previewImage);
+        };
+    },
+    async submitImage() {
+      if (!this.previewImage) {
+        return;
+      }
+      const url = `/api/sessions/check`;
+      const params = {
+          method: 'PATCH',
+          message: 'Success!',
+          callback: () => {
+          // this.$set(this.alerts, params.message, 'success');
+          // setTimeout(() => this.$delete(this.alerts, params.message), 3000);
+          this.showUpload = false;
+          this.previewImage = null;
+          }
+      };
+      const options = {
+          method: params.method, 
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(
+            {
+              check:this.previewImage
+            }
+          )
+      };
+      try {
+          const r = await fetch(url, options);
+          if (!r.ok) {
+              const res = await r.json();
+              throw new Error(res.error);
+          }
+          console.log(await r.json());
+          params.callback();
+      } catch (e) {
+        console.log(e);
+          // this.$set(this.alerts, e, 'error');
+          // setTimeout(() => this.$delete(this.alerts, e), 3000);
+      }
+    },
+    skipCheck() {
+      this.showUpload = false;
+      this.previewImage = null;
     }
   }
 };

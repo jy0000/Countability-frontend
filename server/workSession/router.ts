@@ -95,6 +95,31 @@ router.post(
 );
 
 /**
+ * Add a new session check image.
+ *
+ * @name PATCH /api/sessions/check
+ *
+ * @throws {403} - If the user is not logged in
+ * @throws {409} - If the user is not in a session
+ */
+ router.patch(
+  '/check',
+  [
+    userValidator.isUserLoggedIn,
+    sessionValidator.isNotInSession
+  ],
+  async (req: Request, res: Response) => {
+    const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
+    const session = await WorkSessionCollection.checkOneByUser(userId, req.body.check);
+
+    res.status(201).json({
+      message: 'Successfully uploaded photo check.',
+      session: util.constructWorkSessionResponse(session)
+    });
+  }
+);
+
+/**
  * Delete a session
  *
  * @name DELETE /api/sessions/:id

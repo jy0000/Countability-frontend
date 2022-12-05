@@ -127,7 +127,7 @@ const isSessionOwnerExists = async (req: Request, res: Response, next: NextFunct
     }
   }
   res.status(409).json({
-    error: 'User cannot end session without starting one first.'
+    error: 'User is currently not in a session.'
   });
   return;
 };

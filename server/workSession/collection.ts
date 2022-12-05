@@ -2,6 +2,7 @@ import type {HydratedDocument, Types} from 'mongoose';
 import type {WorkSession} from './model';
 import WorkSessionModel from './model';
 import UserCollection from '../user/collection';
+import PostCollection from '../post/collection';
 
 /**
  * A collection class representing a work session for a user.
@@ -89,6 +90,7 @@ class WorkSessionCollection {
     const workSession = await WorkSessionModel.findOne({_id: workSessionId});
     const endDate = new Date();
     workSession.endDate = endDate;
+    await PostCollection.addOne(workSession.sessionOwnerId, workSession.checks.length > 0 ? workSession.checks[0] : "blank", "I finished my session!",  "", "");
     await workSession.save();
     return workSession.populate('sessionOwnerId');
   }
@@ -103,9 +105,36 @@ class WorkSessionCollection {
     const workSession = await WorkSessionModel.findOne({sessionOwnerId:userId, endDate: undefined});
     const endDate = new Date();
     workSession.endDate = endDate;
+    await PostCollection.addOne(workSession.sessionOwnerId, workSession.checks.length > 0 ? workSession.checks[0] : "blank", "I finished my session!", "", "");
     await workSession.save();
     return workSession.populate('sessionOwnerId');
   }
+
+  /**
+   * Add a check to a work session with the given WorkSessionId.
+   *
+   * @param {string} workSessionId - The WorkSessionId of WorkSession to check 
+   * @return {Promise<HydratedDocument<WorkSession>>} - updated workSession
+   */
+   static async checkOne(workSessionId: Types.ObjectId | string, check: string): Promise<HydratedDocument<WorkSession>> {
+    const workSession = await WorkSessionModel.findOne({_id: workSessionId});
+    workSession.checks.push(check);
+    await workSession.save();
+    return workSession.populate('sessionOwnerId');
+  }
+
+   /**
+   * Add a check to a work session with the given WorkSessionId.
+   *
+   * @param {string} userId - The owner id of WorkSession to check
+   * @return {Promise<HydratedDocument<WorkSession>>} - updated workSession
+   */
+    static async checkOneByUser(userId: Types.ObjectId | string, check: string): Promise<HydratedDocument<WorkSession>> {
+      const workSession = await WorkSessionModel.findOne({sessionOwnerId:userId, endDate: undefined});
+      workSession.checks.push(check);
+      await workSession.save();
+      return workSession.populate('sessionOwnerId');
+    }
 
   /**
    * Update a work session with the given WorkSessionId.
@@ -113,7 +142,7 @@ class WorkSessionCollection {
    * @param {string} workSessionId - The WorkSessionId of WorkSession to
    * @return {Promise<HydratedDocument<WorkSession>>} - updated workSession
    */
-   static async updateOne(workSessionId: Types.ObjectId | string): Promise<HydratedDocument<WorkSession>> {
+   static async updateOne(workSessionId: Types.ObjectId | string, sessionDetails: {numChecks: number, checks: Array<string>}): Promise<HydratedDocument<WorkSession>> {
     // TODO: finish function
     const workSession = await WorkSessionModel.findOne({_id: workSessionId});
     const endDate = new Date();

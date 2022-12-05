@@ -16,6 +16,7 @@ const store = new Vuex.Store({
     friends: [], // All friends created in the app
     username: null, // Username of the logged in user
     point: 0, // Point of the logged in user
+    inSession: false, // if user is in a session
     alerts: {} // global success/error messages encountered during submissions to non-visible forms
   },
   mutations: {
@@ -41,6 +42,9 @@ const store = new Vuex.Store({
        * @param username - new point to set
        */
       state.point = point;
+    },
+    setInSession(state, inSession) {
+      state.inSession = inSession;
     },
     updateFilter(state, filter) {
       /**
@@ -108,6 +112,17 @@ const store = new Vuex.Store({
       const res = await fetch(url).then(async r => r.json());
       console.log('present', res, res.friendedUsers);
       state.friends = res.friendedUsers;
+    },
+    async refreshInSession(state) {
+      const url = `/api/sessions/${state.username}`;
+      const res = await fetch(url).then(async r => r.json());
+      for (let i = 0; i < res.length; i++) {
+        if (!res[i].endDate) {
+          state.inSession = true;
+          return;
+        }
+      }
+      state.inSession = false;
     }
   },
   // Store data across page refreshes, only discard on browser close

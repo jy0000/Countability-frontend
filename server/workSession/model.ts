@@ -12,7 +12,7 @@ export type WorkSession = {
   endDate: Date;
   sessionOwnerId: Types.ObjectId;
   numChecks: number; // Timing occurs in the frontend (client-side)
-  checks: Types.ObjectId[]; // Contains ids of each productivity check
+  checks: string[]; // Contains ids of each productivity check
 };
 
 export type PopulatedWorkSession = {
@@ -21,7 +21,7 @@ export type PopulatedWorkSession = {
   endDate: Date;
   sessionOwner: User;
   numChecks: number;
-  checks: Types.ObjectId[];
+  checks: string[];
 };
 
 const WorkSessionSchema = new Schema<WorkSession>({
@@ -46,9 +46,9 @@ const WorkSessionSchema = new Schema<WorkSession>({
     type: Number,
     required: true
   },
-  // All the productivity checks in this session, along with their photos
+  // All the productivity check photos
   checks: [{
-    type: Schema.Types.ObjectId,
+    type: String,
     required: true
   }]
 });
