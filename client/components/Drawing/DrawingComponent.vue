@@ -82,6 +82,8 @@ export default {
     };
   },
   mounted() {
+    // this.$store.commit('refreshPoint');
+    this.$store.commit('refreshDrawings'); 
     this.c = document.getElementById(this.drawing._id);
     this.canvas = this.c.getContext('2d');
     this.NUMBER_OF_POINTS = 10;

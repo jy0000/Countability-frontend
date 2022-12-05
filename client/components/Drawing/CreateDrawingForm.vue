@@ -51,7 +51,9 @@ export default {
     this.BOX_SIZE = this.CANVAS_SIZE / this.NUMBER_OF_POINTS;
     this.drawGreyLines(this.c);
     this.pixels = [];
+    this.$store.commit('refreshPoint');
     this.tempPoints = this.$store.state.point;
+    this.$store.commit('refreshDrawings'); 
   },
   methods: {
     // submit: function (e){
@@ -60,7 +62,6 @@ export default {
     async submit() {
       if (this.pixels.length != 0)
       {
-      this.$store.commit('refreshPoint');
       this.$store.commit('updatePoint', this.tempPoints - this.$store.state.point); //TODO
       this.$store.commit('refreshPoint');
       
@@ -79,10 +80,20 @@ export default {
           }})
           .then(async r => r.json());
       }
-
-      this.$store.commit('refreshDrawings'); 
-      this.pixels = [];
       
+          const r = await fetch('/api/drawings', {
+            method: 'GET',
+            headers: {
+              'Content-type': 'application/json; charset=UTF-8',
+            }});
+          const res = await r.json();
+          if (!r.ok) {
+            throw new Error(res.error);
+          } 
+          console.log('inside drawing submit', res)
+          this.$store.commit('updateDrawings', res);
+          this.$store.commit('refreshDrawings'); 
+      this.pixels = [];
       this.canvas.clearRect(0, 0, this.c.width, this.c.height);
       this.drawGreyLines(this.c);
     }
@@ -91,6 +102,8 @@ export default {
         this.$set(this.alerts, e, 'error');
         setTimeout(() => this.$delete(this.alerts, e), 800);
       }
+    console.log('REFRESH SHOULD REACH HERE');
+    this.$store.commit('refreshDrawings');
     },
     drawGreyLines() {
       for (let r = 0.5; r < this.NUMBER_OF_POINTS; r++) { // draw grey lines
@@ -106,6 +119,9 @@ export default {
       }
     },
     async drawDot(e) {
+      
+      // this.$store.commit('updatePoint', 30);
+      this.$store.commit('refreshPoint');
       this.x = this.getCoord(e.offsetX, this.BOX_SIZE);
       this.y = this.getCoord(e.offsetY, this.BOX_SIZE);
       this.isDrawing = true;
@@ -116,7 +132,6 @@ export default {
       // // get row, column
       const row = Math.round((this.y - this.BOX_SIZE/2)/this.BOX_SIZE); // 0-indexed
       const col = Math.round((this.x - this.BOX_SIZE/2)/this.BOX_SIZE); // 0-indexed
-      this.$store.commit('refreshPoint');
       const i = row*10 + col
       const delta = this.pixels.includes(i)? 1: -1
       
