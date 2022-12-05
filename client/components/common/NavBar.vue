@@ -13,8 +13,15 @@
         </span>
       </router-link>
     </div>
-    
+
     <div class="right">
+      <router-link to="/">
+        <button
+          class="uniform-button"
+        >
+          Feed
+        </button>
+      </router-link>
       <!-- TODO In router.ts, add session link if not there, create a SessionPage under client/WorkSession-->
       <router-link to="/session">
         <button

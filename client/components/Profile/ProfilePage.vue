@@ -121,6 +121,10 @@ section .scrollbox {
   padding: 3%;
   overflow-y: scroll;
 }
+
+img {
+  border-radius: 50%;
+}
 .box {
   background-color: #c2fbd7;
   border-radius: 5px;
