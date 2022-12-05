@@ -33,6 +33,9 @@
         Submit
       </button>
     </section>
+    <section>
+      <CreatePostForm></CreatePostForm>
+    </section>
   </main>
 </template>
 
