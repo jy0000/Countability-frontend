@@ -48,13 +48,6 @@
           Profile
         </button>
       </router-link>
-      <router-link to="/account">
-        <button
-          class="uniform-button"
-        >
-          Account
-        </button>
-      </router-link>
     </div>
     <section class="alerts">
       <article

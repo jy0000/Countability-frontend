@@ -82,6 +82,9 @@
             <tab title="Friends">
               <FriendPage />
             </tab>
+            <tab title="Account Management">
+              <AccountPage />
+            </tab>
           </tabs>
         </div>
       </header>
@@ -94,12 +97,13 @@
 
 import PostComponent from '@/components/Post/PostComponent.vue';
 import FriendPage from '@/components/Friend/FriendPage.vue';
+import AccountPage from '@/components/Account/AccountPage.vue';
 import Tab from './ProfileTab.vue'
 import Tabs from './ProfileTabs.vue'
 export default {
 
   name: 'PostPage',
-  components: {PostComponent, Tab, Tabs, FriendPage},
+  components: {PostComponent, Tab, Tabs, FriendPage, AccountPage},
   mounted() {
   }
 };
