@@ -62,7 +62,7 @@ export default {
     this.drawGreyLines(this.c);
     this.pixels = [];
     this.$store.commit('refreshPoint');
-    this.tempPoints = this.$store.state.point;
+    // this.tempPoints = this.$store.state.point;
     this.$store.commit('refreshDrawings'); 
   },
   methods: {
@@ -124,9 +124,12 @@ export default {
       }
     },
     drawGreyLines() {
+      const context = this.context;
+      context.fillStyle = "white";
+      context.fillRect(0, 0, this.c.width, this.c.height);
+      context.fillStyle = 'black';
       for (let r = 0.5; r < this.NUMBER_OF_POINTS; r++) { // draw grey lines
           for (let c = 0.5; c < this.NUMBER_OF_POINTS; c++) {
-              const context = this.context;
               context.save();
               context.translate(this.BOX_SIZE * c, this.BOX_SIZE * r);
               context.strokeStyle = 'grey';
@@ -135,6 +138,7 @@ export default {
               context.restore();
           }
       }
+      context.strokeRect(0, 0, this.c.width, this.c.height);
     },
     async drawDot(e) {
       
@@ -156,7 +160,7 @@ export default {
       if (this.pixels.includes(i)){
         this.tempPoints += 1;
         this.pixels.splice(this.pixels.indexOf(i), 1);
-        context.fillStyle = `rgba(232, 246, 232)`;
+        context.fillStyle = 'white';
         // context.strokeStyle = 'grey';
         context.lineWidth = 2;
         context.moveTo(this.x, this.y);
@@ -167,7 +171,7 @@ export default {
       else if (this.tempPoints + delta >= 0){
         this.tempPoints -= 1;
         this.pixels.push(i);
-        // context.strokeStyle = 'black';
+        context.strokeStyle = 'black';
         context.lineWidth = 2;
         context.moveTo(this.x, this.y);
         // context.strokeRect(this.x-this.BOX_SIZE/2,this.y-this.BOX_SIZE/2, this.BOX_SIZE, this.BOX_SIZE);
