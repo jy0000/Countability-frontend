@@ -8,6 +8,7 @@ type DrawingResponse = {
   author: string;
   dateCreated: string;
   pixels: number[];
+  imageURL: string;
   dateModified: string;
   width: number;
   height: number;
@@ -42,6 +43,7 @@ const constructDrawingResponse = (drawing: HydratedDocument<Drawing>): DrawingRe
     author: username,
     dateCreated: formatDate(drawing.dateCreated),
     pixels: drawingCopy.pixels,
+    imageURL: drawingCopy.imageURL,
     dateModified: formatDate(drawing.dateModified),
     width: drawingCopy.width,
     height: drawingCopy.height

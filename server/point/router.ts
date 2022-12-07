@@ -36,7 +36,7 @@ router.get(
 /**
  * Modify a point
  *
- * @name PATCH /api/points/:id
+ * @name PATCH /api/point
  *
  * @param {string} photo - the new photo for the point
  * @return {PointResponse} - the updated point

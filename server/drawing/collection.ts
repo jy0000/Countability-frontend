@@ -23,6 +23,7 @@ class DrawingCollection {
   static async addOne(
     authorId: Types.ObjectId | string,
     pixels: number[],
+    imageURL: string,
     width: number,
     height: number
   ): Promise<HydratedDocument<Drawing>> {
@@ -31,6 +32,7 @@ class DrawingCollection {
       authorId,
       dateCreated: date,
       pixels,
+      imageURL,
       dateModified: date,
       width,
       height
@@ -102,9 +104,10 @@ class DrawingCollection {
    * @param {number[]} pixels - The new pixels of the drawing
    * @return {Promise<HydratedDocument<Drawing>>} - The newly updated drawing
    */
-  static async updateOne(drawingId: Types.ObjectId | string, pixels: number[]): Promise<HydratedDocument<Drawing>> {
+  static async updateOne(drawingId: Types.ObjectId | string, pixels: number[], imageURL: string): Promise<HydratedDocument<Drawing>> {
     const drawing = await DrawingModel.findOne({_id: drawingId});
     drawing.pixels = pixels;
+    drawing.imageURL = imageURL;
     drawing.dateModified = new Date();
     await drawing.save();
     return drawing.populate('authorId');

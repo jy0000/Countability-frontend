@@ -52,6 +52,7 @@
               >
                 <PostComponent
                   v-for="post in $store.state.posts"
+                  v-if="$store.state.username === post.author"
                   :key="post.id"
                   :post="post"
                 />
@@ -119,6 +120,7 @@ section .scrollbox {
 }
 
 img {
+  border: 3px solid #555;
   border-radius: 50%;
 }
 
