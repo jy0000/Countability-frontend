@@ -2,7 +2,6 @@
 <!-- We've tagged some elements with classes; consider writing CSS using those classes to style them... -->
 
 <template>
-  
   <article
     class="drawing"
   >
@@ -12,11 +11,16 @@
         @{{ drawing.author }}
       </h3>
       <canvas
+        v-if="editing"
         :id="this.drawing._id"
         width="360"
         height="360"
         @mousedown="drawDot"
       />
+      <img
+        v-if="!editing"
+        :src="this.drawing.imageURL"
+      >
       <!-- If the user signs in, they get to see this-->
       <div
         v-if="$store.state.username === drawing.author"
@@ -77,19 +81,18 @@ export default {
   data() {
     return {
       editing: false, // Whether or not this drawing is in edit mode
-      draft: this.drawing.photo, // Potentially-new photo for this drawing
+      // draft: this.drawing.photo, // Potentially-new photo for this drawing
       alerts: {} // Displays success/error messages encountered during drawing modification
     };
   },
   mounted() {
-    this.c = document.getElementById(this.drawing._id);
     this.canvas = this.c.getContext('2d');
     this.NUMBER_OF_POINTS = 10;
     this.CANVAS_SIZE = 360;
     this.BOX_SIZE = this.CANVAS_SIZE / this.NUMBER_OF_POINTS;
-    this.drawGreyLines(this.c);
-    this.drawDot();
-    this.pixels = [];
+    this.pixels = Object.assign([], this.drawing.pixels);
+    // var target = new Image();
+    // target.src = this.drawing.imageURL;
     this.tempPoints = this.$store.state.point;
   },
   methods: {
@@ -105,7 +108,7 @@ export default {
       return coord;
   },
     drawDot() {
-      for (const i of this.drawing.pixels) { // draw grey lines
+      for (const i of this.pixels) {
         const context = this.canvas;
         context.save();
         const r = Math.floor(i/10);
@@ -142,7 +145,9 @@ export default {
        * Enables edit mode on this drawing.
        */
       this.editing = true; // Keeps track of if a drawing is being edited
-      this.draft = this.drawing.photo; // The photo of our current "draft" while being edited
+      this.drawGreyLines(this.c);
+      this.drawDot();
+      // this.draft = this.drawing.photo; // The photo of our current "draft" while being edited
     },
     stopEditing() {
       /**

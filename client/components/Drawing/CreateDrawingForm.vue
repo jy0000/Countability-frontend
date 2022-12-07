@@ -13,7 +13,9 @@
       height="360"
       @mousedown="drawDot"
     />
-    <button v-on:click="submit">Submit</button>
+    <button @click="submit">
+      Submit
+    </button>
     <section class="alerts">
       <article
         v-for="(status, alert, index) in alerts"
@@ -45,10 +47,10 @@ export default {
   },
   mounted() {
     this.c = document.getElementById("myCanvas");
-    this.canvas = this.c.getContext('2d');
+    this.context = this.c.getContext('2d');
     this.NUMBER_OF_POINTS = 10;
-    this.CANVAS_SIZE = 360;
-    this.BOX_SIZE = this.CANVAS_SIZE / this.NUMBER_OF_POINTS;
+    this.context_SIZE = 360;
+    this.BOX_SIZE = this.context_SIZE / this.NUMBER_OF_POINTS;
     this.drawGreyLines(this.c);
     this.pixels = [];
     this.tempPoints = this.$store.state.point;
@@ -70,6 +72,7 @@ export default {
           method: 'POST',
           body: JSON.stringify({
             pixels: this.pixels,
+            imageURL: this.c.toDataURL(),
             height: this.height,
             width: this.width
           }),
@@ -83,13 +86,13 @@ export default {
       //reset variables
       this.pixels = [];
       
-      this.canvas.clearRect(0, 0, this.c.width, this.c.height);
+      this.context.clearRect(0, 0, this.c.width, this.c.height);
       this.drawGreyLines(this.c);
     },
     drawGreyLines() {
       for (let r = 0.5; r < this.NUMBER_OF_POINTS; r++) { // draw grey lines
           for (let c = 0.5; c < this.NUMBER_OF_POINTS; c++) {
-              const context = this.canvas;
+              const context = this.context;
               context.save();
               context.translate(this.BOX_SIZE * c, this.BOX_SIZE * r);
               context.strokeStyle = 'grey';
@@ -103,7 +106,7 @@ export default {
       this.x = this.getCoord(e.offsetX, this.BOX_SIZE);
       this.y = this.getCoord(e.offsetY, this.BOX_SIZE);
       this.isDrawing = true;
-      const context = this.canvas;
+      const context = this.context;
       // save original context settings before we translate and change colors
       context.save();
       
