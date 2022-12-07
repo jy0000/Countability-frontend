@@ -11,6 +11,7 @@ export type Drawing = {
   authorId: Types.ObjectId;
   dateCreated: Date;
   pixels: number[];
+  imageURL: string;
   dateModified: Date;
   width: number;
   height: number;
@@ -21,6 +22,7 @@ export type PopulatedDrawing = {
   authorId: User;
   dateCreated: Date;
   pixels: number[];
+  imageURL: string;
   dateModified: Date;
   width: number;
   height: number;
@@ -39,6 +41,10 @@ const DrawingSchema = new Schema<Drawing>({
   },
   pixels: {
     type: [Number],
+    required: true
+  },
+  imageURL: {
+    type: String,
     required: true
   },
   dateModified: {

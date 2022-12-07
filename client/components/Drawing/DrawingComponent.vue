@@ -11,11 +11,16 @@
         @{{ drawing.author }}
       </h3>
       <canvas
+        v-if="editing"
         :id="this.drawing._id"
         width="360"
         height="360"
         @mousedown="drawDot"
       />
+      <img
+        v-if="!editing"
+        :src="this.drawing.imageURL"
+      >
       <!-- If the user signs in, they get to see this-->
       <div
         v-if="$store.state.username === drawing.author"
@@ -75,34 +80,23 @@ export default {
   },
   data() {
     return {
-      // editing: false, // Whether or not this drawing is in edit mode
-      alerts: {}, // Displays success/error messages encountered during drawing modification
-      canvas: this.getCanvas(), // canvas for this drawing
+      editing: false, // Whether or not this drawing is in edit mode
+      // draft: this.drawing.photo, // Potentially-new photo for this drawing
+      alerts: {} // Displays success/error messages encountered during drawing modification
     };
   },
   mounted() {
-    // this.$store.commit('refreshPoint');
-    this.$store.commit('refreshDrawings'); 
+    this.canvas = this.c.getContext('2d');
     this.NUMBER_OF_POINTS = 10;
     this.CANVAS_SIZE = 360;
     this.BOX_SIZE = this.CANVAS_SIZE / this.NUMBER_OF_POINTS;
-    this.canvas = this.getCanvas();
-    
+    this.pixels = Object.assign([], this.drawing.pixels);
+    // var target = new Image();
+    // target.src = this.drawing.imageURL;
+    this.tempPoints = this.$store.state.point;
   },
   methods: {
-    getCanvas(){
-      const c = document.getElementById(this.drawing._id);  //this.canvas;
-      if (!c){
-        
-        console.log('TYPE of C', typeof c, c);
-      }
-      console.log('TYPE of C', typeof c, c);
-      const context = c.getContext('2d');
-      console.log('TYPE of context', typeof context, context);
-      this.drawGreyLines(context);
-      this.drawDot(context); 
-      return c
-    },
+    
     getCoord(coordinate, boxSize) {
       const points = [];
       for (let i = 0.5; i < this.NUMBER_OF_POINTS; i++) {
@@ -114,8 +108,9 @@ export default {
       });
       return coord;
   },
-    drawDot(context) {
-      for (const i of this.drawing.pixels) { // draw grey lines
+    drawDot() {
+      for (const i of this.pixels) {
+        const context = this.canvas;
         context.save();
         const r = Math.floor(i/10);
         const c = i - 10*r;
@@ -147,20 +142,22 @@ export default {
       }
       context.save();
     },
-    // startEditing() {
-    //   /**
-    //    * Enables edit mode on this drawing.
-    //    */
-    //   this.editing = true; // Keeps track of if a drawing is being edited
-    //   this.draft = this.drawing.photo; // The photo of our current "draft" while being edited
-    // },
-    // stopEditing() {
-    //   /**
-    //    * Disables edit mode on this drawing.
-    //    */
-    //   this.editing = false;
-    //   this.draft = this.drawing.photo;
-    // },
+    startEditing() {
+      /**
+       * Enables edit mode on this drawing.
+       */
+      this.editing = true; // Keeps track of if a drawing is being edited
+      this.drawGreyLines(this.c);
+      this.drawDot();
+      // this.draft = this.drawing.photo; // The photo of our current "draft" while being edited
+    },
+    stopEditing() {
+      /**
+       * Disables edit mode on this drawing.
+       */
+      this.editing = false;
+      this.draft = this.drawing.photo;
+    },
     deleteDrawing() {
       /**
        * Deletes this drawing.

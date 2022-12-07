@@ -89,7 +89,7 @@ router.post(
   ],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    const drawing = await DrawingCollection.addOne(userId, req.body.pixels, req.body.width, req.body.height);
+    const drawing = await DrawingCollection.addOne(userId, req.body.pixels, req.body.imageURL, req.body.width, req.body.height);
 
     res.status(201).json({
       message: 'Your drawing was created successfully.',
@@ -144,7 +144,7 @@ router.patch(
     drawingValidator.isValidDrawingModifier
   ],
   async (req: Request, res: Response) => {
-    const drawing = await DrawingCollection.updateOne(req.params.drawingId, req.body.pixels);
+    const drawing = await DrawingCollection.updateOne(req.params.drawingId, req.body.pixels, req.body.imageURL);
     res.status(200).json({
       message: 'Your drawing was updated successfully.',
       drawing: util.constructDrawingResponse(drawing)

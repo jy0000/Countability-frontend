@@ -55,7 +55,7 @@ export default {
   },
   mounted() {
     this.c = document.getElementById("myCanvas");
-    this.canvas = this.c.getContext('2d');
+    this.context = this.c.getContext('2d');
     this.NUMBER_OF_POINTS = 10;
     this.CANVAS_SIZE = 360;
     this.BOX_SIZE = this.CANVAS_SIZE / this.NUMBER_OF_POINTS;
@@ -82,6 +82,7 @@ export default {
           method: 'POST',
           body: JSON.stringify({
             pixels: this.pixels,
+            imageURL: this.c.toDataURL(),
             height: this.height,
             width: this.width
           }),
@@ -104,7 +105,8 @@ export default {
           this.$store.commit('updateDrawings', res);
           this.$store.commit('refreshDrawings'); 
       this.pixels = [];
-      this.canvas.clearRect(0, 0, this.c.width, this.c.height);
+      
+      this.context.clearRect(0, 0, this.c.width, this.c.height);
       this.drawGreyLines(this.c);
       // if (this.callback)
       // {
@@ -124,7 +126,7 @@ export default {
     drawGreyLines() {
       for (let r = 0.5; r < this.NUMBER_OF_POINTS; r++) { // draw grey lines
           for (let c = 0.5; c < this.NUMBER_OF_POINTS; c++) {
-              const context = this.canvas;
+              const context = this.context;
               context.save();
               context.translate(this.BOX_SIZE * c, this.BOX_SIZE * r);
               context.strokeStyle = 'grey';
@@ -141,7 +143,7 @@ export default {
       this.x = this.getCoord(e.offsetX);
       this.y = this.getCoord(e.offsetY);
       this.isDrawing = true;
-      const context = this.canvas;
+      const context = this.context;
       // save original context settings before we translate and change colors
       context.save();
       
