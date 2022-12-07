@@ -8,6 +8,15 @@
           Let's get to work, @{{ $store.state.username }}!
         </h2>
       </header>
+      <section class="alerts">
+          <article
+            v-for="(status, alert, index) in alerts"
+            :key="index"
+            :class="status"
+          >
+            <p>{{ alert }}</p>
+          </article>
+        </section>
     </section>
     <section v-else>
       <header>
@@ -29,7 +38,8 @@
     </section>
     <section v-if="$store.state.username">
       <article v-if="!inSession">
-        <button @click='startSession' :disabled='inSession'> Start Session </button>
+        <button @click='startSession' :disabled='disableStart'> Start Session </button>
+        <p v-if="disableStart">Loading...</p>
       </article>
       <article v-else>
         <h4>Time Elapsed: {{timeElapsed}}</h4>
@@ -47,7 +57,8 @@
             </div>
         </div>
         <h4 v-else>Checking user every 5 seconds (beta only)</h4>
-        <button @click='endSession' :disabled='!inSession'> End Session </button>
+        <button @click='endSession' :disabled='disableEnd'> End Session </button>
+        <p v-if="disableEnd">Loading...</p>
       </article>
     </section>
   </main>
@@ -71,6 +82,8 @@ export default {
         }
       }
       if (this.inSession) {
+        this.disableStart = true;
+        this.disableEnd = false;
         let page = this;
         let startTime = moment(this.currentSession.startDate, 'MMMM Do YYYY, h:mm:ss a').toDate();
         this.timerIntervalId = setInterval(() => {
@@ -89,6 +102,10 @@ export default {
         }, 1000);
         this.waitForCheck();
       }
+      else {
+        this.disableStart = false;
+        this.disableEnd = true;
+      }
     });
     await promise;
   },
@@ -102,7 +119,10 @@ export default {
       previewImage:null,
       numChecks: 0,
       inSession: false,
-      currentSession: null
+      currentSession: null,
+      disableStart: true,
+      disableEnd: true,
+      alerts: {}
     }
   },
   methods: {
@@ -129,19 +149,19 @@ export default {
       clearInterval(this.timerIntervalId);
     },
     async startSession() {
-      this.timeElapsed = "00:00:00";
+      this.disableStart = true;
+      this.disableEnd = false;
       const url = `/api/sessions`;
       const params = {
           method: 'POST',
           message: 'Success!',
           callback: () => {
-          // this.$set(this.alerts, params.message, 'success');
-          // setTimeout(() => this.$delete(this.alerts, params.message), 3000);
-            this.inSession = true;
-            this.$store.commit('refreshInSession');
-            this.$store.commit('refreshSession');
-            this.runTimer();
-            this.waitForCheck();
+          this.timeElapsed = "00:00:00";
+          this.$set(this.alerts, params.message, 'success');
+          setTimeout(() => this.$delete(this.alerts, params.message), 3000);
+          this.inSession = true;
+          this.runTimer();
+          this.waitForCheck();
           }
       };
       const options = {
@@ -164,22 +184,23 @@ export default {
           console.log(this.currentSession);
       } catch (e) {
         console.log(e);
-          // this.$set(this.alerts, e, 'error');
-          // setTimeout(() => this.$delete(this.alerts, e), 3000);
+          this.$set(this.alerts, e, 'error');
+          setTimeout(() => this.$delete(this.alerts, e), 3000);
       }
     },
     async endSession() {
+      this.disableStart = false;
+      this.disableEnd = true;
       const url = `/api/sessions/end`;
       const params = {
           method: 'POST',
           message: 'Success!',
           callback: () => {
-          // this.$set(this.alerts, params.message, 'success');
-          // setTimeout(() => this.$delete(this.alerts, params.message), 3000);
+          this.$set(this.alerts, params.message, 'success');
+          setTimeout(() => this.$delete(this.alerts, params.message), 3000);
             this.inSession = false;
-            this.$store.commit('refreshInSession');
-            this.$store.commit('refreshSession');
             this.stopTimer();
+            this.stopChecks();
             this.$store.commit('updatePoint', this.numChecks);
             this.numChecks = 0;
             this.$store.commit('refreshPoint');
@@ -200,8 +221,8 @@ export default {
           this.currentSession = null;
       } catch (e) {
         console.log(e);
-          // this.$set(this.alerts, e, 'error');
-          // setTimeout(() => this.$delete(this.alerts, e), 3000);
+          this.$set(this.alerts, e, 'error');
+          setTimeout(() => this.$delete(this.alerts, e), 3000);
       }
     },
     waitForCheck() {
@@ -209,6 +230,9 @@ export default {
       this.checkIntervalId = setInterval(() => {
         page.showUpload = true;
       }, 5000)
+    },
+    stopChecks() {
+      clearInterval(this.checkIntervalId);
     },
     uploadImage(e){
         const image = e.target.files[0];
@@ -230,8 +254,8 @@ export default {
           method: 'PATCH',
           message: 'Success!',
           callback: () => {
-          // this.$set(this.alerts, params.message, 'success');
-          // setTimeout(() => this.$delete(this.alerts, params.message), 3000);
+          this.$set(this.alerts, params.message, 'success');
+          setTimeout(() => this.$delete(this.alerts, params.message), 3000);
           this.showUpload = false;
           this.previewImage = null;
           }
@@ -255,8 +279,8 @@ export default {
           params.callback();
       } catch (e) {
         console.log(e);
-          // this.$set(this.alerts, e, 'error');
-          // setTimeout(() => this.$delete(this.alerts, e), 3000);
+        this.$set(this.alerts, e, 'error');
+        setTimeout(() => this.$delete(this.alerts, e), 3000);
       }
     },
     skipCheck() {
