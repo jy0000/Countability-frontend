@@ -40,6 +40,11 @@
             <button @click='submitImage'>Submit Image</button>
             <button @click='skipCheck'>Skip Check</button>
           </div>
+          <div class="slider">
+            Focus Level:
+            <input type="range" min="0" max="10" value="5" oninput="rangeValue.innerText = this.value">
+            <p id="rangeValue">5</p>
+            </div>
         </div>
         <h4 v-else>Checking user every 5 seconds (beta only)</h4>
         <button @click='endSession'> End Session </button>
@@ -64,6 +69,7 @@ export default {
       checkIntervalId: "",
       showUpload: false,
       previewImage:null,
+      numChecks: 0,
     }
   },
   methods: {
@@ -171,6 +177,9 @@ export default {
           // setTimeout(() => this.$delete(this.alerts, params.message), 3000);
             this.$store.commit('refreshInSession');
             this.stopTimer();
+            this.$store.commit('updatePoint', this.numChecks);
+            this.numChecks = 0;
+            this.$store.commit('refreshPoint');
           }
       };
       const options = {
@@ -211,6 +220,7 @@ export default {
       if (!this.previewImage) {
         return;
       }
+      this.numChecks += 1;
       const url = `/api/sessions/check`;
       const params = {
           method: 'PATCH',
@@ -274,6 +284,8 @@ section .scrollbox {
   padding: 3%;
   overflow-y: scroll;
 }
+
+
 .box {
   background-color: #c2fbd7;
   border-radius: 5px;
@@ -288,6 +300,7 @@ section .scrollbox {
   font-size: 30px;
   margin-bottom: 10px;
 }
+
 
 /** Cross box */
 .input-form-box {
@@ -359,4 +372,50 @@ section .scrollbox {
   border-top-left-radius: 255px 15px;
   border-top-right-radius: 15px 225px;
 }
+
+body {
+  background: linear-gradient(to right, red, yellow);
+  }
+  .slider {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  width: 500px;
+  height: 60px;
+  padding: 30px;
+  padding-left: 40px;
+  background: #fcfcfc;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0px 15px 40px #7E6D5766;
+  }
+  .slider p {
+  font-size: 26px;
+  font-weight: 600;
+  font-family: Open Sans;
+  padding-left: 30px;
+  color: black;
+  }
+  .slider input[type="range"] {
+  -webkit-appearance:none !important;
+  width: 420px;
+  height: 2px;
+  background: black;
+  border: none;
+  outline: none;
+  }
+  .slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  width: 30px;
+  height:30px;
+  background: black;
+  border: 2px solid black;
+  border-radius: 50%;
+  cursor: pointer;
+  }
+  .slider input[type="range"]::-webkit-slider-thumb:hover {
+  background: black;
+  }
 </style>

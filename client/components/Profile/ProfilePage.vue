@@ -46,9 +46,6 @@
       <header>
         <div>
           <tabs>
-            <tab title="Account Management">
-              <AccountPage />
-            </tab>
             <tab title="Sessions">
               <section
                 v-if="$store.state.posts.length && $store.state.username"
@@ -70,6 +67,9 @@
             </tab>
             <tab title="Friends">
               <FriendPage />
+            </tab>
+            <tab title="Account Management">
+              <AccountPage />
             </tab>
           </tabs>
         </div>
