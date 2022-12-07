@@ -28,8 +28,8 @@
       </article>
     </section>
     <section v-if="$store.state.username">
-      <article v-if="!$store.state.inSession">
-        <button @click='startSession'> Start Session </button>
+      <article v-if="!inSession">
+        <button @click='startSession' :disabled='inSession'> Start Session </button>
       </article>
       <article v-else>
         <h4>Time Elapsed: {{timeElapsed}}</h4>
@@ -47,67 +47,65 @@
             </div>
         </div>
         <h4 v-else>Checking user every 5 seconds (beta only)</h4>
-        <button @click='endSession'> End Session </button>
+        <button @click='endSession' :disabled='!inSession'> End Session </button>
       </article>
     </section>
   </main>
 </template>
 
 <script>
+import moment from 'moment';
 
 export default {
   name: 'SessionPage',
-  mounted() {
-    // Primitive fix
-    this.$store.commit('refreshInSession');
+  async mounted() {
+    const url = `/api/sessions/${this.$store.state.username}`;
+    const promise = fetch(url).then(async (r) => {
+      const res = await r.json();
+      this.currentSession = null;
+      this.inSession = false;
+      for (let i = 0; i < res.length; i++) {
+        if (!res[i].endDate) {
+          this.currentSession = res[i];
+          this.inSession = true;
+        }
+      }
+      if (this.inSession) {
+        let page = this;
+        let startTime = moment(this.currentSession.startDate, 'MMMM Do YYYY, h:mm:ss a').toDate();
+        this.timerIntervalId = setInterval(() => {
+          let time = new Date() - startTime;
+          function pad(n) {
+            return ('00' + n).slice(-2);
+          }
+          const ms = time % 1000;
+          time = (time-ms)/1000;
+          const s = time % 60;
+          time = (time-s)/60;
+          const m = time % 60;
+          time = (time-m)/60;
+          const hr = time;
+          page.timeElapsed = pad(hr) + ":" + pad(m) + ":" + pad(s);
+        }, 1000);
+        this.waitForCheck();
+      }
+    });
+    await promise;
   },
   data() {
     return {
       startTime: "",
-      timeElapsed: "00:00:00",
+      timeElapsed: "Loading start time...",
       timerIntervalId: "",
       checkIntervalId: "",
       showUpload: false,
       previewImage:null,
       numChecks: 0,
+      inSession: false,
+      currentSession: null
     }
   },
   methods: {
-    async submitRequest() {
-      const url = `/api/sessions/check`;
-      const params = {
-          method: 'PATCH',
-          message: 'Success!',
-          callback: () => {
-          // this.$set(this.alerts, params.message, 'success');
-          // setTimeout(() => this.$delete(this.alerts, params.message), 3000);
-
-          }
-      };
-      const options = {
-          method: params.method, 
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify(
-            {
-              check:'test',
-              numChecks: 0
-            }
-          )
-      };
-      try {
-          const r = await fetch(url, options);
-          if (!r.ok) {
-              const res = await r.json();
-              throw new Error(res.error);
-          }
-          console.log(await r.json());
-          // params.callback();
-      } catch (e) {
-        console.log(e);
-          // this.$set(this.alerts, e, 'error');
-          // setTimeout(() => this.$delete(this.alerts, e), 3000);
-      }
-    },
     runTimer() {
       let page = this;
       this.startTime = new Date();
@@ -139,7 +137,9 @@ export default {
           callback: () => {
           // this.$set(this.alerts, params.message, 'success');
           // setTimeout(() => this.$delete(this.alerts, params.message), 3000);
+            this.inSession = true;
             this.$store.commit('refreshInSession');
+            this.$store.commit('refreshSession');
             this.runTimer();
             this.waitForCheck();
           }
@@ -159,8 +159,9 @@ export default {
               const res = await r.json();
               throw new Error(res.error);
           }
-          console.log(await r.json());
           params.callback();
+          this.currentSession = await r.json();
+          console.log(this.currentSession);
       } catch (e) {
         console.log(e);
           // this.$set(this.alerts, e, 'error');
@@ -175,7 +176,9 @@ export default {
           callback: () => {
           // this.$set(this.alerts, params.message, 'success');
           // setTimeout(() => this.$delete(this.alerts, params.message), 3000);
+            this.inSession = false;
             this.$store.commit('refreshInSession');
+            this.$store.commit('refreshSession');
             this.stopTimer();
             this.$store.commit('updatePoint', this.numChecks);
             this.numChecks = 0;
@@ -194,6 +197,7 @@ export default {
           }
           console.log(await r.json());
           params.callback();
+          this.currentSession = null;
       } catch (e) {
         console.log(e);
           // this.$set(this.alerts, e, 'error');

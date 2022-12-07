@@ -26,6 +26,7 @@ const store = new Vuex.Store({
 
     // Work session
     workSessions: [], // Frontend: (SessionComponent -> SessionPage)
+    currentSession: null,
 
     // Friend and friend requests
     outgoingFriendRequests: [], // Frontend: (FriendRequestOutComponent -> FriendPage)
@@ -65,6 +66,9 @@ const store = new Vuex.Store({
     },
     setInSession(state, inSession) {
       state.inSession = inSession;
+    },
+    setSession(state, session) {
+      state.currentSession = session;
     },
     updateFilter(state, filter) {
       /**
@@ -187,6 +191,17 @@ const store = new Vuex.Store({
         }
       }
       state.inSession = false;
+    },
+    async refreshSession(state) {
+      const url = `/api/sessions/${state.username}`;
+      const res = await fetch(url).then(async r => r.json());
+      for (let i = 0; i < res.length; i++) {
+        if (!res[i].endDate) {
+          state.currentSession = res[i];
+          return;
+        }
+      }
+      state.currentSession = null;
     }
   },
   // Store data across page refreshes, only discard on browser close
