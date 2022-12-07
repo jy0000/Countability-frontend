@@ -30,15 +30,6 @@
           Work session
         </button>
       </router-link>
-     
-      <!-- TODO In router.ts, add friend link, create a FriendPage under client/Friend-->
-      <router-link to="/friend">
-        <button
-          class="uniform-button"
-        >
-          Friends
-        </button>
-      </router-link>
 
       <!-- TODO In router.ts, add profile link if not there, create a ProfilePage under client/Profile-->
       <router-link to="/drawing">
