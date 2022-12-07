@@ -13,7 +13,9 @@
       height="360"
       @mousedown="drawDot"
     />
-    <button v-on:click="submit">Submit</button>
+    <button @click="submit">
+      Submit
+    </button>
     <section class="alerts">
       <article
         v-for="(status, alert, index) in alerts"
@@ -29,6 +31,8 @@
 <script lang="ts">
 // import DrawingForm from '@/Drawing/DrawingForm.vue';
 
+// import { callbackify } from 'util';
+
 export default {
   name: 'DrawingForm',
   data() {
@@ -39,20 +43,26 @@ export default {
       pixels: [],
       hasBody: true,
       tempPoints: this.$store.state.point,
+      callback:null,
+      // callback: () => {
+      //   const message = 'Successfully created a post!';
+      //   this.$set(this.alerts, message, 'success');
+      //   // Delete this success message after 3 seconds
+      //   setTimeout(() => this.$delete(this.alerts, message), 3000);
+      // },
       alerts: {}, // Displays success/error messages encountered during form submission
-
     };
   },
   mounted() {
     this.c = document.getElementById("myCanvas");
-    this.canvas = this.c.getContext('2d');
+    this.context = this.c.getContext('2d');
     this.NUMBER_OF_POINTS = 10;
     this.CANVAS_SIZE = 360;
     this.BOX_SIZE = this.CANVAS_SIZE / this.NUMBER_OF_POINTS;
     this.drawGreyLines(this.c);
     this.pixels = [];
     this.$store.commit('refreshPoint');
-    this.tempPoints = this.$store.state.point;
+    // this.tempPoints = this.$store.state.point;
     this.$store.commit('refreshDrawings'); 
   },
   methods: {
@@ -72,6 +82,7 @@ export default {
           method: 'POST',
           body: JSON.stringify({
             pixels: this.pixels,
+            imageURL: this.c.toDataURL(),
             height: this.height,
             width: this.width
           }),
@@ -94,21 +105,31 @@ export default {
           this.$store.commit('updateDrawings', res);
           this.$store.commit('refreshDrawings'); 
       this.pixels = [];
-      this.canvas.clearRect(0, 0, this.c.width, this.c.height);
+      
+      this.context.clearRect(0, 0, this.c.width, this.c.height);
       this.drawGreyLines(this.c);
+      // if (this.callback)
+      // {
+      //   this.callback();
+      // }
+      // const message = 'Successfully created a post!';
+      // this.$set(this.alerts, message, 'success');
+      // // Delete this success message after 3 seconds
+      // setTimeout(() => this.$delete(this.alerts, message), 3000);
     }
     else{
         const e = 'Cannot submit a drawing with no pixels colored in';
         this.$set(this.alerts, e, 'error');
         setTimeout(() => this.$delete(this.alerts, e), 800);
       }
-    console.log('REFRESH SHOULD REACH HERE');
-    this.$store.commit('refreshDrawings');
     },
     drawGreyLines() {
+      const context = this.context;
+      context.fillStyle = "white";
+      context.fillRect(0, 0, this.c.width, this.c.height);
+      context.fillStyle = 'black';
       for (let r = 0.5; r < this.NUMBER_OF_POINTS; r++) { // draw grey lines
           for (let c = 0.5; c < this.NUMBER_OF_POINTS; c++) {
-              const context = this.canvas;
               context.save();
               context.translate(this.BOX_SIZE * c, this.BOX_SIZE * r);
               context.strokeStyle = 'grey';
@@ -117,15 +138,16 @@ export default {
               context.restore();
           }
       }
+      context.strokeRect(0, 0, this.c.width, this.c.height);
     },
     async drawDot(e) {
       
       // this.$store.commit('updatePoint', 30);
       this.$store.commit('refreshPoint');
-      this.x = this.getCoord(e.offsetX, this.BOX_SIZE);
-      this.y = this.getCoord(e.offsetY, this.BOX_SIZE);
+      this.x = this.getCoord(e.offsetX);
+      this.y = this.getCoord(e.offsetY);
       this.isDrawing = true;
-      const context = this.canvas;
+      const context = this.context;
       // save original context settings before we translate and change colors
       context.save();
       
@@ -138,7 +160,7 @@ export default {
       if (this.pixels.includes(i)){
         this.tempPoints += 1;
         this.pixels.splice(this.pixels.indexOf(i), 1);
-        context.fillStyle = `rgba(232, 246, 232)`;
+        context.fillStyle = 'white';
         // context.strokeStyle = 'grey';
         context.lineWidth = 2;
         context.moveTo(this.x, this.y);
@@ -149,7 +171,7 @@ export default {
       else if (this.tempPoints + delta >= 0){
         this.tempPoints -= 1;
         this.pixels.push(i);
-        // context.strokeStyle = 'black';
+        context.strokeStyle = 'black';
         context.lineWidth = 2;
         context.moveTo(this.x, this.y);
         // context.strokeRect(this.x-this.BOX_SIZE/2,this.y-this.BOX_SIZE/2, this.BOX_SIZE, this.BOX_SIZE);
@@ -160,13 +182,12 @@ export default {
         this.$set(this.alerts, e, 'error');
         setTimeout(() => this.$delete(this.alerts, e), 800);
       }
-        
     context.restore();
     },
-    getCoord(coordinate, boxSize) {
+    getCoord(coordinate) {
       const points = [];
       for (let i = 0.5; i < this.NUMBER_OF_POINTS; i++) {
-          points.push(boxSize * i);
+          points.push(this.BOX_SIZE * i);
       }
       // https://stackoverflow.com/questions/8584902/get-the-closest-number-out-of-an-array
       const coord = points.reduce(function(prev, curr) {
