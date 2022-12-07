@@ -52,6 +52,7 @@
               >
                 <PostComponent
                   v-for="post in $store.state.posts"
+                  v-if="$store.state.username === post.author"
                   :key="post.id"
                   :post="post"
                 />
