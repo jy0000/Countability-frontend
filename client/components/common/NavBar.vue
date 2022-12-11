@@ -107,10 +107,6 @@ img {
     align-items: center;
 }
 
-.right a {
-    margin-left: 5px;
-}
-
 .alerts {
     width: 25%;
 }
@@ -120,12 +116,6 @@ Code reference: https://getcssscan.com/css-buttons-examples
 
 .uniform-button {
   align-self: center;
-  background-color: #fff;
-  background-image: none;
-  background-position: 0 90%;
-  background-repeat: repeat no-repeat;
-  background-size: 4px 3px;
-  border-radius: 15px 225px 255px 15px 15px 255px 225px 15px;
   border-style: solid;
   border-width: 2px;
   box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
@@ -136,21 +126,7 @@ Code reference: https://getcssscan.com/css-buttons-examples
   font-family: Neucha, sans-serif;
   font-size: 1.5rem;
   line-height: 23px;
-  outline: none;
   padding: .75rem;
-  text-decoration: none;
-  transition: all 235ms ease-in-out;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
+  margin-right: 0.35rem;
 }
-.uniform-button:hover {
-  box-shadow: black;
-  transform: translate3d(0, 2px, 0);
-}
-
-.uniform-button:focus {
-  box-shadow: black;
-}
-
 </style>
