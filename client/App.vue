@@ -34,6 +34,7 @@ export default {
 }
 
 body {
+  zoom: 80%;
   height: 100vh;
   flex-direction: column;
   display: flex;
