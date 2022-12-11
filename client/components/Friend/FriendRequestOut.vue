@@ -57,12 +57,12 @@ export default {
         method: 'DELETE', headers: {'Content-Type': 'application/json'}
       };
       try {
-      const r = await fetch(`/api/friendRequest/${this.friend._id}`, options);
-      console.log('out form', this.friend.friendRequestReceiverName);
-      if (!r.ok) {
-          const res = await r.json();
-          throw new Error(res.error);
-        }
+        const r = await fetch(`/api/friendRequest/${this.friend._id}`, options);
+        console.log('out form', this.friend.friendRequestReceiverName);
+        if (!r.ok) {
+            const res = await r.json();
+            throw new Error(res.error);
+          }
         // Refresh on-screen display
         this.$store.commit('refreshOutFriendRequest');
         this.$store.commit('alert', {

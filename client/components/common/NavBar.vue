@@ -62,7 +62,7 @@
 <style scoped>
 nav {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    padding: 1vw 2vw;
+    padding: 0.3vw 0.1vw;
 
     background-image: radial-gradient(100% 100% at 100% 0, #00c8ff 0, #288352 100%);
     border: 0;
@@ -90,7 +90,7 @@ a:hover {color:#5564b9;}    Mouse over link
 }
 
 img {
-    height: 75px;
+    height: 70px;
 }
 
 .left {
@@ -144,19 +144,6 @@ Code reference: https://getcssscan.com/css-buttons-examples
   -webkit-user-select: none;
   touch-action: manipulation;
 }
-.subbar {
-  align-self: center;
-  color: #ffffff;
-  cursor: pointer;
-  display: inline-block;
-  font-family: Neucha, sans-serif;
-  font-size: 1.5rem;
-  font-weight: 500;
-  line-height: 23px;
-  padding: .75rem;
-  text-shadow: 0px 1.5px #c0c0c0;
-}
-
 .uniform-button:hover {
   box-shadow: black;
   transform: translate3d(0, 2px, 0);

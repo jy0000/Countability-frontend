@@ -171,7 +171,7 @@ const store = new Vuex.Store({
        headers: {
          'Content-type': 'application/json; charset=UTF-8',
        }}).then(async r => r.json());
-      console.log('refresh drawings', res);
+      // console.log('refresh drawings', res);
       state.drawings = res;
     },
     async refreshFriends(state) {
