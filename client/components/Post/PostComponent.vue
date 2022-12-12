@@ -8,7 +8,7 @@
     <header>
       <!-- Header and features (endorse, for example)-->
       <h3 class="author">
-        @{{ post.author }} {{ post.photo }}
+        @{{ post.author }}
       </h3>
 
       <img
@@ -63,7 +63,7 @@
   
     <!-- End of Added descriptive post -->
     <p class="info">
-      Posted at {{ post.dateModified }}
+      Posted on {{ post.dateModified }}
       <i v-if="post.edited">(edited)</i>
     </p>
     <section class="alerts">

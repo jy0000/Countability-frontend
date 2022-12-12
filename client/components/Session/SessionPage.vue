@@ -38,14 +38,30 @@
     </section>
     <section v-if="$store.state.username">
       <article v-if="(!inSession && !closingSession)">
-        <button @click='startSession' :disabled='disableStart'> Start Session </button>
-        <p v-if="(disableStart && !closingSession)">Loading...</p>
+        <button
+          :disabled="disableStart"
+          @click="startSession"
+        >
+          Start Session
+        </button>
+        <p v-if="(disableStart && !closingSession)">
+          Loading...
+        </p>
       </article>
       <article v-else>
-        <h4 v-if="!closingSession">Time Elapsed: {{timeElapsed}}</h4>
+        <h4 v-if="!closingSession">
+          Time Elapsed: {{ timeElapsed }}
+        </h4>
         <div v-if="(showUpload && !closingSession)">
-          <img :src="previewImage" class="uploading-image" />
-          <input type="file" accept="image/jpeg" @change=uploadImage>
+          <img
+            :src="previewImage"
+            class="uploading-image"
+          >
+          <input
+            type="file"
+            accept="image/png, image/jpeg, image/jpg, image/heic"
+            @change="uploadImage"
+          >
           <div>
             <button @click="submitImage">
               Submit Image
@@ -54,20 +70,41 @@
               Skip Check
             </button>
           </div>
-          
         </div>
-        <h4 v-if="!closingSession">Checking user every 5 seconds (beta only)</h4>
-        <button v-if="!closingSession" @click='closeSession' :disabled='disableEnd'> End Session </button>
-        <p v-if="disableEnd">Loading...</p>
+        <h4 v-if="!closingSession">
+          Checking user every 5 seconds (beta only)
+        </h4>
+        <button
+          v-if="!closingSession"
+          :disabled="disableEnd"
+          @click="closeSession"
+        >
+          End Session
+        </button>
+        <p v-if="disableEnd">
+          Loading...
+        </p>
       </article>
       <article v-if="closingSession">
         <div class="slider">
           Focus Level:
-          <input type="range" min="0" max="10" value="5" oninput="rangeValue.innerText = this.value">
-          <p id="rangeValue">5</p>
-          </div>
-        <button @click='endSession' :disabled='disableEnd'> Submit Session </button>
-
+          <input
+            type="range"
+            min="0"
+            max="10"
+            value="5"
+            oninput="rangeValue.innerText = this.value"
+          >
+          <p id="rangeValue">
+            5
+          </p>
+        </div>
+        <button
+          :disabled="disableEnd"
+          @click="endSession"
+        >
+          Submit Session
+        </button>
       </article>
     </section>
   </main>
@@ -91,6 +128,23 @@ export default {
       currentSession: null,
       disableStart: true,
       disableEnd: true,
+      alerts: {}
+    }
+  },
+  data() {
+    return {
+      startTime: "",
+      timeElapsed: "Loading start time...",
+      timerIntervalId: "",
+      checkIntervalId: "",
+      showUpload: false,
+      previewImage:null,
+      numChecks: 0,
+      inSession: false,
+      currentSession: null,
+      disableStart: true,
+      disableEnd: true,
+      closingSession: false,
       alerts: {}
     }
   },
@@ -133,23 +187,6 @@ export default {
       }
     });
     await promise;
-  },
-  data() {
-    return {
-      startTime: "",
-      timeElapsed: "Loading start time...",
-      timerIntervalId: "",
-      checkIntervalId: "",
-      showUpload: false,
-      previewImage:null,
-      numChecks: 0,
-      inSession: false,
-      currentSession: null,
-      disableStart: true,
-      disableEnd: true,
-      closingSession: false,
-      alerts: {}
-    }
   },
   methods: {
     runTimer() {

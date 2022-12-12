@@ -4,10 +4,11 @@
   <main>
     <section v-if="$store.state.username">
       <header>
-        <h2 class="box">
+        <h3 class="box">
           Welcome @{{ $store.state.username }}
-        </h2>
+        </h3>
       </header>
+      <h3>Take a look at what the community did today!</h3>
     </section>
     <section v-else>
       <article>
