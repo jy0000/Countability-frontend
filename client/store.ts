@@ -105,8 +105,6 @@ const store = new Vuex.Store({
        * @param filter - Username of the user to fitler posts by
        */
       const url = `/api/point`;
-      // /:{delta}`
-      console.log('delta in updatePoint', delta)
       const res = await fetch(url, {
         method: 'PATCH',
         body: JSON.stringify({
@@ -117,7 +115,6 @@ const store = new Vuex.Store({
           // 'Accept': 'application/json'
         }})
         .then(async r => r.json());
-        console.log('updatePoint', res);
       state.point = res.requestResponse.point;
     },
     async refreshPoint(state) {
@@ -131,7 +128,6 @@ const store = new Vuex.Store({
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
         }}).then(async r => r.json());
-       console.log('refresh point', res);
        state.point = res.requestResponse.point;
     },
 

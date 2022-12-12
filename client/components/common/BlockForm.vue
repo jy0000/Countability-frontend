@@ -122,7 +122,6 @@ export default {
             this.$store.commit('refreshInFriendRequest');
             this.$store.commit('refreshFriends');
             this.$store.commit('refreshPoint');
-            console.log('call from init in blockform')
           }
         }
 
@@ -139,40 +138,26 @@ export default {
           }
         }
         if (this.refreshPoint) {
-          // Also update the point (backend fetch)
-          // options.method = 'GET';
-          // options.body = null; // GET request MUST not have body, so muyst clear
-          // const r = await fetch('/api/point', options); // secondary call, don't change this.url
-          // const res = await r.json();
-          // if (!r.ok) {
-          //   // If response is not okay, we throw an error and enter the catch block
-          //   throw new Error(res.error);
-          // } else {
           this.$store.commit('refreshPoint'); // frontend update 
-          // }
         }
   
         // FRIENDS AND FRIEND REQUESTS
         // (Done) Update OUT friend requests shown on screen by GET
         if (this.refreshOutFriendRequest) {
-          console.log('out blockform refreshs ent')
           this.$store.commit('refreshOutFriendRequest');
         }
 
         // (Done) Update IN friend requests shown on screen by GET
         if (this.refreshInFriendRequest) {
-          console.log('in blockform refreshs ent')
           this.$store.commit('refreshInFriendRequest');
         }
 
         // (Done) Update currently displayed friend list
         if (this.refreshFriends) {
-          console.log('list')
           this.$store.commit('refreshFriends');
         }
 
         if (this.refreshPosts) {
-          console.log('post')
           options.method = 'GET';
           options.body = null;
           const r = await fetch('/api/point/', options);
