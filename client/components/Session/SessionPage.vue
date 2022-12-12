@@ -86,6 +86,7 @@
         </p>
       </article>
       <article v-if="closingSession">
+        <CreatePostForm />
         <div class="slider">
           Focus Level:
           <input
@@ -112,9 +113,11 @@
 
 <script>
 import moment from 'moment';
+import CreatePostForm from '../Post/CreatePostForm.vue';
 
 export default {
   name: 'SessionPage',
+  components: {CreatePostForm},
   data() {
     return {
       startTime: "",

@@ -19,7 +19,7 @@
         <button
           class="uniform-button"
         >
-          Feed
+          Productivity feed
         </button>
       </router-link>
       <!-- TODO In router.ts, add session link if not there, create a SessionPage under client/WorkSession-->
@@ -27,7 +27,7 @@
         <button
           class="uniform-button"
         >
-          Work session
+          Manage work session
         </button>
       </router-link>
 
@@ -36,7 +36,7 @@
         <button
           class="uniform-button"
         >
-          Drawings
+          Gallery
         </button>
       </router-link><router-link to="/draw">
         <button
@@ -134,5 +134,14 @@ Code reference: https://getcssscan.com/css-buttons-examples
   line-height: 23px;
   padding: .75rem;
   margin-right: 0.35rem;
+}
+
+.uniform-button:hover {
+  box-shadow: rgba(0, 0, 0, .3) 2px 8px 8px -5px;
+  transform: translate3d(0, 2px, 0);
+}
+
+.uniform-button:focus {
+  box-shadow: rgba(0, 0, 0, .3) 2px 8px 4px -6px;
 }
 </style>
