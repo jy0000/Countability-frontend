@@ -10,13 +10,13 @@
       <h3 class="author">
         @{{ drawing.author }}
       </h3>
-      <h3 
+      <!-- <h3 
         v-if="editing"
         class="uniform-button"
       >
         Your temporary points left: {{ tempPoints }}
         These will not be spent until you save your drawing
-      </h3>
+      </h3> -->
       <canvas
         :id="drawing._id"
         width="360"
@@ -44,12 +44,14 @@
         >
           🚫 Discard changes
         </button>
-        <button
-          v-if="!editing"
-          @click="startEditing"
-        >
-          ✏️ Edit
-        </button>
+        <router-link :to="`/draw/${drawing._id}`">
+          <button
+            v-if="!editing"
+            @click="startEditing"
+          >
+            ✏️ Edit
+          </button> 
+        </router-link>
         <button @click="deleteDrawing">
           🗑️ Delete
         </button>
@@ -117,8 +119,8 @@ export default {
       for (const i of this.pixels) {
         const context = this.context;
         context.save();
-        const r = Math.floor(i/10);
-        const c = i - 10*r;
+        const r = Math.floor(i/this.NUMBER_OF_POINTS);
+        const c = i - this.NUMBER_OF_POINTS*r;
         const x = c*this.BOX_SIZE + this.BOX_SIZE/2
         const y = r*this.BOX_SIZE + this.BOX_SIZE/2
         context.lineWidth = 2;
@@ -127,12 +129,6 @@ export default {
         context.fillRect(x-this.BOX_SIZE/2+1,y-this.BOX_SIZE/2+1, this.BOX_SIZE-2, this.BOX_SIZE-2);
         context.save();
       }
-      // var target = new Image();
-      // target.src = this.c.toDataURL();
-      // // //https://stackoverflow.com/questions/10257781/can-i-get-image-from-canvas-element-and-use-it-in-img-src-tag
-      // // document.getElementById('result').appendChild(target);
-      // // this.canvas.clearRect(0, 0, this.c.width, this.c.height);
-      // // this.drawGreyLines(this.c);
     },
     drawGreyLines() {
       const context = this.context;
@@ -255,19 +251,6 @@ export default {
         return;
       }
 
-      const params = {
-        method: 'PATCH',
-        message: 'Successfully edited drawing!',
-        body: JSON.stringify({
-          pixels: this.pixels,
-          imageURL: this.c.toDataURL()
-        }),
-        callback: () => {
-          this.$set(this.alerts, params.message, 'success');
-          setTimeout(() => this.$delete(this.alerts, params.message), 3000);
-        }
-      };
-      this.request(params);
       // this.$store.commit('updateDrawings', res);
       this.$store.commit('updatePoint', this.tempPoints - this.$store.state.point); //TODO
       // this.$store.commit('refreshPoint');//TODO WHY THIS THROWS ERROR

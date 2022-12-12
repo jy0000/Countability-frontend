@@ -9,8 +9,8 @@
     <h1>Drawing</h1>
     <canvas
       id="myCanvas"
-      width="360"
-      height="360"
+      width="350"
+      height="350"
       @mousedown="drawDot"
     />
     <button @click="submit">
@@ -40,9 +40,9 @@ export default {
       method: 'POST',
       height: 10, //TODO to be adjustable
       width: 10,
+      tempPoints: this.$store.state.point,
       pixels: [],
       hasBody: true,
-      tempPoints: this.$store.state.point,
       callback:null,
       // callback: () => {
       //   const message = 'Successfully created a post!';
@@ -53,22 +53,59 @@ export default {
       alerts: {}, // Displays success/error messages encountered during form submission
     };
   },
-  mounted() {
+  // watch:{
+  //   '$route'(to, from): {
+  //     if(to !== from ) {
+  //       this.$forceUpdate();
+  //     }
+  //   }
+  // }
+  async mounted() {
     this.c = document.getElementById("myCanvas");
     this.context = this.c.getContext('2d');
     this.NUMBER_OF_POINTS = 10;
-    this.CANVAS_SIZE = 360;
+    this.CANVAS_SIZE = 350;
     this.BOX_SIZE = this.CANVAS_SIZE / this.NUMBER_OF_POINTS;
     this.drawGreyLines(this.c);
-    this.pixels = [];
+    this.pixels = (this.$route.params.drawingId)? (await fetch(`/api/drawings/${this.$route.params.drawingId}?author=${this.$store.state.username}`, {
+       method: 'GET',
+       headers: {
+         'Content-type': 'application/json; charset=UTF-8',
+       }}).then(async r => r.json())).pixels: [];
     this.$store.commit('refreshPoint');
     // this.tempPoints = this.$store.state.point;
     this.$store.commit('refreshDrawings'); 
+    // if (this.$route.params.drawingId){
+    //   const url = `/api/drawings/${this.$route.params.drawingId}?author=${this.$store.state.username}`;
+    //   const res = await fetch(url, {
+    //    method: 'GET',
+    //    headers: {
+    //      'Content-type': 'application/json; charset=UTF-8',
+    //    }}).then(async r => r.json());
+    //    console.log("RES", res);
+    //   this.pixels = res.pixels;
+    this.drawPixels();
+    // }
   },
   methods: {
     // submit: function (e){
     //   this.onSubmit();
     // },
+    drawPixels() {
+      for (const i of this.pixels) {
+        const context = this.context;
+        context.save();
+        const r = Math.floor(i/this.NUMBER_OF_POINTS);
+        const c = i - this.NUMBER_OF_POINTS*r;
+        const x = c*this.BOX_SIZE + this.BOX_SIZE/2
+        const y = r*this.BOX_SIZE + this.BOX_SIZE/2
+        context.lineWidth = 2;
+        context.moveTo(x, y);
+        // context.strokeRect(this.x-this.BOX_SIZE/2,this.y-this.BOX_SIZE/2, this.BOX_SIZE, this.BOX_SIZE);
+        context.fillRect(x-this.BOX_SIZE/2+1,y-this.BOX_SIZE/2+1, this.BOX_SIZE-2, this.BOX_SIZE-2);
+        context.save();
+      }
+    },
     async submit() {
       if (this.pixels.length != 0)
       {
@@ -76,34 +113,49 @@ export default {
       this.$store.commit('refreshPoint');
       
       const url = `/api/drawings`;
-      if (this.method == 'POST')
-      {
-        await fetch(url, {
-          method: 'POST',
-          body: JSON.stringify({
-            pixels: this.pixels,
-            imageURL: this.c.toDataURL(),
-            height: this.height,
-            width: this.width
-          }),
-          headers: {
-            'Content-type': 'application/json; charset=UTF-8',
-          }})
-          .then(async r => r.json());
-      }
-      
-          const r = await fetch('/api/drawings', {
-            method: 'GET',
+      if (this.$route.params.drawingId){
+        await fetch(url+`/${this.$route.params.drawingId}`, {
+            method: 'PATCH',
+            body: JSON.stringify({
+              pixels: this.pixels,
+              imageURL: this.c.toDataURL(),
+              height: this.height,
+              width: this.width
+            }),
             headers: {
               'Content-type': 'application/json; charset=UTF-8',
-            }});
-          const res = await r.json();
-          if (!r.ok) {
-            throw new Error(res.error);
-          } 
-          console.log('inside drawing submit', res)
-          this.$store.commit('updateDrawings', res);
-          this.$store.commit('refreshDrawings'); 
+            }})
+            .then(async r => r.json());
+      }
+      else{
+        if (this.method == 'POST')
+        {
+          await fetch(url, {
+            method: 'POST',
+            body: JSON.stringify({
+              pixels: this.pixels,
+              imageURL: this.c.toDataURL(),
+              height: this.height,
+              width: this.width
+            }),
+            headers: {
+              'Content-type': 'application/json; charset=UTF-8',
+            }})
+            .then(async r => r.json());
+        }
+      }
+      const r = await fetch('/api/drawings', {
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        }});
+      const res = await r.json();
+      if (!r.ok) {
+        throw new Error(res.error);
+      } 
+      console.log('inside drawing submit', res)
+      this.$store.commit('updateDrawings', res);
+      this.$store.commit('refreshDrawings'); 
       this.pixels = [];
       
       this.context.clearRect(0, 0, this.c.width, this.c.height);
@@ -141,7 +193,6 @@ export default {
       context.strokeRect(0, 0, this.c.width, this.c.height);
     },
     async drawDot(e) {
-      
       // this.$store.commit('updatePoint', 30);
       this.$store.commit('refreshPoint');
       this.x = this.getCoord(e.offsetX);

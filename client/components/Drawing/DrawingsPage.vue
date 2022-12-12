@@ -23,8 +23,6 @@
       </article>
     </section>
     <section v-if="$store.state.username">
-      <PointComponent />
-      <CreateDrawingForm />
       <header>
         <div class="left">
           <h2 class="box">
@@ -53,16 +51,12 @@
 <script>
 // Components
 import DrawingComponent from '@/components/Drawing/DrawingComponent.vue';
-import CreateDrawingForm from '@/components/Drawing/CreateDrawingForm.vue';
-import PointComponent from '@/components/Point/PointComponent.vue';
 
 export default {
   name: 'DrawingPage',
   components: 
   {
     DrawingComponent,
-    CreateDrawingForm,
-    PointComponent,
   },
   mounted() {
     // Primitive fix

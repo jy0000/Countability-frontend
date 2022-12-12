@@ -36,6 +36,12 @@
         <button
           class="uniform-button"
         >
+          Drawings
+        </button>
+      </router-link><router-link to="/draw">
+        <button
+          class="uniform-button"
+        >
           Draw
         </button>
       </router-link>

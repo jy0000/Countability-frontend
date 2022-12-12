@@ -1,7 +1,7 @@
 <!-- Default page that also displays drawings -->
 
 <template>
-  <main>
+  <main :key="$route.fullPath">
     <section v-if="$store.state.username">
       <header>
         <h2 class="box">
@@ -25,34 +25,12 @@
     <section v-if="$store.state.username">
       <PointComponent />
       <CreateDrawingForm />
-      <header>
-        <div class="left">
-          <h2 class="box">
-            📙 Productivity drawings across the community
-          </h2>
-        </div>
-      </header>
-      <section
-        v-if="$store.state.drawings.length && $store.state.username"
-      >
-        <DrawingComponent
-          v-for="drawing in $store.state.drawings"
-          :key="drawing.id"
-          :drawing="drawing"
-        />
-      </section>
-      <article
-        v-else
-      >
-        <h3>No drawings found.</h3>
-      </article>
     </section>
   </main>
 </template>
 
 <script>
 // Components
-import DrawingComponent from '@/components/Drawing/DrawingComponent.vue';
 import CreateDrawingForm from '@/components/Drawing/CreateDrawingForm.vue';
 import PointComponent from '@/components/Point/PointComponent.vue';
 
@@ -60,7 +38,6 @@ export default {
   name: 'DrawingPage',
   components: 
   {
-    DrawingComponent,
     CreateDrawingForm,
     PointComponent,
   },

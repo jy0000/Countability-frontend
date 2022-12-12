@@ -19,7 +19,17 @@ const router = express.Router();
 /**
  * Get drawings by author.
  *
- * @name GET /api/drawings?authorId=id
+ * @name GET /api/drawings?author=username
+ *
+ * @return {DrawingResponse[]} - An array of drawings created by user with id, authorId
+ * @throws {400} - If author is not given
+ * @throws {404} - If no user has given authorId
+ *
+ */
+/**
+ * Get drawings by author.
+ *
+ * @name GET /api/drawings/:drawingId=id
  *
  * @return {DrawingResponse[]} - An array of drawings created by user with id, authorId
  * @throws {400} - If authorId is not given
@@ -27,10 +37,10 @@ const router = express.Router();
  *
  */
 router.get(
-  '/',
+  '/:drawingId?',
   async (req: Request, res: Response, next: NextFunction) => {
     // Check if authorId query parameter was supplied
-    if (req.query.author !== undefined) {
+    if (req.query.author !== undefined || req.params.drawingId !== undefined) {
       next();
       return;
     }
@@ -42,9 +52,24 @@ router.get(
   [
     userValidator.isAuthorExists
   ],
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response, next: NextFunction) => {
+    if (req.params.drawingId !== undefined) {
+      next();
+      return;
+    }
+
     const authorDrawings = await DrawingCollection.findAllByUsername(req.query.author as string);
     const response = authorDrawings.map(util.constructDrawingResponse);
+    res.status(200).json(response);
+  },
+  [
+    userValidator.isUserLoggedIn,
+    drawingValidator.isDrawingExists,
+    drawingValidator.isValidDrawingModifier
+  ],
+  async (req: Request, res: Response) => {
+    const drawing = await DrawingCollection.findOne(req.params.drawingId);
+    const response = util.constructDrawingResponse(drawing);
     res.status(200).json(response);
   }
 );
