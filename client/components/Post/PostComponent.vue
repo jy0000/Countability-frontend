@@ -12,21 +12,18 @@
       </h3>
 
       <img
-        v-if="post.photo"
+        v-if="post.photo != 'blank'"
         id="base64image"
         class="photo"
         :src="post.photo"
         width="200"
         height="200"
       >
-      <img
+      <h3
         v-else
-        id="base64image"
-        class="photo"
-        src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
-        width="200"
-        height="200"
       >
+        No picture was taken in this work session
+      </h3>
       <!-- If the user signs in, they get to see this-->
       <div
         v-if="$store.state.username === post.author"
