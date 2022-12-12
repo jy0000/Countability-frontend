@@ -100,7 +100,7 @@
           </p>
         </div>
         <button
-          :disabled="disableEnd"
+          :disabled="!closingSession"
           @click="endSession"
         >
           Submit Session
@@ -164,7 +164,7 @@ export default {
         this.disableStart = true;
         this.disableEnd = false;
         let page = this;
-        let startTime = moment(this.currentSession.startDate, 'MMMM Do YYYY, h:mm:ss a').toDate();
+        let startTime = moment(this.currentSession.startDate, 'MMMM Do YYYY, h:mm:ss a').utcOffset('-0500').toDate();
         this.timerIntervalId = setInterval(() => {
           let time = new Date() - startTime;
           function pad(n) {
@@ -257,7 +257,6 @@ export default {
     async endSession() {
       this.disableStart = false;
       this.disableEnd = true;
-      this.closingSession = false;
       const url = `/api/sessions/end`;
       const params = {
           method: 'POST',
@@ -266,6 +265,7 @@ export default {
           this.$set(this.alerts, params.message, 'success');
           setTimeout(() => this.$delete(this.alerts, params.message), 3000);
             this.inSession = false;
+            this.closingSession = false;
             this.stopTimer();
             this.stopChecks();
             this.$store.commit('updatePoint', this.numChecks);
@@ -296,7 +296,7 @@ export default {
       const page = this;
       this.checkIntervalId = setInterval(() => {
         page.showUpload = true;
-        alert("Productivity check! Upload a photo of your workspace.");
+        // alert("Productivity check! Upload a photo of your workspace.");
       }, 5000)
     },
     stopChecks() {
