@@ -1,19 +1,15 @@
-<!-- Default page that also displays sessions -->
+<!-- Default page that also displays drawings -->
+
 <template>
   <main>
     <section v-if="$store.state.username">
       <header>
         <h2 class="box">
-          My profile @{{ $store.state.username }}
+          Welcome @{{ $store.state.username }}
         </h2>
       </header>
     </section>
     <section v-else>
-      <header>
-        <h2 class="box">
-          Welcome to Countability!
-        </h2>
-      </header>
       <article>
         <h3>
           <router-link
@@ -22,92 +18,56 @@
           >
             Sign in
           </router-link>
-          to create, edit, and delete sessions.
+          to create, edit, and delete drawings.
         </h3>
       </article>
     </section>
-
     <section v-if="$store.state.username">
+      <PointComponent />
+      <CreateDrawingForm />
       <header>
-        <div class="position">
-          <img
-            src="../../public/luffy.png"
-            height="300"
-            width="300"
-          >
-          <h2 class="uniform-button">
-            {{ $store.state.friends.length }} Friends 
-          </h2>
-          <h2 class="uniform-button">
-            {{ $store.state.point }} Points 
+        <div class="left">
+          <h2 class="box">
+            📙 Productivity drawings across the community
           </h2>
         </div>
       </header>
-      <header>
-        <div>
-          <tabs>
-            <tab title="Sessions">
-              <section
-                v-if="$store.state.posts.length && $store.state.username"
-              >
-                <PostComponent
-                  v-for="post in $store.state.posts"
-                  v-if="$store.state.username === post.author"
-                  :key="post.id"
-                  :post="post"
-                />
-              </section>
-              <article
-                v-else
-              >
-                <h3>No posts found.</h3>
-              </article>
-            </tab>
-            <tab title="Drawings">
-              <section
-                v-if="$store.state.drawings.length && $store.state.username"
-              >
-                <DrawingComponent
-                  v-for="drawing in $store.state.userDrawings"
-                  :key="drawing.id"
-                  :drawing="drawing"
-                />
-              </section>
-              <article
-                v-else
-              >
-                <h3>No drawings found.</h3>
-              </article>
-            </tab>
-            <tab title="Friends">
-              <FriendPage />
-            </tab>
-            <tab title="Account Management">
-              <AccountPage />
-            </tab>
-          </tabs>
-        </div>
-      </header>
+      <section
+        v-if="$store.state.drawings.length && $store.state.username"
+      >
+        <DrawingComponent
+          v-for="drawing in $store.state.drawings"
+          :key="drawing.id"
+          :drawing="drawing"
+        />
+      </section>
+      <article
+        v-else
+      >
+        <h3>No drawings found.</h3>
+      </article>
     </section>
   </main>
 </template>
 
 <script>
 // Components
-
-import PostComponent from '@/components/Post/PostComponent.vue';
-import FriendPage from '@/components/Friend/FriendPage.vue';
-import AccountPage from '@/components/Account/AccountPage.vue';
 import DrawingComponent from '@/components/Drawing/DrawingComponent.vue';
-import Tab from './ProfileTab.vue'
-import Tabs from './ProfileTabs.vue'
-export default {
+import CreateDrawingForm from '@/components/Drawing/CreateDrawingForm.vue';
+import PointComponent from '@/components/Point/PointComponent.vue';
 
-  name: 'PostPage',
-  components: {PostComponent, Tab, Tabs, FriendPage, AccountPage, DrawingComponent},
+export default {
+  name: 'DrawingPage',
+  components: 
+  {
+    DrawingComponent,
+    CreateDrawingForm,
+    PointComponent,
+  },
   mounted() {
-    
-    this.$store.commit('refreshUserDrawings');
+    // Primitive fix
+    this.$store.commit('refreshPoint');
+    this.$store.commit('refreshDrawings');
   }
 };
 </script>
@@ -132,16 +92,6 @@ section .scrollbox {
   flex: 1 0 50vh;
   padding: 3%;
   overflow-y: scroll;
-}
-
-img {
-  border: 3px solid #555;
-  border-radius: 50%;
-}
-
-.position {
-  display: flex;
-  justify-content: flex-start;
 }
 .box {
   background-color: #c2fbd7;
@@ -203,9 +153,9 @@ img {
   border-top-left-radius: 255px 15px;
   border-top-right-radius: 15px 225px;
 }
-.uniform-button {
+.button-55 {
   align-self: center;
-  background-color: white;
+  background-color: rgb(199, 193, 193, 0.45);
   background-image: none;
   background-position: 0 90%;
   background-repeat: repeat no-repeat;
@@ -229,3 +179,4 @@ img {
   border-top-right-radius: 15px 225px;
 }
 </style>
+

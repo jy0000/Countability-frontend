@@ -38,6 +38,7 @@ const store = new Vuex.Store({
     point: 0,
     alerts: {},
     drawings: [],
+    userDrawings: [],
   },
   mutations: {
     /** SET (for refresh persist @blockform) */
@@ -173,6 +174,20 @@ const store = new Vuex.Store({
        }}).then(async r => r.json());
       // console.log('refresh drawings', res);
       state.drawings = res;
+    },
+    /** End of Added this point (frontend, call after made post request)*/ //TODO only refresh drawings of session user
+    async refreshUserDrawings(state) {
+      /**
+       * Request the server for the currently available posts.
+       */
+      const url = `/api/drawings?author=${state.username}`;
+      const res = await fetch(url, {
+       method: 'GET',
+       headers: {
+         'Content-type': 'application/json; charset=UTF-8',
+       }}).then(async r => r.json());
+      // console.log('refresh drawings', res);
+      state.userDrawings = res;
     },
     async refreshFriends(state) {
       /**
