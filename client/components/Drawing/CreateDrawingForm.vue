@@ -2,6 +2,15 @@
 
 <template>
   <div id="app">
+    <section class="alerts">
+      <article
+        v-for="(status, alert, index) in alerts"
+        :key="index"
+        :class="status"
+      >
+        <p>{{ alert }}</p>
+      </article>
+    </section>
     <h3 class="uniform-button">
       Your temporary points left: {{ tempPoints }}
       These will not be spent until you save your drawing
@@ -16,15 +25,7 @@
     <button @click="submit">
       Submit
     </button>
-    <section class="alerts">
-      <article
-        v-for="(status, alert, index) in alerts"
-        :key="index"
-        :class="status"
-      >
-        <p>{{ alert }}</p>
-      </article>
-    </section>
+    
   </div>
 </template>
 
@@ -251,5 +252,17 @@ export default {
   #myCanvas {
   border: 1px solid grey;
 }
+  /* .alerts {
+    
+    position: absolute;
+    z-index: 99;
+    bottom: 0;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, 10%);
+    width: 100%;
+    text-align: center;
+    
+  } */
 </style>
 
