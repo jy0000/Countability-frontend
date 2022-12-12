@@ -9,14 +9,14 @@
         </h2>
       </header>
       <section class="alerts">
-          <article
-            v-for="(status, alert, index) in alerts"
-            :key="index"
-            :class="status"
-          >
-            <p>{{ alert }}</p>
-          </article>
-        </section>
+        <article
+          v-for="(status, alert, index) in alerts"
+          :key="index"
+          :class="status"
+        >
+          <p>{{ alert }}</p>
+        </article>
+      </section>
     </section>
     <section v-else>
       <header>
@@ -38,27 +38,62 @@
     </section>
     <section v-if="$store.state.username">
       <article v-if="!inSession">
-        <button @click='startSession' :disabled='disableStart'> Start Session </button>
-        <p v-if="disableStart">Loading...</p>
+        <button
+          :disabled="disableStart"
+          @click="startSession"
+        >
+          Start Session
+        </button>
+        <p v-if="disableStart">
+          Loading...
+        </p>
       </article>
       <article v-else>
-        <h4>Time Elapsed: {{timeElapsed}}</h4>
+        <h4>Time Elapsed: {{ timeElapsed }}</h4>
         <div v-if="showUpload">
-          <img :src="previewImage" class="uploading-image" />
-          <input type="file" accept="image/jpeg" @change=uploadImage>
+          <img
+            :src="previewImage"
+            class="uploading-image"
+          >
+          <input
+            type="file"
+            accept="image/jpeg"
+            @change="uploadImage"
+          >
           <div>
-            <button @click='submitImage'>Submit Image</button>
-            <button @click='skipCheck'>Skip Check</button>
+            <button @click="submitImage">
+              Submit Image
+            </button>
+            <button @click="skipCheck">
+              Skip Check
+            </button>
           </div>
           <div class="slider">
             Focus Level:
-            <input type="range" min="0" max="10" value="5" oninput="rangeValue.innerText = this.value">
-            <p id="rangeValue">5</p>
-            </div>
+            <input
+              type="range"
+              min="0"
+              max="10"
+              value="5"
+              oninput="rangeValue.innerText = this.value"
+            >
+            <p id="rangeValue">
+              5
+            </p>
+          </div>
         </div>
-        <h4 v-else>Checking user every 5 seconds (beta only)</h4>
-        <button @click='endSession' :disabled='disableEnd'> End Session </button>
-        <p v-if="disableEnd">Loading...</p>
+        <h4 v-else>
+          Checking user every 5 seconds (beta only)
+        </h4>
+        <button
+          :disabled="disableEnd"
+          @click="endSession"
+        >
+          End Session
+        </button>
+        <p v-if="disableEnd">
+          Loading...
+        </p>
       </article>
     </section>
   </main>
@@ -69,6 +104,22 @@ import moment from 'moment';
 
 export default {
   name: 'SessionPage',
+  data() {
+    return {
+      startTime: "",
+      timeElapsed: "Loading start time...",
+      timerIntervalId: "",
+      checkIntervalId: "",
+      showUpload: false,
+      previewImage:null,
+      numChecks: 0,
+      inSession: false,
+      currentSession: null,
+      disableStart: true,
+      disableEnd: true,
+      alerts: {}
+    }
+  },
   async mounted() {
     const url = `/api/sessions/${this.$store.state.username}`;
     const promise = fetch(url).then(async (r) => {
@@ -108,22 +159,6 @@ export default {
       }
     });
     await promise;
-  },
-  data() {
-    return {
-      startTime: "",
-      timeElapsed: "Loading start time...",
-      timerIntervalId: "",
-      checkIntervalId: "",
-      showUpload: false,
-      previewImage:null,
-      numChecks: 0,
-      inSession: false,
-      currentSession: null,
-      disableStart: true,
-      disableEnd: true,
-      alerts: {}
-    }
   },
   methods: {
     runTimer() {

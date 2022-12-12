@@ -8,16 +8,25 @@
     <header>
       <!-- Header and features (endorse, for example)-->
       <h3 class="author">
-        @{{ post.author }}
+        @{{ post.author }} {{ post.photo }}
       </h3>
 
       <img
-      class="photo"
-      :src="post.photo"
-      id="base64image"
-      width="200"
-      height="200"
-    />
+        v-if="post.photo"
+        id="base64image"
+        class="photo"
+        :src="post.photo"
+        width="200"
+        height="200"
+      >
+      <img
+        v-else
+        id="base64image"
+        class="photo"
+        src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="
+        width="200"
+        height="200"
+      >
       <!-- If the user signs in, they get to see this-->
       <div
         v-if="$store.state.username === post.author"
@@ -54,20 +63,7 @@
       :value="draft"
       @input="draft = $event.target.value"
     />
-    
-
-
-    <!-- Added descriptive post -->
-    <p class="info">
-      <i
-        v-if="post.caption == 'News'"
-        class="newsPost"
-      > Source: {{ post.focusReflection }}</i>
-      <i
-        v-else-if="post.caption == 'Fibe'"
-        class="fibePost"
-      >  @{{ post.author }} is feeling {{ post.progressReflection }}</i>
-    </p>
+  
     <!-- End of Added descriptive post -->
     <p class="info">
       Posted at {{ post.dateModified }}
