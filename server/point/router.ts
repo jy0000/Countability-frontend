@@ -57,7 +57,11 @@ router.patch(
   async (req: Request, res: Response) => {
     const currentUserId = req.session.userId as string;
     const user = await UserCollection.findOneByUserId(currentUserId);
-    const delta = (req.body.delta) ? Number(req.body.delta) : undefined;
+    let delta;
+    if (req.body.delta !== undefined) {
+      delta = Number(req.body.delta);
+    }
+
     const point = await PointCollection.updateOne(user.point._id, delta);
     res.status(200).json({
       message: 'Your point was updated successfully.',

@@ -1,12 +1,23 @@
 <template>
-   <div v-if="showUpload">
-      <img :src="previewImage" class="uploading-image" />
-      <input type="file" accept="image/jpeg" @change=uploadImage>
-      <div>
-        <button @click='submitImage'>Submit Image</button>
-        <button @click='skipCheck'>Skip Check</button>
-      </div>
-   </div>
+  <div v-if="showUpload">
+    <img
+      :src="previewImage"
+      class="uploading-image"
+    >
+    <input
+      type="file"
+      accept="image/jpeg"
+      @change="uploadImage"
+    >
+    <div>
+      <button @click="submitImage">
+        Submit Image
+      </button>
+      <button @click="skipCheck">
+        Skip Check
+      </button>
+    </div>
+  </div>
 </template>
 
 <script>

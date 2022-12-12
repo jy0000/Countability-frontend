@@ -118,7 +118,7 @@ export default {
             method: 'PATCH',
             body: JSON.stringify({
               pixels: this.pixels,
-              imageURL: this.c.toDataURL(),
+              imageURL: this.c.toDataURL(), 
               height: this.height,
               width: this.width
             }),

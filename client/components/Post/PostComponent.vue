@@ -12,12 +12,18 @@
       </h3>
 
       <img
-      class="photo"
-      :src="post.photo"
-      id="base64image"
-      width="200"
-      height="200"
-    />
+        v-if="post.photo != 'blank'"
+        id="base64image"
+        class="photo"
+        :src="post.photo"
+        width="200"
+        height="200"
+      >
+      <h3
+        v-else
+      >
+        No picture was taken in this work session
+      </h3>
       <!-- If the user signs in, they get to see this-->
       <div
         v-if="$store.state.username === post.author"
@@ -54,23 +60,10 @@
       :value="draft"
       @input="draft = $event.target.value"
     />
-    
-
-
-    <!-- Added descriptive post -->
-    <p class="info">
-      <i
-        v-if="post.caption == 'News'"
-        class="newsPost"
-      > Source: {{ post.focusReflection }}</i>
-      <i
-        v-else-if="post.caption == 'Fibe'"
-        class="fibePost"
-      >  @{{ post.author }} is feeling {{ post.progressReflection }}</i>
-    </p>
+  
     <!-- End of Added descriptive post -->
     <p class="info">
-      Posted at {{ post.dateModified }}
+      Posted on {{ post.dateModified }}
       <i v-if="post.edited">(edited)</i>
     </p>
     <section class="alerts">
