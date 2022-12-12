@@ -229,6 +229,7 @@ export default {
       const page = this;
       this.checkIntervalId = setInterval(() => {
         page.showUpload = true;
+        alert("Productivity check! Upload a photo of your workspace.");
       }, 5000)
     },
     stopChecks() {
