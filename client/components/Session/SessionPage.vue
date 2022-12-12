@@ -37,28 +37,33 @@
       </article>
     </section>
     <section v-if="$store.state.username">
-      <article v-if="!inSession">
+      <article v-if="(!inSession && !closingSession)">
         <button @click='startSession' :disabled='disableStart'> Start Session </button>
-        <p v-if="disableStart">Loading...</p>
+        <p v-if="(disableStart && !closingSession)">Loading...</p>
       </article>
       <article v-else>
-        <h4>Time Elapsed: {{timeElapsed}}</h4>
-        <div v-if="showUpload">
+        <h4 v-if="!closingSession">Time Elapsed: {{timeElapsed}}</h4>
+        <div v-if="(showUpload && !closingSession)">
           <img :src="previewImage" class="uploading-image" />
           <input type="file" accept="image/jpeg" @change=uploadImage>
           <div>
             <button @click='submitImage'>Submit Image</button>
             <button @click='skipCheck'>Skip Check</button>
           </div>
-          <div class="slider">
-            Focus Level:
-            <input type="range" min="0" max="10" value="5" oninput="rangeValue.innerText = this.value">
-            <p id="rangeValue">5</p>
-            </div>
+          
         </div>
-        <h4 v-else>Checking user every 5 seconds (beta only)</h4>
-        <button @click='endSession' :disabled='disableEnd'> End Session </button>
+        <h4 v-if="!closingSession">Checking user every 5 seconds (beta only)</h4>
+        <button v-if="!closingSession" @click='closeSession' :disabled='disableEnd'> End Session </button>
         <p v-if="disableEnd">Loading...</p>
+      </article>
+      <article v-if="closingSession">
+        <div class="slider">
+          Focus Level:
+          <input type="range" min="0" max="10" value="5" oninput="rangeValue.innerText = this.value">
+          <p id="rangeValue">5</p>
+          </div>
+        <button @click='endSession' :disabled='disableEnd'> Submit Session </button>
+
       </article>
     </section>
   </main>
@@ -122,6 +127,7 @@ export default {
       currentSession: null,
       disableStart: true,
       disableEnd: true,
+      closingSession: false,
       alerts: {}
     }
   },
@@ -188,9 +194,13 @@ export default {
           setTimeout(() => this.$delete(this.alerts, e), 3000);
       }
     },
+    closeSession() {
+      this.closingSession = true;
+    },
     async endSession() {
       this.disableStart = false;
       this.disableEnd = true;
+      this.closingSession = false;
       const url = `/api/sessions/end`;
       const params = {
           method: 'POST',
