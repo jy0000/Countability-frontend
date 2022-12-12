@@ -73,17 +73,7 @@ export default {
          'Content-type': 'application/json; charset=UTF-8',
        }}).then(async r => r.json())).pixels: [];
     this.$store.commit('refreshPoint');
-    // this.tempPoints = this.$store.state.point;
     this.$store.commit('refreshDrawings'); 
-    // if (this.$route.params.drawingId){
-    //   const url = `/api/drawings/${this.$route.params.drawingId}?author=${this.$store.state.username}`;
-    //   const res = await fetch(url, {
-    //    method: 'GET',
-    //    headers: {
-    //      'Content-type': 'application/json; charset=UTF-8',
-    //    }}).then(async r => r.json());
-    //    console.log("RES", res);
-    //   this.pixels = res.pixels;
     this.drawPixels();
     // }
   },
@@ -153,7 +143,6 @@ export default {
       if (!r.ok) {
         throw new Error(res.error);
       } 
-      console.log('inside drawing submit', res)
       this.$store.commit('updateDrawings', res);
       this.$store.commit('refreshDrawings'); 
       this.pixels = [];
