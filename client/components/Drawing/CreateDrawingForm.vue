@@ -116,6 +116,9 @@ export default {
               'Content-type': 'application/json; charset=UTF-8',
             }})
             .then(async r => r.json());
+        const e = 'Sucessfully edited your drawing!';
+        this.$set(this.alerts, e, 'success');
+        setTimeout(() => this.$delete(this.alerts, e), 800);
       }
       else{
         if (this.method == 'POST')
@@ -133,6 +136,9 @@ export default {
             }})
             .then(async r => r.json());
         }
+        const e = 'Sucessfully created a drawing!';
+        this.$set(this.alerts, e, 'success');
+        setTimeout(() => this.$delete(this.alerts, e), 800);
       }
       const r = await fetch('/api/drawings', {
         method: 'GET',
@@ -157,6 +163,7 @@ export default {
       // this.$set(this.alerts, message, 'success');
       // // Delete this success message after 3 seconds
       // setTimeout(() => this.$delete(this.alerts, message), 3000);
+      
     }
     else{
         const e = 'Cannot submit a drawing with no pixels colored in';
