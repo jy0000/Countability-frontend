@@ -22,10 +22,11 @@
       height="350"
       @mousedown="drawDot"
     />
-    <button @click="submit">
-      Submit
-    </button>
-    
+    <router-link :to="`/draw`">
+      <button @click="submit">
+        Submit
+      </button>
+    </router-link>    
   </div>
 </template>
 

@@ -104,6 +104,7 @@ const store = new Vuex.Store({
        * Update the stored posts filter to the specified one.
        * @param filter - Username of the user to fitler posts by
        */
+      state.point = state.point + delta
       const url = `/api/point`;
       const res = await fetch(url, {
         method: 'PATCH',
