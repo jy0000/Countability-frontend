@@ -14,11 +14,11 @@
       height="350"
       @mousedown="drawDot"
     />
-    <router-link :to="`/draw`">
-      <button @click="submit">
-        Submit
-      </button>
-    </router-link> 
+    <!-- <router-link to="/drawing"> -->
+    <button @click="submit">
+      Create drawing
+    </button>
+    <!-- </router-link>  -->
     <section class="alerts">
       <article
         v-for="(status, alert, index) in alerts"
@@ -32,12 +32,12 @@
 </template>
 
 <script lang="ts">
-// import DrawingForm from '@/Drawing/DrawingForm.vue';
 
-// import { callbackify } from 'util';
+import router from '../../router';
 
 export default {
   name: 'DrawingForm',
+  components: 'router',
   data() {
     return {
       method: 'POST',
@@ -122,6 +122,7 @@ export default {
         const e = 'Sucessfully edited your drawing!';
         this.$set(this.alerts, e, 'success');
         setTimeout(() => this.$delete(this.alerts, e), 1000);
+        this.$router.push("/drawing");
       }
       else{
         if (this.method == 'POST')
@@ -166,7 +167,7 @@ export default {
       // this.$set(this.alerts, message, 'success');
       // // Delete this success message after 3 seconds
       // setTimeout(() => this.$delete(this.alerts, message), 1000);
-      
+      this.$router.push("/drawing");
     }
     else{
         const e = 'Cannot submit a drawing with no pixels colored in';

@@ -79,8 +79,11 @@
 </template>
 
 <script>
+import router from '../../router';
+
 export default {
   name: 'DrawingComponent',
+  components: 'router',
   props: {
     // Data from the stored drawing
     drawing: {
