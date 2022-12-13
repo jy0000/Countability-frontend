@@ -142,6 +142,7 @@ export default {
     }
   },
   async mounted() {
+    console.log(moment.utc(new Date()));
     const url = `/api/sessions/${this.$store.state.username}`;
     const promise = fetch(url).then(async (r) => {
       const res = await r.json();
@@ -181,6 +182,12 @@ export default {
     });
     await promise;
   },
+  destroyed() {
+      if (this.checkIntervalId) {
+        clearInterval(this.checkIntervalId);
+        this.stopFlash();
+      }
+    },
   methods: {
     runTimer() {
       let page = this;
@@ -292,14 +299,17 @@ export default {
         let audio = new Audio('https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3');
         // audio.play();
         this.flashIcon();
-        // alert("Productivity check! Upload a photo of your workspace.");
-      }, 5000)
+        alert("Productivity check! Upload a photo of your workspace.");
+      }, 5000);
     },
     stopChecks() {
       clearInterval(this.checkIntervalId);
       this.stopFlash();
     },
     flashIcon() {
+      if (this.flashIntervalId) {
+        clearInterval(this.flashIntervalId);
+      }
       let icons = ['/blackicon.png', '/redicon.png']
       let link = document.querySelector("link[rel~='icon']");
       let index = 1;

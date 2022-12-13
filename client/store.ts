@@ -27,6 +27,7 @@ const store = new Vuex.Store({
     // Work session
     workSessions: [], // Frontend: (SessionComponent -> SessionPage)
     currentSession: null,
+    checkIntervalId: 0,
 
     // Friend and friend requests
     outgoingFriendRequests: [], // Frontend: (FriendRequestOutComponent -> FriendPage)
@@ -70,6 +71,9 @@ const store = new Vuex.Store({
     },
     setSession(state, session) {
       state.currentSession = session;
+    },
+    setCheckIntervalId(state, intervalId) {
+      state.checkIntervalId = intervalId;
     },
     updateFilter(state, filter) {
       /**
