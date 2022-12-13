@@ -86,7 +86,7 @@ router.post(
   '/',
   [
     userValidator.isUserLoggedIn,
-    postValidator.isValidPostContent,
+    // PostValidator.isValidPostContent,
     postValidator.isPostPropertyComplete
   ],
   async (req: Request, res: Response) => {

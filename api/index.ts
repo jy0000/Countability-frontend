@@ -71,6 +71,10 @@ app.use(session({
   })
 }));
 
+// Const bodyParser = require('body-parser');
+// app.use(bodyParser.json({limit: '50mb'}));
+// app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
+
 // This makes sure that if a user is logged in, they still exist in the database
 app.use(userValidator.isCurrentSessionUserExists);
 
