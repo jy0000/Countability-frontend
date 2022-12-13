@@ -86,6 +86,7 @@
         </p>
       </article>
       <article v-if="closingSession">
+        <CreatePostForm />
         <div class="slider">
           Focus Level:
           <input
@@ -112,9 +113,11 @@
 
 <script>
 import moment from 'moment';
+import CreatePostForm from '../Post/CreatePostForm.vue';
 
 export default {
   name: 'SessionPage',
+  components: {CreatePostForm},
   data() {
     return {
       startTime: "",
@@ -222,7 +225,7 @@ export default {
           callback: () => {
           this.timeElapsed = "00:00:00";
           this.$set(this.alerts, params.message, 'success');
-          setTimeout(() => this.$delete(this.alerts, params.message), 3000);
+          setTimeout(() => this.$delete(this.alerts, params.message), 1000);
           this.inSession = true;
           this.runTimer();
           this.waitForCheck();
@@ -249,7 +252,7 @@ export default {
       } catch (e) {
         console.log(e);
           this.$set(this.alerts, e, 'error');
-          setTimeout(() => this.$delete(this.alerts, e), 3000);
+          setTimeout(() => this.$delete(this.alerts, e), 1000);
       }
     },
     closeSession() {
@@ -264,7 +267,7 @@ export default {
           message: 'Success!',
           callback: () => {
           this.$set(this.alerts, params.message, 'success');
-          setTimeout(() => this.$delete(this.alerts, params.message), 3000);
+          setTimeout(() => this.$delete(this.alerts, params.message), 1000);
             this.inSession = false;
             this.closingSession = false;
             this.stopTimer();
@@ -290,7 +293,7 @@ export default {
       } catch (e) {
         console.log(e);
           this.$set(this.alerts, e, 'error');
-          setTimeout(() => this.$delete(this.alerts, e), 3000);
+          setTimeout(() => this.$delete(this.alerts, e), 1000);
       }
     },
     waitForCheck() {
@@ -343,7 +346,7 @@ export default {
           callback: () => {
           this.stopFlash();
           this.$set(this.alerts, params.message, 'success');
-          setTimeout(() => this.$delete(this.alerts, params.message), 3000);
+          setTimeout(() => this.$delete(this.alerts, params.message), 1000);
           this.showUpload = false;
           this.previewImage = null;
           }
@@ -368,7 +371,7 @@ export default {
       } catch (e) {
         console.log(e);
         this.$set(this.alerts, e, 'error');
-        setTimeout(() => this.$delete(this.alerts, e), 3000);
+        setTimeout(() => this.$delete(this.alerts, e), 1000);
       }
     },
     skipCheck() {

@@ -22,7 +22,6 @@ router.get(
   }
 );
 
-
 /**
  * Get all work sessions of a specific user.
  *
@@ -37,7 +36,7 @@ router.get(
   ],
   async (req: Request, res: Response) => {
     // Check if sessionOwner parameter was supplied
-    const owner = req.params.sessionOwner as string;
+    const owner = req.params.sessionOwner;
     const ownerSessions = await WorkSessionCollection.findAllByUsername(owner);
     const response = ownerSessions.map(util.constructWorkSessionResponse);
     res.status(200).json(response);
@@ -51,14 +50,14 @@ router.get(
  * @return {WorkSessionResponse} - A work session with the id provided
  * @throws {404} - If no session has id sessionId
  */
- router.get(
+router.get(
   '/:sessionId?',
   [
     sessionValidator.isSessionExists
   ],
   async (req: Request, res: Response) => {
     // Check if sessionId parameter was supplied
-    const id = req.params.sessionId as string;
+    const id = req.params.sessionId;
     const session = await WorkSessionCollection.findOne(id);
     const response = util.constructWorkSessionResponse(session);
     res.status(200).json(response);
@@ -102,7 +101,7 @@ router.post(
  * @throws {403} - If the user is not logged in
  * @throws {409} - If the user is not in a session
  */
- router.patch(
+router.patch(
   '/check',
   [
     userValidator.isUserLoggedIn,
@@ -130,7 +129,7 @@ router.post(
 router.delete(
   '/:sessionId?',
   [
-    sessionValidator.isSessionExists,
+    sessionValidator.isSessionExists
   ],
   async (req: Request, res: Response) => {
     await WorkSessionCollection.deleteOne(req.params.sessionId);
@@ -151,7 +150,7 @@ router.delete(
  * @throws {404} - If the sessionId is not valid
  * @throws {409} - If the user has already started a session
  */
- router.post(
+router.post(
   '/end',
   [
     userValidator.isUserLoggedIn,

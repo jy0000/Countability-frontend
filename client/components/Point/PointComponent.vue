@@ -3,18 +3,13 @@
     class="point"
   >
     <section>
-      <header>
-        <h2 class="box">
-          Points
-        </h2>
-      </header>
-      <div
+      <section
         v-if="$store.state.username"
       >
         <h3 class="uniform-button">
           Your points: {{ $store.state.point }}
         </h3>
-      </div>
+      </section>
       <!-- If the user signs in, they get to see above-->
     </section>
   </article>

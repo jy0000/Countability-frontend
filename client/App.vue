@@ -50,19 +50,20 @@ main {
 }
 
 .alerts {
-    position: absolute;
+    position: fixed;
+    font-size: 1.2em;
     z-index: 99;
-    bottom: 0;
-    top: 100%;
     left: 50%;
-    transform: translate(-50%, 10%);
-    width: 100%;
+    top: 0;
+    /* bottom: 0; */
+    transform: translate(-50%, 0%);
+    width: 30%;
     text-align: center;
-}
+} */
 
 .alerts article {
     border-radius: 5px;
-    padding: 10px 20px;
+    padding: 20px 20px;
     color: #fff;
 }
 
@@ -71,11 +72,15 @@ main {
 }
 
 .alerts .error {
-    background-color: rgb(166, 23, 33);
+  color: #fff;
+  background-color: rgb(166, 23, 33);
+  padding: 20px 20px;
 }
 
 .alerts .success {
-    background-color: rgb(45, 135, 87);
+  color: #fff;
+  background-color: rgb(45, 135, 87);
+  padding: 20px 20px;
 }
 
 h3 {

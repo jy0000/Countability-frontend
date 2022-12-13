@@ -49,7 +49,7 @@ const store = new Vuex.Store({
       Vue.set(state.alerts, payload.message, payload.status);
       setTimeout(() => {
         Vue.delete(state.alerts, payload.message);
-      }, 3000);
+      }, 1000);
     },
     setUsername(state, username) {
       /**
@@ -104,6 +104,7 @@ const store = new Vuex.Store({
        * Update the stored posts filter to the specified one.
        * @param filter - Username of the user to fitler posts by
        */
+      state.point = state.point + delta
       const url = `/api/point`;
       const res = await fetch(url, {
         method: 'PATCH',

@@ -131,7 +131,7 @@ export default {
       if (this.post.photo === this.draft) {
         const error = 'Error: Edited post photo should be different than current post photo.';
         this.$set(this.alerts, error, 'error'); // Set an alert to be the error text, timeout of 3000 ms
-        setTimeout(() => this.$delete(this.alerts, error), 3000);
+        setTimeout(() => this.$delete(this.alerts, error), 1000);
         return;
       }
 
@@ -141,7 +141,7 @@ export default {
         body: JSON.stringify({photo: this.draft}),
         callback: () => {
           this.$set(this.alerts, params.message, 'success');
-          setTimeout(() => this.$delete(this.alerts, params.message), 3000);
+          setTimeout(() => this.$delete(this.alerts, params.message), 1000);
         }
       };
       this.request(params);
@@ -184,7 +184,7 @@ export default {
         params.callback();
       } catch (e) {
         this.$set(this.alerts, e, 'error');
-        setTimeout(() => this.$delete(this.alerts, e), 3000);
+        setTimeout(() => this.$delete(this.alerts, e), 1000);
       }
     }
   }
