@@ -12,7 +12,9 @@
         <h3>
           Enter the name of the user you want to befriend.
         </h3>  <small class="left-small">
-          Friend requests will periodically refresh (5 seconds)
+          Note: Friend requests will periodically refresh (5 seconds)
+          <br>
+          If the user you tries to friend declines your friend request, your outgoing request will be removed.
         </small>
       </div>
 
@@ -116,8 +118,10 @@ export default {
   name: 'FriendPage',
   components: {FriendsComponent, CreateFriendRequestForm, FriendRequestIn, FriendRequestOut},
   mounted() {
-    const func = () => {this.$store.commit('refreshOutFriendRequest'); this.$store.commit('refreshInFriendRequest'); this.$store.commit('refreshFriends'); setTimeout(func, 5000)};
-    setTimeout(func, 5000);
+    if (this.$store.state.username !== null) {
+      const func = () => {this.$store.commit('refreshOutFriendRequest'); this.$store.commit('refreshInFriendRequest'); this.$store.commit('refreshFriends'); setTimeout(func, 5000)};
+      setTimeout(func, 5000);
+    }
   }
 };
 </script>

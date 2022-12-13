@@ -13,7 +13,7 @@
         class="actions"
       >
         <button @click="deleteFriendRequest">
-          ❌ Reject friend request
+          ❌ Decline friend request
         </button>
         <button @click="addFriend">
           ✅ Accept friend request
