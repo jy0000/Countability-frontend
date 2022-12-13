@@ -59,7 +59,7 @@ main {
     transform: translate(-50%, 0%);
     width: 30%;
     text-align: center;
-} */
+}
 
 .alerts article {
     border-radius: 5px;
