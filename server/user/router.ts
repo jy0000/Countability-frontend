@@ -6,6 +6,8 @@ import * as userValidator from '../user/middleware';
 import * as util from './util';
 import FriendshipCollection from '../friendship/collection';
 import FriendRequestCollection from '../friendRequest/collection';
+import WorkSessionCollection from '../workSession/collection';
+import DrawingCollection from '../drawing/collection';
 
 const router = express.Router();
 
@@ -168,6 +170,9 @@ router.delete(
     // Delete all friendships and friend requests in which this user is associated with
     await FriendshipCollection.deleteAllFriendshipOfUser(userId);
     await FriendRequestCollection.deleteAllRequestsOfUser(userId);
+    await FriendRequestCollection.deleteAllRequestsOfUser(userId);
+    await WorkSessionCollection.deleteAllByOwnerId(userId);
+    await DrawingCollection.deleteMany(userId);
 
     req.session.userId = undefined;
     res.status(200).json({
