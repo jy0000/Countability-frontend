@@ -85,7 +85,9 @@
               <FriendPage />
             </tab>
             <tab title="Account Management">
-              <AccountPage />
+              <div class="shiftPage">
+                <AccountPage />
+              </div>
             </tab>
           </tabs>
         </div>
@@ -141,6 +143,9 @@ img {
   border-radius: 50%;
 }
 
+.shiftPage {
+  margin-left: 50px;
+}
 .position {
   display: flex;
   align-items: center;

@@ -5,7 +5,7 @@
     <section v-if="$store.state.username">
       <header>
         <h2 class="box">
-          Let's get to work, @{{ $store.state.username }}!
+          Let's get to work, @{{ $store.state.username }}
         </h2>
       </header>
       <section class="alerts">
