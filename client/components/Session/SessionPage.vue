@@ -107,26 +107,13 @@
       </article>
       <article v-if="closingSession">
         <CreatePostForm />
-        <div class="slider">
-          Focus Level:
-          <input
-            type="range"
-            min="0"
-            max="10"
-            value="5"
-            oninput="rangeValue.innerText = this.value"
-          >
-          <p id="rangeValue">
-            5
-          </p>
-        </div>
-        <button
+        <!-- <button
           :disabled="!closingSession"
           class="button-8"
           @click="endSession"
         >
           Finish work!
-        </button>
+        </button> -->
       </article>
     </section>
   </main>
@@ -154,7 +141,8 @@ export default {
       disableStart: true,
       disableEnd: true,
       closingSession: false,
-      alerts: {}
+      alerts: {},
+      photos: []
     }
   },
   async mounted() {
@@ -340,9 +328,12 @@ export default {
         };
     },
     async submitImage() {
+
       if (!this.previewImage) {
         return;
       }
+      this.photos.append(this.previewImage);
+
       this.numChecks += 1;
       const url = `/api/sessions/check`;
       const params = {

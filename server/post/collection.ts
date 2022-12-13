@@ -35,7 +35,7 @@ class PostCollection {
   // eslint-disable-next-line max-params
   static async addOne(
     authorId: Types.ObjectId | string,
-    photo: string,
+    photo: string[],
     caption: string,
     focusReflection: string,
     progressReflection: string
@@ -110,20 +110,20 @@ class PostCollection {
     return postsFromFriendedUsers;
   }
 
-  /**
-   * Update a post with the new photo
-   *
-   * @param {string} postId - The id of the post to be updated
-   * @param {string} photo - The new photo of the post
-   * @return {Promise<HydratedDocument<Post>>} - The newly updated post
-   */
-  static async updateOne(postId: Types.ObjectId | string, photo: string): Promise<HydratedDocument<Post>> {
-    const post = await PostModel.findOne({_id: postId});
-    post.photo = photo;
-    post.dateModified = new Date();
-    await post.save();
-    return post.populate('authorId');
-  }
+  // /**
+  //  * Update a post with the new photo
+  //  *
+  //  * @param {string} postId - The id of the post to be updated
+  //  * @param {string} photo - The new photo of the post
+  //  * @return {Promise<HydratedDocument<Post>>} - The newly updated post
+  //  */
+  // static async updateOne(postId: Types.ObjectId | string, photo: string): Promise<HydratedDocument<Post>> {
+  //   const post = await PostModel.findOne({_id: postId});
+  //   post.photo = photo;
+  //   post.dateModified = new Date();
+  //   await post.save();
+  //   return post.populate('authorId');
+  // }
 
   /**
    * Delete a post with given postId.

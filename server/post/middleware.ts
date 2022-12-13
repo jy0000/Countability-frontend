@@ -35,28 +35,27 @@ const isPostExists = async (req: Request, res: Response, next: NextFunction) => 
   next();
 };
 
-/**
- * Checks if the photo of the post in req.body is valid, i.e not a stream of empty
- * spaces and not more than 140 characters
- */
-const isValidPostContent = (req: Request, res: Response, next: NextFunction) => {
-  const {photo} = req.body as {photo: string}; // Changed
-  if (!photo.trim()) {
-    res.status(400).json({
-      error: 'Post photo must be at least one character long.'
-    });
-    return;
-  }
+// /**
+//  * Checks if the photo of the post in req.body is valid, 
+//  */
+// const isValidPostContent = (req: Request, res: Response, next: NextFunction) => {
+//   const {caption} = req.body as {photo: string[]}; // Changed
+//   if (!photo.trim()) {
+//     res.status(400).json({
+//       error: 'Post photo must be at least one character long.'
+//     });
+//     return;
+//   }
 
-  if (photo.length > 140) {
-    res.status(413).json({
-      error: 'Post photo must be no more than 140 characters.'
-    });
-    return;
-  }
+//   if (photo.length > 140) {
+//     res.status(413).json({
+//       error: 'Post photo must be no more than 140 characters.'
+//     });
+//     return;
+//   }
 
-  next();
-};
+//   next();
+// };
 
 /**
  * Checks if the current user is the author of the post whose postId is in req.params
@@ -76,7 +75,7 @@ const isValidPostModifier = async (req: Request, res: Response, next: NextFuncti
 
 export {
   isPostPropertyComplete,
-  isValidPostContent,
+  // isValidPostContent,
   isPostExists,
   isValidPostModifier
 };

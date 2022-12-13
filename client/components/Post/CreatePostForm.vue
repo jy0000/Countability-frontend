@@ -1,5 +1,7 @@
 <!-- Form for creating posts (block style) -->
-
+<!-- <template>
+  <button @posted="this.$parent.endSession()"/>
+</template> -->
 <script>
 import BlockForm from '@/components/common/BlockForm.vue';
 
@@ -13,8 +15,9 @@ export default {
       hasBody: true,
       fields: [
       {id: 'caption', label: 'Your work in one sentence', value:'', placeholder: ""},
-        {id: 'content', label: 'Reflection', value: ''},
-        {id: 'photo', label: 'Photo', value: ''},
+      {id: 'progressReflection', label: 'Reflection', value: ''},
+      {id: 'focusReflection', label: 'How focused where you on a scale from 1 to 10', value: ''},
+      {id: 'photo', label: 'Photo', value: this.$parent.photos},
       ],
       title: 'Reflecting on my work',
       refreshPosts: true,

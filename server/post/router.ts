@@ -86,7 +86,7 @@ router.post(
   '/',
   [
     userValidator.isUserLoggedIn,
-    postValidator.isValidPostContent,
+    // postValidator.isValidPostContent,
     postValidator.isPostPropertyComplete
   ],
   async (req: Request, res: Response) => {
@@ -125,34 +125,34 @@ router.delete(
   }
 );
 
-/**
- * Modify a post
- *
- * @name PATCH /api/posts/:id
- *
- * @param {string} photo - the new photo for the post
- * @return {PostResponse} - the updated post
- * @throws {403} - if the user is not logged in or not the author of
- *                 of the post
- * @throws {404} - If the postId is not valid
- * @throws {400} - If the post photo is empty or a stream of empty spaces
- * @throws {413} - If the post photo is more than 140 characters long
- */
-router.patch(
-  '/:postId?',
-  [
-    userValidator.isUserLoggedIn,
-    postValidator.isPostExists,
-    postValidator.isValidPostModifier,
-    postValidator.isValidPostContent
-  ],
-  async (req: Request, res: Response) => {
-    const post = await PostCollection.updateOne(req.params.postId, req.body.photo);
-    res.status(200).json({
-      message: 'Your post was updated successfully.',
-      post: util.constructPostResponse(post)
-    });
-  }
-);
+// /**
+//  * Modify a post
+//  *
+//  * @name PATCH /api/posts/:id
+//  *
+//  * @param {string} photo - the new photo for the post
+//  * @return {PostResponse} - the updated post
+//  * @throws {403} - if the user is not logged in or not the author of
+//  *                 of the post
+//  * @throws {404} - If the postId is not valid
+//  * @throws {400} - If the post photo is empty or a stream of empty spaces
+//  * @throws {413} - If the post photo is more than 140 characters long
+//  */
+// router.patch(
+//   '/:postId?',
+//   [
+//     userValidator.isUserLoggedIn,
+//     postValidator.isPostExists,
+//     postValidator.isValidPostModifier,
+//     postValidator.isValidPostContent
+//   ],
+//   async (req: Request, res: Response) => {
+//     const post = await PostCollection.updateOne(req.params.postId, req.body.photo);
+//     res.status(200).json({
+//       message: 'Your post was updated successfully.',
+//       post: util.constructPostResponse(post)
+//     });
+//   }
+// );
 
 export {router as postRouter};

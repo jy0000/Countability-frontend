@@ -90,7 +90,7 @@ class WorkSessionCollection {
     const workSession = await WorkSessionModel.findOne({_id: workSessionId});
     const endDate = new Date();
     workSession.endDate = endDate;
-    await PostCollection.addOne(workSession.sessionOwnerId, workSession.checks.length > 0 ? workSession.checks[0] : 'blank', 'I finished my session!', '', '');
+    //await PostCollection.addOne(workSession.sessionOwnerId, workSession.checks.length > 0 ? workSession.checks[0] : 'no photo', 'I finished my session!', '', '');
     await workSession.save();
     return workSession.populate('sessionOwnerId');
   }
@@ -105,7 +105,7 @@ class WorkSessionCollection {
     const workSession = await WorkSessionModel.findOne({sessionOwnerId: userId, endDate: undefined});
     const endDate = new Date();
     workSession.endDate = endDate;
-    await PostCollection.addOne(workSession.sessionOwnerId, workSession.checks.length > 0 ? workSession.checks[0] : 'blank', 'I finished my session!', '', '');
+    //await PostCollection.addOne(workSession.sessionOwnerId, workSession.checks.length > 0 ? workSession.checks[0] : 'no photo', 'I finished my session!', '', '');
     await workSession.save();
     return workSession.populate('sessionOwnerId');
   }

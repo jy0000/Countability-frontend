@@ -26,8 +26,25 @@
           :placeholder="field.placeholder"
           @input="field.value = $event.target.value"
         >
+        <div 
+          v-else-if="field.id === 'focusReflection'"
+          class="slider"
+        >
+          Focus Level:
+          <input
+            type="range"
+            min="0"
+            max="10"
+            value="5"
+            oninput="rangeValue.innerText = this.value"
+            @input="field.value = $event.target.value"
+          >
+          <p id="rangeValue">
+            5
+          </p>
+        </div>
         <input
-          v-else
+          v-else-if="field.id !== 'photo'"
           :type="field.id === 'password' ? 'password' : 'text'"
           :name="field.id"
           :value="field.value"
@@ -38,11 +55,20 @@
     <article v-else>
       <p>{{ content }}</p>
     </article>
+    <!-- <button
+      v-if="url === 'api/posts'"
+      :disabled="!closingSession"
+      type="submit"
+      @click="this.$parent.endSession()"
+    >
+      Finish work!
+    </button> -->
     <button
       type="submit"
     >
       {{ title }}
     </button>
+    
     <section class="alerts">
       <article
         v-for="(status, alert, index) in alerts"
@@ -87,6 +113,12 @@ export default {
       /**
         * Submits a form with the specified options from data().
         */
+
+      if (this.url === 'api/posts'){
+        // this.$parent.endSession();
+        this.$emit('posted');
+      }
+
       const options = {
         method: this.method,
         headers: {'Content-Type': 'application/json'},

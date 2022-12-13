@@ -10,7 +10,7 @@ export type Post = {
   _id: Types.ObjectId;
   authorId: Types.ObjectId;
   dateCreated: Date;
-  photo: string;
+  photo: string[];
   dateModified: Date;
   caption: string;
   focusReflection: string; // News post property
@@ -21,7 +21,7 @@ export type PopulatedPost = {
   _id: Types.ObjectId;
   authorId: User;
   dateCreated: Date;
-  photo: string;
+  photo: string[];
   dateModified: Date;
   caption: string;
   focusReflection: string; // News post property
@@ -42,7 +42,7 @@ const PostSchema = new Schema<Post>({
   },
   // The photo of the post
   photo: {
-    type: String,
+    type: [String],
     required: true
   },
   // The date the post was modified

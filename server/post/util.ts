@@ -7,7 +7,7 @@ type PostResponse = {
   _id: string;
   author: string;
   dateCreated: string;
-  photo: string;
+  photo: string[];
   dateModified: string;
   caption: string;
   focusReflection: string;
@@ -44,9 +44,10 @@ const constructPostResponse = (post: HydratedDocument<Post>): PostResponse => {
     dateCreated: formatDate(post.dateCreated),
     dateModified: formatDate(post.dateModified),
     caption: postCopy.caption,
+    photo: postCopy.photo,
     // Defaults to empty string if the post type does not have this property.
-    focusReflection: postCopy.caption === 'News' ? postCopy.focusReflection : '',
-    progressReflection: postCopy.caption === 'Fibe' ? postCopy.progressReflection : ''
+    focusReflection: postCopy.focusReflection,
+    progressReflection: postCopy.progressReflection
   };
 };
 
