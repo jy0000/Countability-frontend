@@ -189,9 +189,7 @@ export default {
         this.disableStart = true;
         this.disableEnd = false;
         let page = this;
-        console.log(this.currentSession.startDate);
         let startTime = moment(this.currentSession.startDate).utc();
-        console.log(startTime);
         this.timerIntervalId = setInterval(() => {
           let time = moment.utc(new Date()) - startTime;
           function pad(n) {
