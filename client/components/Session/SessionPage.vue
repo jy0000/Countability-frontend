@@ -38,12 +38,17 @@
     </section>
     <section v-if="$store.state.username">
       <article v-if="(!inSession && !closingSession)">
-        <button
+        <div>
+          <button
           :disabled="disableStart"
           @click="startSession"
-        >
-          Start Session
-        </button>
+          >
+            Start Session
+          </button>
+          <p>
+            Start a work session! After starting a session, every so often, you'll be prompted to take a picture of your workspace as a productivity check. Complete these checks to earn points toward your drawings, and show your friends just how productive you can be :)!
+          </p>
+        </div>
         <p v-if="(disableStart && !closingSession)">
           Loading...
         </p>
@@ -125,22 +130,6 @@ export default {
       timerIntervalId: "",
       checkIntervalId: "",
       flashIntervalId: "",
-      showUpload: false,
-      previewImage:null,
-      numChecks: 0,
-      inSession: false,
-      currentSession: null,
-      disableStart: true,
-      disableEnd: true,
-      alerts: {}
-    }
-  },
-  data() {
-    return {
-      startTime: "",
-      timeElapsed: "Loading start time...",
-      timerIntervalId: "",
-      checkIntervalId: "",
       showUpload: false,
       previewImage:null,
       numChecks: 0,
