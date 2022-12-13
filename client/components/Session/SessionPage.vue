@@ -251,7 +251,7 @@ export default {
       const url = `/api/sessions`;
       const params = {
           method: 'POST',
-          message: 'Success!',
+          message: 'Successfully started a work session!',
           callback: () => {
           this.timeElapsed = "00:00:00";
           this.$set(this.alerts, params.message, 'success');
@@ -295,7 +295,7 @@ export default {
       const url = `/api/sessions/end`;
       const params = {
           method: 'POST',
-          message: 'Success!',
+          message: 'Successfully finished a work session!',
           callback: () => {
           this.$set(this.alerts, params.message, 'success');
           setTimeout(() => this.$delete(this.alerts, params.message), 1000);
@@ -379,6 +379,9 @@ export default {
     },
     async submitImage() {
       if (!this.previewImage) {
+        const imageError = new Error('No image uploaded!');
+        this.$set(this.alerts, imageError, 'error');
+        setTimeout(() => this.$delete(this.alerts, imageError), 1000);
         return;
       }
       this.numChecks += 1;
