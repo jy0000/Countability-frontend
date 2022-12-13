@@ -118,7 +118,7 @@ export default {
   name: 'FriendPage',
   components: {FriendsComponent, CreateFriendRequestForm, FriendRequestIn, FriendRequestOut},
   mounted() {
-    if (this.$store.state.username) {
+    if (this.$store.state.username !== null) {
       const func = () => {this.$store.commit('refreshOutFriendRequest'); this.$store.commit('refreshInFriendRequest'); this.$store.commit('refreshFriends'); setTimeout(func, 5000)};
       setTimeout(func, 5000);
     }
