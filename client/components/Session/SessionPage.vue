@@ -38,12 +38,17 @@
     </section>
     <section v-if="$store.state.username">
       <article v-if="(!inSession && !closingSession)">
-        <button
+        <div>
+          <button
           :disabled="disableStart"
           @click="startSession"
-        >
-          Start Session
-        </button>
+          >
+            Start Session
+          </button>
+          <p>
+            Start a work session! After starting a session, every so often, you'll be prompted to take a picture of your workspace as a productivity check. Complete these checks to earn points toward your drawings, and show your friends just how productive you can be :)!
+          </p>
+        </div>
         <p v-if="(disableStart && !closingSession)">
           Loading...
         </p>
@@ -124,22 +129,7 @@ export default {
       timeElapsed: "Loading start time...",
       timerIntervalId: "",
       checkIntervalId: "",
-      showUpload: false,
-      previewImage:null,
-      numChecks: 0,
-      inSession: false,
-      currentSession: null,
-      disableStart: true,
-      disableEnd: true,
-      alerts: {}
-    }
-  },
-  data() {
-    return {
-      startTime: "",
-      timeElapsed: "Loading start time...",
-      timerIntervalId: "",
-      checkIntervalId: "",
+      flashIntervalId: "",
       showUpload: false,
       previewImage:null,
       numChecks: 0,
@@ -167,7 +157,7 @@ export default {
         this.disableStart = true;
         this.disableEnd = false;
         let page = this;
-        let startTime = moment(this.currentSession.startDate, 'MMMM Do YYYY, h:mm:ss a').utcOffset('-0500').toDate();
+        let startTime = moment(this.currentSession.startDate, 'MMMM Do YYYY, h:mm:ss a').utcOffset('-05:00').toDate();
         this.timerIntervalId = setInterval(() => {
           let time = new Date() - startTime;
           function pad(n) {
@@ -299,11 +289,29 @@ export default {
       const page = this;
       this.checkIntervalId = setInterval(() => {
         page.showUpload = true;
+        let audio = new Audio('https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3');
+        // audio.play();
+        this.flashIcon();
         // alert("Productivity check! Upload a photo of your workspace.");
       }, 5000)
     },
     stopChecks() {
       clearInterval(this.checkIntervalId);
+      this.stopFlash();
+    },
+    flashIcon() {
+      let icons = ['/blackicon.png', '/redicon.png']
+      let link = document.querySelector("link[rel~='icon']");
+      let index = 1;
+      this.flashIntervalId = setInterval(() => {
+        link.href = icons[1-index];
+        index = 1-index;
+      }, 500);
+    },
+    stopFlash() {
+      clearInterval(this.flashIntervalId);
+      let link = document.querySelector("link[rel~='icon']");
+      link.href = '/favicon.ico';
     },
     uploadImage(e){
         const image = e.target.files[0];
@@ -325,6 +333,7 @@ export default {
           method: 'PATCH',
           message: 'Success!',
           callback: () => {
+          this.stopFlash();
           this.$set(this.alerts, params.message, 'success');
           setTimeout(() => this.$delete(this.alerts, params.message), 1000);
           this.showUpload = false;
@@ -357,6 +366,7 @@ export default {
     skipCheck() {
       this.showUpload = false;
       this.previewImage = null;
+      this.stopFlash();
     }
   }
 };
