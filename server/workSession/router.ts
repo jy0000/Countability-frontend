@@ -80,11 +80,12 @@ router.post(
   [
     userValidator.isUserLoggedIn,
     sessionValidator.isValidSessionNumChecks,
+    sessionValidator.isValidSessionCheckFreq,
     sessionValidator.isAlreadyInSession
   ],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    const session = await WorkSessionCollection.addOne(userId, req.body.numChecks);
+    const session = await WorkSessionCollection.addOne(userId, req.body.numChecks, req.body.checkFreq);
 
     res.status(201).json({
       message: 'Your session was created successfully.',

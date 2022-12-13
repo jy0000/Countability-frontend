@@ -13,6 +13,7 @@ export type WorkSession = {
   sessionOwnerId: Types.ObjectId;
   numChecks: number; // Timing occurs in the frontend (client-side)
   checks: string[]; // Contains ids of each productivity check
+  checkFreq: number;
 };
 
 export type PopulatedWorkSession = {
@@ -22,6 +23,7 @@ export type PopulatedWorkSession = {
   sessionOwner: User;
   numChecks: number;
   checks: string[];
+  checkFreq: number;
 };
 
 const WorkSessionSchema = new Schema<WorkSession>({
@@ -50,7 +52,10 @@ const WorkSessionSchema = new Schema<WorkSession>({
   checks: [{
     type: String,
     required: true
-  }]
+  }],
+  checkFreq: {
+    type: Number,
+  }
 });
 
 const WorkSessionModel = model<WorkSession>('WorkSession', WorkSessionSchema);

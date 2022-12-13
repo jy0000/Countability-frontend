@@ -57,6 +57,20 @@
         <p v-if="(disableStart && !closingSession)">
           Loading...
         </p>
+        <div class="slider">
+          How often to check in (seconds)?
+          <input
+            type="range"
+            min="5"
+            max="60"
+            value="15"
+            oninput="checkFreqMinutes.innerText = this.value"
+            @change="setFreq"
+          >
+          <p id="checkFreqMinutes">
+            15
+          </p>
+        </div>
       </article>
       <article v-else>
         <h4 v-if="!closingSession">
@@ -90,9 +104,9 @@
             </button>
           </div>
         </div>
-        <h4 v-if="!closingSession">
+        <!-- <h4 v-if="!closingSession">
           Checking user every 5 seconds (beta only)
-        </h4>
+        </h4> -->
         <button
           v-if="!closingSession"
           :disabled="disableEnd"
@@ -151,6 +165,7 @@ export default {
       numChecks: 0,
       inSession: false,
       currentSession: null,
+      checkFreq: 900000,
       disableStart: true,
       disableEnd: true,
       closingSession: false,
@@ -158,7 +173,6 @@ export default {
     }
   },
   async mounted() {
-    console.log(moment.utc(new Date()));
     const url = `/api/sessions/${this.$store.state.username}`;
     const promise = fetch(url).then(async (r) => {
       const res = await r.json();
@@ -167,6 +181,7 @@ export default {
       for (let i = 0; i < res.length; i++) {
         if (!res[i].endDate) {
           this.currentSession = res[i];
+          this.checkFreq = res[i].checkFreq;
           this.inSession = true;
         }
       }
@@ -174,9 +189,9 @@ export default {
         this.disableStart = true;
         this.disableEnd = false;
         let page = this;
-        let startTime = moment(this.currentSession.startDate, 'MMMM Do YYYY, h:mm:ss a').utcOffset('-05:00').toDate();
+        let startTime = moment(this.currentSession.startDate, 'MMMM Do YYYY, h:mm:ss a').utc();
         this.timerIntervalId = setInterval(() => {
-          let time = new Date() - startTime;
+          let time = moment.utc(new Date()) - startTime;
           function pad(n) {
             return ('00' + n).slice(-2);
           }
@@ -209,6 +224,9 @@ export default {
       let page = this;
       this.startTime = new Date();
       let startTime = new Date()
+      if (this.timerIntervalId) {
+        this.stopTimer();
+      }
       this.timerIntervalId = setInterval(() => {
         let time = new Date() - startTime;
         function pad(n) {
@@ -248,7 +266,8 @@ export default {
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify(
             {
-              numChecks: 0
+              numChecks: 0,
+              checkFreq: this.checkFreq
             }
           )
       };
@@ -310,13 +329,18 @@ export default {
     },
     waitForCheck() {
       const page = this;
+      if (this.checkIntervalId) {
+        clearInterval(this.checkIntervalId);
+      }
       this.checkIntervalId = setInterval(() => {
         page.showUpload = true;
-        let audio = new Audio('https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3');
-        // audio.play();
-        this.flashIcon();
-        alert("Productivity check! Upload a photo of your workspace.");
-      }, 5000);
+        if (!this.closingSession) {
+          let audio = new Audio('https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3');
+          // audio.play();
+          this.flashIcon();
+          alert("Productivity check! Upload a photo of your workspace.");
+        }
+      }, this.checkFreq);
     },
     stopChecks() {
       clearInterval(this.checkIntervalId);
@@ -397,6 +421,9 @@ export default {
       this.showUpload = false;
       this.previewImage = null;
       this.stopFlash();
+    },
+    setFreq(e) {
+      this.checkFreq = e.target.value * 1000; // debugging using seconds instead of minutes
     }
   }
 };

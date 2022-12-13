@@ -16,14 +16,15 @@ class WorkSessionCollection {
    */
   static async addOne(
     sessionOwnerId: Types.ObjectId | string,
-    numChecks: number
+    numChecks: number, checkFreq: number
   ): Promise<HydratedDocument<WorkSession>> {
     const startDate = new Date();
     const newWorkSession = new WorkSessionModel({
       startDate,
       sessionOwnerId,
       numChecks,
-      checks: []
+      checks: [],
+      checkFreq
     });
     await newWorkSession.save();
     return newWorkSession.populate('sessionOwnerId');

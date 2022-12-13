@@ -41,10 +41,14 @@ const constructWorkSessionResponse = (session: HydratedDocument<WorkSession>): W
     endDate: formatDate(session.endDate),
     sessionOwner: sessionOwnerUsername,
     numChecks: sessionCopy.numChecks,
-    checks: sessionCopy.checks
+    checks: sessionCopy.checks,
+    checkFreq: 300000
   };
   if (!sessionCopy.endDate) {
     delete toReturn.endDate;
+  }
+  if (sessionCopy.checkFreq) {
+    toReturn.checkFreq = sessionCopy.checkFreq;
   }
   return toReturn;
 };

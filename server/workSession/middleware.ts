@@ -94,6 +94,20 @@ const isValidSessionNumChecks = async (req: Request, res: Response, next: NextFu
 };
 
 /**
+ * Checks if the provided numChecks is valid
+ */
+ const isValidSessionCheckFreq = async (req: Request, res: Response, next: NextFunction) => {
+  if (req.body.checkFreq as number <= 0) {
+    res.status(400).json({
+      error: 'Check frequency must be a positive integer.'
+    });
+    return;
+  }
+
+  next();
+};
+
+/**
  * Checks if logged in user is already in a session
  */
 const isAlreadyInSession = async (req: Request, res: Response, next: NextFunction) => {
@@ -153,6 +167,7 @@ export {
   isSessionExists,
   isValidSessionModifier,
   isValidSessionNumChecks,
+  isValidSessionCheckFreq,
   isAlreadyInSession,
   isNotInSession
 };
