@@ -8,9 +8,24 @@
           Welcome @{{ $store.state.username }}
         </h2>
       </header>
+      <section class="alerts">
+        <article
+          v-for="(status, alert, index) in alerts"
+          :key="index"
+          :class="status"
+        >
+          <p>{{ alert }}</p>
+        </article>
+      </section>
+      <CreateDrawingForm />
     </section>
     <section v-else>
       <article>
+        <header>
+          <h2 class="box">
+            Welcome to Countability!
+          </h2>
+        </header>
         <h3>
           <router-link
             class="button-sign-in"
@@ -18,33 +33,36 @@
           >
             Sign in
           </router-link>
-          to create, edit, and delete drawings.
+          to make creative pixel art.
         </h3>
       </article>
     </section>
-    <section v-if="$store.state.username">
+    <!-- <section v-if="$store.state.username">
       <CreateDrawingForm />
-    </section>
+    </section> -->
   </main>
 </template>
 
 <script>
 // Components
 import CreateDrawingForm from '@/components/Drawing/CreateDrawingForm.vue';
-import PointComponent from '@/components/Point/PointComponent.vue';
 
 export default {
   name: 'DrawingPage',
   components: 
   {
     CreateDrawingForm,
-    PointComponent,
+  },
+  data() {
+    return {
+      alerts: {}
+    };
   },
   mounted() {
     // Primitive fix
     this.$store.commit('refreshPoint');
     this.$store.commit('refreshDrawings');
-  }
+  },
 };
 </script>
 

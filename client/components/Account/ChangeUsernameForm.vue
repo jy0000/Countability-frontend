@@ -19,7 +19,7 @@ export default {
       callback: () => {
         const message = 'Successfully changed username!';
         this.$set(this.alerts, message, 'success');
-        setTimeout(() => this.$delete(this.alerts, message), 3000);
+        setTimeout(() => this.$delete(this.alerts, message), 1000);
       }
     };
   }

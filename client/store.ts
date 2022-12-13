@@ -49,7 +49,7 @@ const store = new Vuex.Store({
       Vue.set(state.alerts, payload.message, payload.status);
       setTimeout(() => {
         Vue.delete(state.alerts, payload.message);
-      }, 3000);
+      }, 1000);
     },
     setUsername(state, username) {
       /**

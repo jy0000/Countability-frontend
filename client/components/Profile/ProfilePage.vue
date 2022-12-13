@@ -22,7 +22,7 @@
           >
             Sign in
           </router-link>
-          to create, edit, and delete sessions.
+          to create, edit, and delete your own unique profile.
         </h3>
       </article>
     </section>

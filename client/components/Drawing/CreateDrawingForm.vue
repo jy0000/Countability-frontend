@@ -18,7 +18,16 @@
       <button @click="submit">
         Submit
       </button>
-    </router-link>    
+    </router-link> 
+    <section class="alerts">
+      <article
+        v-for="(status, alert, index) in alerts"
+        :key="index"
+        :class="status"
+      >
+        <p>{{ alert }}</p>
+      </article>
+    </section>   
   </article>
 </template>
 
@@ -38,12 +47,12 @@ export default {
       pixels: [],
       hasBody: true,
       // callback:null,
-      callback: () => {
-        const message = 'Successfully created a post!';
-        this.$set(this.alerts, message, 'success');
-        // Delete this success message after 3 seconds
-        setTimeout(() => this.$delete(this.alerts, message), 3000);
-      },
+      // callback: () => {
+      //   const message = 'Successfully created a post!';
+      //   this.$set(this.alerts, message, 'success');
+      //   // Delete this success message after 3 seconds
+      //   setTimeout(() => this.$delete(this.alerts, message), 1000);
+      // },
       alerts: {}, // Displays success/error messages encountered during form submission
     };
   },
@@ -112,7 +121,7 @@ export default {
             .then(async r => r.json());
         const e = 'Sucessfully edited your drawing!';
         this.$set(this.alerts, e, 'success');
-        setTimeout(() => this.$delete(this.alerts, e), 800);
+        setTimeout(() => this.$delete(this.alerts, e), 1000);
       }
       else{
         if (this.method == 'POST')
@@ -132,7 +141,7 @@ export default {
         }
         const e = 'Sucessfully created a drawing!';
         this.$set(this.alerts, e, 'success');
-        setTimeout(() => this.$delete(this.alerts, e), 800);
+        setTimeout(() => this.$delete(this.alerts, e), 1000);
       }
       const r = await fetch('/api/drawings', {
         method: 'GET',
@@ -156,13 +165,13 @@ export default {
       // const message = 'Successfully created a post!';
       // this.$set(this.alerts, message, 'success');
       // // Delete this success message after 3 seconds
-      // setTimeout(() => this.$delete(this.alerts, message), 3000);
+      // setTimeout(() => this.$delete(this.alerts, message), 1000);
       
     }
     else{
         const e = 'Cannot submit a drawing with no pixels colored in';
         this.$set(this.alerts, e, 'error');
-        setTimeout(() => this.$delete(this.alerts, e), 800);
+        setTimeout(() => this.$delete(this.alerts, e), 1000);
       }
     },
     drawGreyLines() {
@@ -221,7 +230,7 @@ export default {
       else {
         e = 'Not Enough Points';
         this.$set(this.alerts, e, 'error');
-        setTimeout(() => this.$delete(this.alerts, e), 3000);
+        setTimeout(() => this.$delete(this.alerts, e), 1000);
       }
     context.restore();
     },

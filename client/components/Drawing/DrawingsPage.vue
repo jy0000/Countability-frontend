@@ -4,6 +4,11 @@
   <main>
     <section v-if="!$store.state.username">
       <article>
+        <header>
+          <h2 class="box">
+            Welcome to Countability!
+          </h2>
+        </header>
         <h3>
           <router-link
             class="button-sign-in"
@@ -78,10 +83,6 @@ header, header > * {
 
 button {
     margin-right: 10px;
-}
-
-.alert {
-  position: fixed;
 }
 
 section .scrollbox {

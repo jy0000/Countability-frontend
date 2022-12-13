@@ -142,7 +142,6 @@ export default {
       context.strokeRect(0, 0, this.c.width, this.c.height);
     },
     async drawDot(e) {
-      
       // this.$store.commit('updatePoint', 30);
       this.$store.commit('refreshPoint');
       this.x = this.getCoord(e.offsetX);
@@ -179,6 +178,7 @@ export default {
         context.fillRect(this.x-this.BOX_SIZE/2+1,this.y-this.BOX_SIZE/2+1, this.BOX_SIZE-2, this.BOX_SIZE-2);
       }
       else {
+        console.log('here')
         e = 'Not Enough Points';
         this.$set(this.alerts, e, 'error');
         setTimeout(() => this.$delete(this.alerts, e), 800);
@@ -241,7 +241,7 @@ export default {
       if (this.drawing.pixels === this.pixels) {
         const error = 'Error: Edited drawing should be different than current drawing.';
         this.$set(this.alerts, error, 'error'); // Set an alert to be the error text, timeout of 3000 ms
-        setTimeout(() => this.$delete(this.alerts, error), 3000);
+        setTimeout(() => this.$delete(this.alerts, error), 1000);
         return;
       }
 
@@ -289,7 +289,7 @@ export default {
         params.callback();
       } catch (e) {
         this.$set(this.alerts, e, 'error');
-        setTimeout(() => this.$delete(this.alerts, e), 3000);
+        setTimeout(() => this.$delete(this.alerts, e), 1000);
       }
     }
   }

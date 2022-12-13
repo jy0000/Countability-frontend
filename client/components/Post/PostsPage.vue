@@ -17,6 +17,11 @@
     </section>
     <section v-else>
       <article>
+        <header>
+          <h2 class="box">
+            Welcome to Countability!
+          </h2>
+        </header>
         <h3>
           <router-link
             class="button-sign-in"
