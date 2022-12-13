@@ -35,7 +35,7 @@ const constructDrawingResponse = (drawing: HydratedDocument<Drawing>): DrawingRe
       versionKey: false // Cosmetics; prevents returning of __v property
     })
   };
-  console.log('HERE', drawingCopy);
+  // console.log('HERE', drawingCopy);
   // Temp fix
   let username;
   if (drawingCopy.authorId === null) {

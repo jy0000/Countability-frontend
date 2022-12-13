@@ -120,22 +120,46 @@
         </p>
       </article>
       <article v-if="closingSession">
-        <CreatePostForm />
-        <div class="slider">
-          Focus Level:
-          <input
-            type="range"
-            min="0"
-            max="10"
-            value="5"
-            oninput="rangeValue.innerText = this.value"
-          >
-          <p id="rangeValue">
-            5
-          </p>
-        </div>
+        <form
+          class="input-form-box"
+          @submit.prevent="submit"
+        >
+          <h3>{{ title }}</h3>
+          <article>
+            <div
+              v-for="field in fields"
+              :key="field.id"
+            >
+              <label :for="field.id">{{ field.label }}:</label>
+            
+              <div 
+                v-if="field.id === 'focusReflection'"
+              >
+                <input
+                  type="range"
+                  min="0"
+                  max="10"
+                  value="5"
+                  oninput="rangeValue.innerText = this.value"
+                  @input="field.value = $event.target.value"
+                >
+                <p id="rangeValue">
+                  5
+                </p>
+              </div>
+              <input
+                v-else 
+                :type="text"
+                :name="field.id"
+                :value="field.value"
+                @input="field.value = $event.target.value"
+              >
+            </div>
+          </article>
+        </form>
         <button
           :disabled="!closingSession"
+          type="submit"
           class="button-8"
           @click="endSession"
         >
@@ -152,7 +176,7 @@ import CreatePostForm from '../Post/CreatePostForm.vue';
 
 export default {
   name: 'SessionPage',
-  components: {CreatePostForm},
+  components: {},
   data() {
     return {
       startTime: "",
@@ -169,7 +193,12 @@ export default {
       disableStart: true,
       disableEnd: true,
       closingSession: false,
-      alerts: {}
+      alerts: {},
+      fields: [
+      {id: 'caption', label: 'Your work in one sentence', value:'', placeholder: ""},
+        {id: 'progressReflection', label: 'Reflection', value: ''},
+        {id: 'focusReflection', label: 'Focus', value: ''},
+      ],
     }
   },
   async mounted() {
@@ -310,6 +339,11 @@ export default {
       };
       const options = {
           method: params.method, 
+          body: JSON.stringify({
+            "caption": this.fields[0].value,
+            "progressReflection": this.fields[0].value,
+            "focusReflection": this.fields[0].value
+          }),
           headers: {'Content-Type': 'application/json'}
       };
       try {
@@ -542,6 +576,8 @@ section .scrollbox {
 body {
   background: linear-gradient(to right, red, yellow);
   }
+  
+  
   .slider {
   position: absolute;
   top: 50%;
@@ -604,5 +640,53 @@ body {
   margin-top: 15px;
   position: relative;
   text-align: center;
+}
+
+form {
+  border: 1px solid #111;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  position: relative;
+}
+article > div {
+  display: flex;
+  flex-direction: column;
+}
+form > article p {
+  margin: 0;
+}
+form h3,
+form > * {
+  margin: 0.3em 0;
+}
+form h3 {
+  margin-top: 0;
+}
+textarea {
+   font-family: inherit;
+   font-size: inherit;
+}
+/* CSS */
+.input-form-box {
+  --b: 3px;   /* border thickness */
+  --s: .45em; /* size of the corner */
+  --color: #373B44;
+  
+  padding: calc(.5em + var(--s)) calc(.9em + var(--s));
+  color: var(--color);
+  --_p: var(--s);
+  background:
+    conic-gradient(from 90deg at var(--b) var(--b),#0000 90deg,var(--color) 0)
+    var(--_p) var(--_p)/calc(100% - var(--b) - 2*var(--_p)) calc(100% - var(--b) - 2*var(--_p));
+  transition: .3s linear, color 0s, background-color 0s;
+  outline: var(--b) solid #0000;
+  outline-offset: .6em;
+  font-size: 20px;
+  border: 0;
+  background-color: rgb(199, 193, 193, 0.45);
+  width: 90%;
 }
 </style>

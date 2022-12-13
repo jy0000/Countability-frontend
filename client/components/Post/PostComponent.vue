@@ -10,61 +10,46 @@
       <h3 class="author">
         @{{ post.author }}
       </h3>
-
-      <img
-        v-if="post.photo != 'blank'"
-        id="base64image"
-        class="photo"
-        :src="post.photo"
-        width="200"
-        height="200"
+      <h3 class="sessionTitle">
+        Session: {{ post.caption }}
+      </h3>
+      <div
+        
       >
-      <h3
-        v-else
-      >
-        No picture was taken in this work session
+        <img
+          v-if="photo != 'blank'"
+          id="base64image"
+          class="photo"
+          :src="photo"
+          width="200"
+          height="200"
+        >
+        <h3
+          v-else
+        >
+          No picture was taken in this work session
+        </h3>
+      </div>
+      <h3 class="reflection">
+        Reflection: {{ post.progressReflection }} 
+        <br>
+        Focus: {{ post.focusReflection }}
       </h3>
       <!-- If the user signs in, they get to see this-->
       <div
         v-if="$store.state.username === post.author"
         class="actions"
       >
-        <button
-          v-if="editing"
-          @click="submitEdit"
-        >
-          ✅ Save changes
-        </button>
-        <button
-          v-if="editing"
-          @click="stopEditing"
-        >
-          🚫 Discard changes
-        </button>
-        <button
-          v-if="!editing"
-          @click="startEditing"
-        >
-          ✏️ Edit
-        </button>
         <button @click="deletePost">
           🗑️ Delete
         </button>
       </div>
       <!-- If the user signs in, they get to see above-->
     </header>
-    <!-- Content starts here, if editing, else show photo -->
-    <textarea
-      v-if="editing"
-      class="photo"
-      :value="draft"
-      @input="draft = $event.target.value"
-    />
-  
     <!-- End of Added descriptive post -->
     <p class="info">
       Posted on {{ post.dateModified }}
-      <i v-if="post.edited">(edited)</i>
+      <!-- <i v-if="post.edited">(edited)</i> -->
     </p>
     <section class="alerts">
       <article
@@ -96,25 +81,24 @@ export default {
     };
   },
   methods: {
-    startEditing() {
-      /**
-       * Enables edit mode on this post.
-       */
-      this.editing = true; // Keeps track of if a post is being edited
-      this.draft = this.post.photo; // The photo of our current "draft" while being edited
-    },
-    stopEditing() {
-      /**
-       * Disables edit mode on this post.
-       */
-      this.editing = false;
-      this.draft = this.post.photo;
-    },
+    // startEditing() {
+    //   /**
+    //    * Enables edit mode on this post.
+    //    */
+    //   this.editing = true; // Keeps track of if a post is being edited
+    //   this.draft = this.post.photo; // The photo of our current "draft" while being edited
+    // },
+    // stopEditing() {
+    //   /**
+    //    * Disables edit mode on this post.
+    //    */
+    //   this.editing = false;
+    //   this.draft = this.post.photo;
+    // },
     deletePost() {
       /**
        * Deletes this post.
        */
-      this.$store.commit('refreshPosts');
       const params = {
         method: 'DELETE',
         callback: () => {
@@ -125,28 +109,28 @@ export default {
       };
       this.request(params);
     },
-    submitEdit() {
-      /**
-       * Updates post to have the submitted draft photo.
-       */
-      if (this.post.photo === this.draft) {
-        const error = 'Error: Edited post photo should be different than current post photo.';
-        this.$set(this.alerts, error, 'error'); // Set an alert to be the error text, timeout of 3000 ms
-        setTimeout(() => this.$delete(this.alerts, error), 1000);
-        return;
-      }
+    // submitEdit() {
+    //   /**
+    //    * Updates post to have the submitted draft photo.
+    //    */
+    //   if (this.post.photo === this.draft) {
+    //     const error = 'Error: Edited post photo should be different than current post photo.';
+    //     this.$set(this.alerts, error, 'error'); // Set an alert to be the error text, timeout of 3000 ms
+    //     setTimeout(() => this.$delete(this.alerts, error), 1000);
+    //     return;
+    //   }
 
-      const params = {
-        method: 'PATCH',
-        message: 'Successfully edited post!',
-        body: JSON.stringify({photo: this.draft}),
-        callback: () => {
-          this.$set(this.alerts, params.message, 'success');
-          setTimeout(() => this.$delete(this.alerts, params.message), 1000);
-        }
-      };
-      this.request(params);
-    },
+    //   const params = {
+    //     method: 'PATCH',
+    //     message: 'Successfully edited post!',
+    //     body: JSON.stringify({photo: this.draft}),
+    //     callback: () => {
+    //       this.$set(this.alerts, params.message, 'success');
+    //       setTimeout(() => this.$delete(this.alerts, params.message), 1000);
+    //     }
+    //   };
+    //   this.request(params);
+    // },
     async request(params) {
       /**
        * Submits a request to the post's endpoint
@@ -206,25 +190,25 @@ export default {
   background-color: rgb(199, 193, 193, 0.35)
 }
 
-.newsPost{
+.sessionTitle{
   font-size: 16px;
   letter-spacing: 2px;
   text-decoration: none;
   color: #000;
   cursor: pointer;
-  background-color: #3c97f8;
+  background-color: #ddf1ae;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   padding: 0.25em 0.5em;
   margin-bottom: 15px;
 }
 
-.fibePost{
+.reflection{
   font-size: 16px;
   letter-spacing: 2px;
   text-decoration: none;
   color: #000;
   cursor: pointer;
-  background-color:  #FFDD00;
+  background-color:  #f1fff1;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   padding: 0.25em 0.5em;
   margin-bottom: 15px;

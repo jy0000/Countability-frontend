@@ -224,7 +224,7 @@ export default {
        * Deletes this drawing.
        */
       this.$store.commit("updatePoint", this.drawing.pixels.length);
-      this.$store.commit('refreshUserDrawings');
+      this.$store.commit("updateDrawing", this.$store.state.drawings.filter(e => e._id !== this.drawing._id));
       const params = {
         method: 'DELETE',
         callback: () => {
