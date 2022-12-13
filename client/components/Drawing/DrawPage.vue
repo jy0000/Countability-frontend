@@ -23,7 +23,6 @@
       </article>
     </section>
     <section v-if="$store.state.username">
-      <PointComponent />
       <CreateDrawingForm />
     </section>
   </main>

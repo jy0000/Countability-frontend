@@ -1,21 +1,13 @@
 <!-- from https://codepen.io/reiallenramos/pen/MWaEmpw -->
 
 <template>
-  <div id="app">
-    <section class="alerts">
-      <article
-        v-for="(status, alert, index) in alerts"
-        :key="index"
-        :class="status"
-      >
-        <p>{{ alert }}</p>
-      </article>
+  <article id="app">
+    <section>   
+      <span class="button-3">
+        Available drawing points: {{ tempPoints }}
+      </span> 
     </section>
-    <h3 class="uniform-button">
-      Your temporary points left: {{ tempPoints }}
-      These will not be spent until you save your drawing
-    </h3>
-    <h1>Drawing</h1>
+    <h3>Spend your productivity points</h3>
     <canvas
       id="myCanvas"
       width="350"
@@ -25,8 +17,16 @@
     <button @click="submit">
       Submit
     </button>
-    
-  </div>
+    <section class="alerts">
+      <article
+        v-for="(status, alert, index) in alerts"
+        :key="index"
+        :class="status"
+      >
+        <p>{{ alert }}</p>
+      </article>
+    </section>
+  </article>
 </template>
 
 <script lang="ts">
@@ -44,13 +44,13 @@ export default {
       tempPoints: this.$store.state.point,
       pixels: [],
       hasBody: true,
-      callback:null,
-      // callback: () => {
-      //   const message = 'Successfully created a post!';
-      //   this.$set(this.alerts, message, 'success');
-      //   // Delete this success message after 3 seconds
-      //   setTimeout(() => this.$delete(this.alerts, message), 3000);
-      // },
+      // callback:null,
+      callback: () => {
+        const message = 'Successfully created a post!';
+        this.$set(this.alerts, message, 'success');
+        // Delete this success message after 3 seconds
+        setTimeout(() => this.$delete(this.alerts, message), 3000);
+      },
       alerts: {}, // Displays success/error messages encountered during form submission
     };
   },
@@ -228,7 +228,7 @@ export default {
       else {
         e = 'Not Enough Points';
         this.$set(this.alerts, e, 'error');
-        setTimeout(() => this.$delete(this.alerts, e), 800);
+        setTimeout(() => this.$delete(this.alerts, e), 3000);
       }
     context.restore();
     },
@@ -264,5 +264,31 @@ export default {
     text-align: center;
     
   } */
+
+/* CSS from: https://getcssscan.com/css-buttons-examples */
+/* CSS */
+.button-3 {
+  margin-top: 10px;
+  appearance: none;
+  background-color: #2ea44f;
+  border: 2px solid rgba(27, 31, 35, .15);
+  border-radius: 6px;
+  box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
+  box-sizing: border-box;
+  color: #fff;
+  display: inline-block;
+  font-size: 20px;
+  font-weight: 200;
+  line-height: 20px;
+  padding: 6px 16px;
+  position: relative;
+  text-align: left;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  white-space: nowrap;
+}
 </style>
 

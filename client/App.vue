@@ -50,15 +50,15 @@ main {
 }
 
 .alerts {
-    position: absolute;
+    position: fixed;
     z-index: 99;
     bottom: 0;
-    top: 100%;
+    top: 50;
     left: 50%;
     transform: translate(-50%, 10%);
     width: 100%;
     text-align: center;
-}
+} */
 
 .alerts article {
     border-radius: 5px;

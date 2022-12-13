@@ -10,13 +10,6 @@
       <h3 class="author">
         @{{ drawing.author }}
       </h3>
-      <!-- <h3 
-        v-if="editing"
-        class="uniform-button"
-      >
-        Your temporary points left: {{ tempPoints }}
-        These will not be spent until you save your drawing
-      </h3> -->
       <canvas
         :id="drawing._id"
         width="360"
@@ -26,6 +19,7 @@
       <img
         v-if="!editing"
         :src="drawing.imageURL"
+        style="width:10%;height:10%;"
       >
       <!-- If the user signs in, they get to see this-->
       <div

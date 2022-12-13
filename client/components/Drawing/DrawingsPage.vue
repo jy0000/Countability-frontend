@@ -2,14 +2,7 @@
 
 <template>
   <main>
-    <section v-if="$store.state.username">
-      <header>
-        <h2 class="box">
-          Welcome @{{ $store.state.username }}
-        </h2>
-      </header>
-    </section>
-    <section v-else>
+    <section v-if="!$store.state.username">
       <article>
         <h3>
           <router-link
@@ -26,7 +19,7 @@
       <header>
         <div class="left">
           <h2 class="box">
-            📙 Productivity drawings across the community
+            🎨  Productivity art in the community
           </h2>
         </div>
       </header>
@@ -80,6 +73,10 @@ header, header > * {
 
 button {
     margin-right: 10px;
+}
+
+.alert {
+  position: fixed;
 }
 
 section .scrollbox {
