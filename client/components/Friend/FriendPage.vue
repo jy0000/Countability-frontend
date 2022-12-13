@@ -4,15 +4,10 @@
   <main>
     <header>
       <h2 class="box">
-        Hi, @{{ $store.state.username }}!
+        Make friends, @{{ $store.state.username }}
       </h2>
     </header>
     <section v-if="$store.state.username">
-      <header>
-        <h2 class="box">
-          Add friend
-        </h2>
-      </header>
       <CreateFriendRequestForm />
     </section>
 

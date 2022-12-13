@@ -2,7 +2,7 @@
 <template>
   <main>
     <section v-if="$store.state.username">
-      <header>
+      <header class="position">
         <h2 class="box">
           My profile @{{ $store.state.username }}
         </h2>
@@ -28,22 +28,24 @@
     </section>
 
     <section v-if="$store.state.username">
-      <header>
-        <div class="position">
+      <header class="position">
+        <div>
           <img
-            src="../../public/luffy.png"
+            src="../../public/luffy2.png"
             height="300"
             width="300"
           >
-          <h2 class="uniform-button">
-            {{ $store.state.friends.length }} Friends 
-          </h2>
-          <h2 class="uniform-button">
-            {{ $store.state.point }} Points 
-          </h2>
         </div>
       </header>
-      <header>
+      <div class="position">
+        <h2 class="button-3">
+          {{ $store.state.friends.length }} Friends 
+        </h2>
+        <h2 class="button-3">
+          {{ $store.state.point }} Points 
+        </h2>
+      </div>
+      <header class="position">
         <div>
           <tabs>
             <tab title="Sessions">
@@ -141,7 +143,9 @@ img {
 
 .position {
   display: flex;
-  justify-content: flex-start;
+  align-items: center;
+  justify-content: center;
+  
 }
 .box {
   background-color: #c2fbd7;
@@ -202,6 +206,24 @@ img {
   border-bottom-right-radius: 225px 15px;
   border-top-left-radius: 255px 15px;
   border-top-right-radius: 15px 225px;
+}
+
+.button-3 {
+  margin-top: 10px;
+  appearance: none;
+  background-color: #2ea44f;
+  border: 2px solid rgba(27, 31, 35, .15);
+  border-radius: 6px;
+  box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
+  box-sizing: border-box;
+  color: #fff;
+  display: inline-block;
+  font-size: 20px;
+  font-weight: 200;
+  line-height: 20px;
+  padding: 6px 16px;
+  position: relative;
+  margin-right: 5px;
 }
 .uniform-button {
   align-self: center;

@@ -231,10 +231,11 @@ textarea {
   transition: .3s linear, color 0s, background-color 0s;
   outline: var(--b) solid #0000;
   outline-offset: .6em;
-  font-size: 16px;
+  font-size: 20px;
 
   border: 0;
   background-color: rgb(199, 193, 193, 0.45);
-  width: 90%;
+  width: 100%;
+  margin-left: 5px;
 }
 </style>
