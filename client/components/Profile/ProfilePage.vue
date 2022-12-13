@@ -48,7 +48,7 @@
       <header class="position">
         <div>
           <tabs>
-            <tab title="Sessions">
+            <tab title="Work sessions">
               <section
                 v-if="$store.state.posts.length && $store.state.username"
               >

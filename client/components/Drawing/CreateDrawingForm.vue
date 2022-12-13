@@ -15,9 +15,15 @@
       @mousedown="drawDot"
     />
     <!-- <router-link to="/drawing"> -->
-    <button @click="submit">
-      Create drawing
-    </button>
+    <div>
+      <button
+        class="button-8"
+        @click="submit"
+      >
+        Create drawing
+      </button>
+    </div>
+  
     <!-- </router-link>  -->
     <section class="alerts">
       <article
@@ -293,5 +299,36 @@ export default {
   vertical-align: middle;
   white-space: nowrap;
 }
+/* CSS from: https://getcssscan.com/css-buttons-examples*/
+.button-8 {
+  background-color: #e1ecf4;
+  border-radius: 3px;
+  border: 1px solid #7aa7c7;
+  box-shadow: rgba(255, 255, 255, .7) 0 1px 0 0 inset;
+  box-sizing: border-box;
+  color: #39739d;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-block;
+  font-family: -apple-system,system-ui,"Segoe UI","Liberation Sans",sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.15385;
+  outline: none;
+  padding: 10px .8em;
+  margin-top: 10px;
+  position: relative;
+  text-align: center;
+}
+
+.button-8:hover {
+  box-shadow: rgba(0, 0, 0, .3) 2px 8px 8px -5px;
+  transform: translate3d(0, 2px, 0);
+}
+
+.button-8:focus {
+  box-shadow: rgba(0, 0, 0, .3) 2px 8px 4px -6px;
+}
+
 </style>
 
