@@ -316,7 +316,7 @@ export default {
   line-height: 1.15385;
   outline: none;
   padding: 10px .8em;
-  margin-top: 10px;
+  margin-top: 15px;
   position: relative;
   text-align: center;
 }
