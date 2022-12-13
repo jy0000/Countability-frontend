@@ -30,6 +30,11 @@
           </h2>
         </div>
       </header>
+      <small class="info">
+        You can edit and delete your drawings both here and under your profile.
+        <br>
+        You will earn back points from drawings you delete.
+      </small>
       <section
         v-if="$store.state.drawings.length && $store.state.username"
       >
@@ -87,6 +92,7 @@ section .scrollbox {
   padding: 3%;
   overflow-y: scroll;
 }
+
 .box {
   background-color: #c2fbd7;
   border-radius: 5px;
@@ -171,6 +177,10 @@ section .scrollbox {
   border-bottom-right-radius: 225px 15px;
   border-top-left-radius: 255px 15px;
   border-top-right-radius: 15px 225px;
+}
+
+.info {
+  text-align: center;
 }
 </style>
 
