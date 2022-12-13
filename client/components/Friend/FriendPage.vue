@@ -2,15 +2,10 @@
 
 <template>
   <main>
-    <header>
-      <h2 class="box">
-        Hi, @{{ $store.state.username }}!
-      </h2>
-    </header>
     <section v-if="$store.state.username">
       <header>
         <h2 class="box">
-          Add friend
+          Make friends, @{{ $store.state.username }}
         </h2>
       </header>
       <CreateFriendRequestForm />
@@ -112,6 +107,8 @@ export default {
   name: 'FriendPage',
   components: {FriendsComponent, CreateFriendRequestForm, FriendRequestIn, FriendRequestOut},
   mounted() {
+    // const func = () => {this.$store.commit('refreshFriends'); setTimeout(func, 1000)};
+    // setTimeout(func, 1000);
   }
 };
 </script>

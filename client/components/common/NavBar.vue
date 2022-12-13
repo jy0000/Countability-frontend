@@ -123,6 +123,7 @@ Code reference: https://getcssscan.com/css-buttons-examples
 .uniform-button {
   align-self: center;
   border-style: solid;
+  background-color: white;
   border-width: 2px;
   box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
   box-sizing: border-box;

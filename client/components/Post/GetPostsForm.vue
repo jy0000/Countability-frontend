@@ -34,7 +34,7 @@ export default {
         }
 
         this.$set(this.alerts, e, 'error');
-        setTimeout(() => this.$delete(this.alerts, e), 3000);
+        setTimeout(() => this.$delete(this.alerts, e), 1000);
       }
     }
   }

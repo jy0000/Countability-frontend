@@ -26,7 +26,7 @@ export default {
         const message = 'Successfully created a session!';
         this.$set(this.alerts, message, 'success');
         // Delete this success message after 3 seconds
-        setTimeout(() => this.$delete(this.alerts, message), 3000);
+        setTimeout(() => this.$delete(this.alerts, message), 1000);
       },
     };
   }

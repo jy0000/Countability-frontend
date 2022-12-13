@@ -5,13 +5,23 @@
     <section v-if="$store.state.username">
       <header>
         <h3 class="box">
-          Welcome @{{ $store.state.username }}
+          Welcome home, @{{ $store.state.username }}
         </h3>
       </header>
       <h3>Take a look at what the community did today!</h3>
+      <small class="info">
+        Every time you finished a work session, the progress you made are captured as a post.
+        <br>
+        Explore what your friends and peers are up to, be it projects, class work, or life!
+      </small>
     </section>
     <section v-else>
       <article>
+        <header>
+          <h2 class="box">
+            Welcome to Countability!
+          </h2>
+        </header>
         <h3>
           <router-link
             class="button-sign-in"
@@ -27,9 +37,9 @@
       <header>
         <div class="left">
           <h2 class="box">
-            📙 My feed
+            📚 Work from the community
             <span v-if="$store.state.filter">
-              by @{{ $store.state.filter }}
+              : posts by @{{ $store.state.filter }}
             </span>
           </h2>
         </div>
@@ -158,7 +168,7 @@ section .scrollbox {
 }
 .uniform-button {
   align-self: center;
-  background-color: rgb(199, 193, 193, 0.45);
+  background-color: rgb(184, 219, 184);
   background-image: none;
   background-position: 0 90%;
   background-repeat: repeat no-repeat;
@@ -175,10 +185,6 @@ section .scrollbox {
   line-height: 23px;
   outline: none;
   padding: .75rem;
-  text-decoration: none;
-  border-bottom-left-radius: 15px 255px;
-  border-bottom-right-radius: 225px 15px;
-  border-top-left-radius: 255px 15px;
-  border-top-right-radius: 15px 225px;
+
 }
 </style>

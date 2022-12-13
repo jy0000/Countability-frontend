@@ -2,15 +2,13 @@
 
 <template>
   <main>
-    <section v-if="$store.state.username">
-      <header>
-        <h2 class="box">
-          Welcome @{{ $store.state.username }}
-        </h2>
-      </header>
-    </section>
-    <section v-else>
+    <section v-if="!$store.state.username">
       <article>
+        <header>
+          <h2 class="box">
+            Welcome to Countability!
+          </h2>
+        </header>
         <h3>
           <router-link
             class="button-sign-in"
@@ -26,14 +24,15 @@
       <header>
         <div class="left">
           <h2 class="box">
-            📙 Productivity drawings across the community
+            🎨  Productivity art in the community
           </h2>
         </div>
       </header>
-      <small class="info">
-        You can edit and delete your drawings both here and under your profile.
+      <h3>Explore a world of productive pixel art!</h3>
+      <small class="left-small">
+        Edit or remove your drawings here or under your profile.
         <br>
-        You will earn back points from drawings you delete.
+        You will earn back productivity points from drawings you removed!
       </small>
       <section
         v-if="$store.state.drawings.length && $store.state.username"
@@ -75,6 +74,11 @@ export default {
 section {
   display: flex;
   flex-direction: column;
+}
+
+.left-small {
+  margin-top: -10px;
+  margin-bottom: 10px;
 }
 
 header, header > * {

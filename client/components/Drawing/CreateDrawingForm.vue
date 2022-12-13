@@ -1,7 +1,30 @@
 <!-- from https://codepen.io/reiallenramos/pen/MWaEmpw -->
 
 <template>
-  <div id="app">
+  <article id="app">
+    <section>   
+      <span class="button-3">
+        Available drawing points: {{ tempPoints }}
+      </span> 
+    </section>
+    <h3>Spend your productivity points</h3>
+    <canvas
+      id="myCanvas"
+      width="350"
+      height="350"
+      @mousedown="drawDot"
+    />
+    <!-- <router-link to="/drawing"> -->
+    <div>
+      <button
+        class="button-8"
+        @click="submit"
+      >
+        Create drawing
+      </button>
+    </div>
+  
+    <!-- </router-link>  -->
     <section class="alerts">
       <article
         v-for="(status, alert, index) in alerts"
@@ -10,33 +33,17 @@
       >
         <p>{{ alert }}</p>
       </article>
-    </section>
-    <h3 class="uniform-button">
-      Your temporary points left: {{ tempPoints }}
-      These will not be spent until you save your drawing
-    </h3>
-    <h1>Drawing</h1>
-    <canvas
-      id="myCanvas"
-      width="350"
-      height="350"
-      @mousedown="drawDot"
-    />
-    <router-link :to="`/draw`">
-      <button @click="submit">
-        Submit
-      </button>
-    </router-link>    
-  </div>
+    </section>   
+  </article>
 </template>
 
 <script lang="ts">
-// import DrawingForm from '@/Drawing/DrawingForm.vue';
 
-// import { callbackify } from 'util';
+import router from '../../router';
 
 export default {
   name: 'DrawingForm',
+  components: 'router',
   data() {
     return {
       method: 'POST',
@@ -45,12 +52,12 @@ export default {
       tempPoints: this.$store.state.point,
       pixels: [],
       hasBody: true,
-      callback:null,
+      // callback:null,
       // callback: () => {
       //   const message = 'Successfully created a post!';
       //   this.$set(this.alerts, message, 'success');
       //   // Delete this success message after 3 seconds
-      //   setTimeout(() => this.$delete(this.alerts, message), 3000);
+      //   setTimeout(() => this.$delete(this.alerts, message), 1000);
       // },
       alerts: {}, // Displays success/error messages encountered during form submission
     };
@@ -120,7 +127,8 @@ export default {
             .then(async r => r.json());
         const e = 'Sucessfully edited your drawing!';
         this.$set(this.alerts, e, 'success');
-        setTimeout(() => this.$delete(this.alerts, e), 800);
+        setTimeout(() => this.$delete(this.alerts, e), 1000);
+        this.$router.push("/drawing");
       }
       else{
         if (this.method == 'POST')
@@ -140,7 +148,7 @@ export default {
         }
         const e = 'Sucessfully created a drawing!';
         this.$set(this.alerts, e, 'success');
-        setTimeout(() => this.$delete(this.alerts, e), 800);
+        setTimeout(() => this.$delete(this.alerts, e), 1000);
       }
       const r = await fetch('/api/drawings', {
         method: 'GET',
@@ -164,13 +172,13 @@ export default {
       // const message = 'Successfully created a post!';
       // this.$set(this.alerts, message, 'success');
       // // Delete this success message after 3 seconds
-      // setTimeout(() => this.$delete(this.alerts, message), 3000);
-      
+      // setTimeout(() => this.$delete(this.alerts, message), 1000);
+      this.$router.push("/drawing");
     }
     else{
         const e = 'Cannot submit a drawing with no pixels colored in';
         this.$set(this.alerts, e, 'error');
-        setTimeout(() => this.$delete(this.alerts, e), 800);
+        setTimeout(() => this.$delete(this.alerts, e), 1000);
       }
     },
     drawGreyLines() {
@@ -229,7 +237,7 @@ export default {
       else {
         e = 'Not Enough Points';
         this.$set(this.alerts, e, 'error');
-        setTimeout(() => this.$delete(this.alerts, e), 800);
+        setTimeout(() => this.$delete(this.alerts, e), 1000);
       }
     context.restore();
     },
@@ -265,5 +273,62 @@ export default {
     text-align: center;
     
   } */
+
+/* CSS from: https://getcssscan.com/css-buttons-examples */
+/* CSS */
+.button-3 {
+  margin-top: 10px;
+  appearance: none;
+  background-color: #2ea44f;
+  border: 2px solid rgba(27, 31, 35, .15);
+  border-radius: 6px;
+  box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
+  box-sizing: border-box;
+  color: #fff;
+  display: inline-block;
+  font-size: 20px;
+  font-weight: 200;
+  line-height: 20px;
+  padding: 6px 16px;
+  position: relative;
+  text-align: left;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+/* CSS from: https://getcssscan.com/css-buttons-examples*/
+.button-8 {
+  background-color: #e1ecf4;
+  border-radius: 3px;
+  border: 1px solid #7aa7c7;
+  box-shadow: rgba(255, 255, 255, .7) 0 1px 0 0 inset;
+  box-sizing: border-box;
+  color: #39739d;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-block;
+  font-family: -apple-system,system-ui,"Segoe UI","Liberation Sans",sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.15385;
+  outline: none;
+  padding: 10px .8em;
+  margin-top: 15px;
+  position: relative;
+  text-align: center;
+}
+
+.button-8:hover {
+  box-shadow: rgba(0, 0, 0, .3) 2px 8px 8px -5px;
+  transform: translate3d(0, 2px, 0);
+}
+
+.button-8:focus {
+  box-shadow: rgba(0, 0, 0, .3) 2px 8px 4px -6px;
+}
+
 </style>
 
