@@ -17,10 +17,19 @@
         
       >
         <img
-          v-if="photo != 'blank'"
+          v-if="post.photo != 'blank'"
           id="base64image"
           class="photo"
-          :src="photo"
+          :src="post.photo"
+          width="200"
+          height="200"
+        >
+        <img
+          v-if="post.photos"
+          v-for="photo_ in post.photos"
+          id="base64image"
+          class="photo"
+          :src="photo_"
           width="200"
           height="200"
         >
