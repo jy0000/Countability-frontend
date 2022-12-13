@@ -14,18 +14,11 @@
       height="350"
       @mousedown="drawDot"
     />
-    <button @click="submit">
-      Submit
-    </button>
-    <section class="alerts">
-      <article
-        v-for="(status, alert, index) in alerts"
-        :key="index"
-        :class="status"
-      >
-        <p>{{ alert }}</p>
-      </article>
-    </section>
+    <router-link :to="`/draw`">
+      <button @click="submit">
+        Submit
+      </button>
+    </router-link>    
   </article>
 </template>
 
