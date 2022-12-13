@@ -8,6 +8,15 @@
           Make friends, @{{ $store.state.username }}
         </h2>
       </header>
+      <div>
+        <h3>
+          Enter the name of the user you want to befriend.
+        </h3>  <small class="left-small">
+          Friend requests will periodically refresh (5 seconds)
+        </small>
+      </div>
+
+    
       <CreateFriendRequestForm />
     </section>
 
@@ -107,8 +116,8 @@ export default {
   name: 'FriendPage',
   components: {FriendsComponent, CreateFriendRequestForm, FriendRequestIn, FriendRequestOut},
   mounted() {
-    // const func = () => {this.$store.commit('refreshFriends'); setTimeout(func, 1000)};
-    // setTimeout(func, 1000);
+    const func = () => {this.$store.commit('refreshOutFriendRequest'); this.$store.commit('refreshInFriendRequest'); this.$store.commit('refreshFriends'); setTimeout(func, 5000)};
+    setTimeout(func, 5000);
   }
 };
 </script>

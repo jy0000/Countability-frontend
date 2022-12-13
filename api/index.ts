@@ -52,7 +52,7 @@ app.set('port', process.env.PORT || 3000);
 app.use(logger('dev'));
 
 // Parse incoming requests with JSON payloads ('content-type: application/json' in header)
-app.use(express.json());
+app.use(express.json({limit: 100000000}));
 
 // Parse incoming requests with urlencoded payloads ('content-type: application/x-www-form-urlencoded' in header)
 app.use(express.urlencoded({extended: false}));
@@ -72,7 +72,8 @@ app.use(session({
 }));
 
 // Const bodyParser = require('body-parser');
-// app.use(bodyParser.json({limit: '50mb'}));
+// app.express.json();
+// App.use(bodyParser.json({limit: '50mb'}));
 // app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
 
 // This makes sure that if a user is logged in, they still exist in the database

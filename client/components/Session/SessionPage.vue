@@ -333,7 +333,11 @@ export default {
         const image = e.target.files[0];
         const reader = new FileReader();
         reader.readAsDataURL(image);
-        console.log(image);
+        if (image.length > 100000000) {
+          console.log("TODO add an alert here")
+        }
+        console.log('HERE', image);
+
         reader.onload = e =>{
             this.previewImage = e.target.result;
             console.log(this.previewImage);
