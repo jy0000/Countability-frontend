@@ -13,9 +13,9 @@
       <h3 class="sessionTitle">
         Session: {{ post.caption }}
       </h3>
-      <!-- <li
+      <li
         v-for="photo in post.photo"
-      > -->
+      >
         <img
           v-if="photo != 'blank'"
           id="base64image"
@@ -29,7 +29,7 @@
         >
           No picture was taken in this work session
         </h3>
-      <!-- </li> -->
+      </li>
       <h3 class="reflection">
         Reflection: {{ post.progressReflection }} 
         <br>
