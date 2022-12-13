@@ -48,7 +48,7 @@
       <header class="position">
         <div>
           <tabs>
-            <tab title="Sessions">
+            <tab title="Work sessions">
               <section
                 v-if="$store.state.posts.length && $store.state.username"
               >
@@ -62,12 +62,14 @@
               <article
                 v-else
               >
-                <h3>No posts found.</h3>
+                <h3 class="center">
+                  No posts found.
+                </h3>
               </article>
             </tab>
             <tab title="Drawings">
               <section
-                v-if="$store.state.drawings.length && $store.state.username"
+                v-if="$store.state.userDrawings.length && $store.state.username"
               >
                 <DrawingComponent
                   v-for="drawing in $store.state.userDrawings"
@@ -78,14 +80,18 @@
               <article
                 v-else
               >
-                <h3>No drawings found.</h3>
+                <h3 class="center">
+                  No drawings found.
+                </h3>
               </article>
             </tab>
             <tab title="Friends">
               <FriendPage />
             </tab>
             <tab title="Account Management">
-              <AccountPage />
+              <div class="shiftPage">
+                <AccountPage />
+              </div>
             </tab>
           </tabs>
         </div>
@@ -141,11 +147,20 @@ img {
   border-radius: 50%;
 }
 
+.shiftPage {
+  margin-left: 50px;
+}
 .position {
   display: flex;
   align-items: center;
   justify-content: center;
   
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .box {
   background-color: #c2fbd7;

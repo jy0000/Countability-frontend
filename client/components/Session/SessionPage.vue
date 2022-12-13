@@ -5,7 +5,7 @@
     <section v-if="$store.state.username">
       <header>
         <h2 class="box">
-          Let's get to work, @{{ $store.state.username }}!
+          Let's get to work, @{{ $store.state.username }}
         </h2>
       </header>
       <section class="alerts">
@@ -39,16 +39,21 @@
     <section v-if="$store.state.username">
       <article v-if="(!inSession && !closingSession)">
         <div>
-          <button
+          <h3>Track your productivity in a work session!</h3>
+          <small class="info">
+            After starting a session, every so often, you'll be prompted to take a picture of your workspace as a productivity check.
+            <br>
+            Complete these checks to earn points toward your drawings, and show your friends just how productive you can be.
+          </small>
+        </div>
+        <button
+          class="button-8"
           :disabled="disableStart"
           @click="startSession"
-          >
-            Start Session
-          </button>
-          <p>
-            Start a work session! After starting a session, every so often, you'll be prompted to take a picture of your workspace as a productivity check. Complete these checks to earn points toward your drawings, and show your friends just how productive you can be :)!
-          </p>
-        </div>
+        >
+          Start Session
+        </button>
+
         <p v-if="(disableStart && !closingSession)">
           Loading...
         </p>
@@ -58,20 +63,29 @@
           Time Elapsed: {{ timeElapsed }}
         </h4>
         <div v-if="(showUpload && !closingSession)">
-          <img
-            :src="previewImage"
-            class="uploading-image"
-          >
+          <div>
+            <img
+              :src="previewImage"
+              class="uploading-image"
+            >
+          </div>
           <input
             type="file"
             accept="image/png, image/jpeg, image/jpg, image/heic"
+            class="button-8"
             @change="uploadImage"
           >
           <div>
-            <button @click="submitImage">
+            <button
+              class="button-8"
+              @click="submitImage"
+            >
               Submit Image
             </button>
-            <button @click="skipCheck">
+            <button
+              class="button-8"
+              @click="skipCheck"
+            >
               Skip Check
             </button>
           </div>
@@ -82,6 +96,7 @@
         <button
           v-if="!closingSession"
           :disabled="disableEnd"
+          class="button-8"
           @click="closeSession"
         >
           End Session
@@ -107,9 +122,10 @@
         </div>
         <button
           :disabled="!closingSession"
+          class="button-8"
           @click="endSession"
         >
-          Submit Session
+          Finish work!
         </button>
       </article>
     </section>
@@ -327,7 +343,11 @@ export default {
         const image = e.target.files[0];
         const reader = new FileReader();
         reader.readAsDataURL(image);
-        console.log(image);
+        if (image.length > 100000000) {
+          console.log("TODO add an alert here")
+        }
+        console.log('HERE', image);
+
         reader.onload = e =>{
             this.previewImage = e.target.result;
             console.log(this.previewImage);
@@ -537,4 +557,25 @@ body {
   .slider input[type="range"]::-webkit-slider-thumb:hover {
   background: black;
   }
+
+  .button-8 {
+  background-color: #e1ecf4;
+  border-radius: 3px;
+  border: 1px solid #7aa7c7;
+  box-shadow: rgba(255, 255, 255, .7) 0 1px 0 0 inset;
+  box-sizing: border-box;
+  color: #39739d;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-block;
+  font-family: -apple-system,system-ui,"Segoe UI","Liberation Sans",sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.15385;
+  outline: none;
+  padding: 10px .8em;
+  margin-top: 15px;
+  position: relative;
+  text-align: center;
+}
 </style>

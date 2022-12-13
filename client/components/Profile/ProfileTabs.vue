@@ -1,18 +1,23 @@
 <template>
-    <div>
-      <ul class="tabs__header" style="list-style: none;">
-        <li
+  <div>
+    <ul
+      class="tabs__header"
+      style="list-style: none;"
+    >
+      <li
         v-for="(tab, index) in tabs"
         :key="tab.title"
+        :class="{&quot;tabs__selected&quot;: (index == selectedIndex)}"
         @click="selectTab(index)"
-        :class='{"tabs__selected": (index == selectedIndex)}'
-        >
-        <button class="box">{{ tab.title }}</button>
-        </li>
-      </ul>
-      <slot></slot>
-    </div>
-  </template>
+      >
+        <button class="box">
+          {{ tab.title }}
+        </button>
+      </li>
+    </ul>
+    <slot />
+  </div>
+</template>
   
   <script>
   
@@ -46,6 +51,7 @@
   <style scoped>
   
   li {
+    position: relative;
     display:inline;
     padding: 10px 40px;
 }

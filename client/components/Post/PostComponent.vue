@@ -114,6 +114,7 @@ export default {
       /**
        * Deletes this post.
        */
+      this.$store.commit('refreshPosts');
       const params = {
         method: 'DELETE',
         callback: () => {

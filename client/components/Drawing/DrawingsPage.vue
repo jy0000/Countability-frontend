@@ -28,10 +28,11 @@
           </h2>
         </div>
       </header>
-      <small class="info">
-        You can edit and delete your drawings both here and under your profile.
+      <h3>Explore a world of productive pixel art!</h3>
+      <small class="left-small">
+        Edit or remove your drawings here or under your profile.
         <br>
-        You will earn back points from drawings you delete.
+        You will earn back productivity points from drawings you removed!
       </small>
       <section
         v-if="$store.state.drawings.length && $store.state.username"
@@ -73,6 +74,11 @@ export default {
 section {
   display: flex;
   flex-direction: column;
+}
+
+.left-small {
+  margin-top: -10px;
+  margin-bottom: 10px;
 }
 
 header, header > * {

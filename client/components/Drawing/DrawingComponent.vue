@@ -223,8 +223,8 @@ export default {
       /**
        * Deletes this drawing.
        */
-      console.log('deletedrawing', this.drawing.pixels.length)
       this.$store.commit("updatePoint", this.drawing.pixels.length);
+      this.$store.commit('refreshUserDrawings');
       const params = {
         method: 'DELETE',
         callback: () => {

@@ -53,6 +53,7 @@ export default {
       /**
        * Deletes a friend request.
        */
+      this.$store.commit('refreshOutFriendRequest');
       const options = {
         method: 'DELETE', headers: {'Content-Type': 'application/json'}
       };

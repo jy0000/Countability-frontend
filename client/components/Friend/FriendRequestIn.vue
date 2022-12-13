@@ -56,6 +56,7 @@ export default {
       /**
        * Deletes a friend request.
        */
+      this.$store.commit('refreshInFriendRequest');
       const options = {
         method: 'DELETE', headers: {'Content-Type': 'application/json'}
       };
@@ -73,7 +74,8 @@ export default {
       } catch (e) {
         this.$set(this.alerts, e, 'error');
         setTimeout(() => this.$delete(this.alerts, e), 1000);
-      } 
+      }
+      this.$store.commit('refreshInFriendRequest');
     },
     async addFriend() {
       /**
@@ -81,6 +83,7 @@ export default {
        * 
        * Also delete the incoming friend request as they are already friends now
        */
+      this.$store.commit('refreshInFriendRequest');
       await this.deleteFriendRequest();
       const options = {
         method: 'POST', headers: {'Content-Type': 'application/json'},

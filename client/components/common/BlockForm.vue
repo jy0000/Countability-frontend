@@ -235,7 +235,6 @@ textarea {
 
   border: 0;
   background-color: rgb(199, 193, 193, 0.45);
-  width: 100%;
-  margin-left: 5px;
+  width: 90%;
 }
 </style>
