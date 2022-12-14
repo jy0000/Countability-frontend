@@ -160,6 +160,7 @@
                 :type="text"
                 :name="field.id"
                 :value="field.value"
+                :placeholder="field.placeholder"
                 @input="field.value = $event.target.value"
               >
               <!-- </div> -->
@@ -204,7 +205,7 @@ export default {
       closingSession: false,
       alerts: {},
       fields: [
-      {id: 'caption', label: 'Reflect on your work', value:'', placeholder: ""},
+      {id: 'caption', label: 'Reflect on your work', value:'', placeholder: "Reflect on your work in < 50 characters"},
       ],
     }
   },

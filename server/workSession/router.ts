@@ -4,6 +4,7 @@ import WorkSessionCollection from './collection';
 import * as userValidator from '../user/middleware';
 import * as sessionValidator from './middleware';
 import * as util from './util';
+import * as postValidator from '../post/middleware';
 
 const router = express.Router();
 
@@ -155,7 +156,8 @@ router.post(
   '/end',
   [
     userValidator.isUserLoggedIn,
-    sessionValidator.isNotInSession
+    sessionValidator.isNotInSession,
+    postValidator.isValidPostContent
   ],
   async (req: Request, res: Response) => {
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn

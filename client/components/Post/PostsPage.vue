@@ -46,7 +46,7 @@
         <div class="right">
           <GetPostsForm
             ref="getPostsForm"
-            class="uniform-button"
+            class="uniform-button2"
             value="author"
             placeholder="🔍 Filter by author (optional)"
             button="🔄 Get posts"
@@ -142,6 +142,24 @@ section .scrollbox {
   background-color: rgb(199, 193, 193, 0.45)
 }
 .uniform-button {
+  text-decoration: none;
+  align-self: center;
+  border-style: solid;
+  background-color: white;
+  border-width: 2px;
+  box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
+  box-sizing: border-box;
+  color:#41403e;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Neucha, sans-serif;
+  font-size: 1.5rem;
+  line-height: 23px;
+  padding: .75rem;
+  margin-right: 0.35rem;
+}
+
+.uniform-button2 {
   text-decoration: none;
   align-self: center;
   border-style: solid;

@@ -40,7 +40,9 @@ const isPostExists = async (req: Request, res: Response, next: NextFunction) => 
  * spaces and not more than 140 characters
  */
 const isValidPostContent = (req: Request, res: Response, next: NextFunction) => {
-  const {photo} = req.body as {photo: string}; // Changed
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const photo = req.body.caption;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   if (!photo.trim()) {
     res.status(400).json({
       error: 'Post photo must be at least one character long.'
@@ -48,9 +50,9 @@ const isValidPostContent = (req: Request, res: Response, next: NextFunction) => 
     return;
   }
 
-  if (photo.length > 140) {
+  if (photo.length > 100) {
     res.status(413).json({
-      error: 'Post photo must be no more than 140 characters.'
+      error: 'Post photo must be no more than 100 characters.'
     });
     return;
   }
