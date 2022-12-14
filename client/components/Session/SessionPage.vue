@@ -199,6 +199,7 @@ export default {
         {id: 'progressReflection', label: 'Reflection', value: ''},
         {id: 'focusReflection', label: 'Focus', value: ''},
       ],
+      photos: []
     }
   },
   async mounted() {
@@ -342,7 +343,8 @@ export default {
           body: JSON.stringify({
             "caption": this.fields[0].value,
             "progressReflection": this.fields[0].value,
-            "focusReflection": this.fields[0].value
+            "focusReflection": this.fields[0].value,
+            "photos": this.photos
           }),
           headers: {'Content-Type': 'application/json'}
       };
@@ -415,6 +417,8 @@ export default {
       if (!this.previewImage) {
         return;
       }
+      this.photos.push(this.previewImage) //DO WE NEED TO JSON STRINGIFY?
+
       this.numChecks += 1;
       const url = `/api/sessions/check`;
       const params = {
