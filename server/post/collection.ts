@@ -41,12 +41,13 @@ class PostCollection {
     progressReflection: string
   ): Promise<HydratedDocument<Post>> {
     const date = new Date();
+    const caption2 = caption;
     const post = new PostModel({
       authorId,
       dateCreated: date,
       photo,
       dateModified: date,
-      caption,
+      caption: caption2,
       focusReflection,
       progressReflection
     });

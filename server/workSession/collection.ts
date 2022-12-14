@@ -87,11 +87,11 @@ class WorkSessionCollection {
    * @param {string} workSessionId - The WorkSessionId of WorkSession to end
    * @return {Promise<HydratedDocument<WorkSession>>} - updated workSession
    */
-  static async endOne(workSessionId: Types.ObjectId | string): Promise<HydratedDocument<WorkSession>> {
+  static async endOne(workSessionId: Types.ObjectId | string, caption: string): Promise<HydratedDocument<WorkSession>> {
     const workSession = await WorkSessionModel.findOne({_id: workSessionId});
     const endDate = new Date();
     workSession.endDate = endDate;
-    await PostCollection.addOne(workSession.sessionOwnerId, workSession.checks.length > 0 ? workSession.checks[0] : 'blank', 'I finished my session!', '', '');
+    await PostCollection.addOne(workSession.sessionOwnerId, workSession.checks.length > 0 ? workSession.checks[0] : 'blank', caption, '', '');
     await workSession.save();
     return workSession.populate('sessionOwnerId');
   }
