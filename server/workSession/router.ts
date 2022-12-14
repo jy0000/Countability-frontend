@@ -160,7 +160,7 @@ router.post(
   async (req: Request, res: Response) => {
     console.log('INENDSESSION', req);
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
-    const session = await WorkSessionCollection.endOneByUser(userId, req.body.caption, req.body.progressReflection, req.body.focusReflection, req.body.photos);
+    const session = await WorkSessionCollection.endOneByUser(userId);
     res.status(200).json({
       message: 'Your session was ended successfully.',
       session: util.constructWorkSessionResponse(session)

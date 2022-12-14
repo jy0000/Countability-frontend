@@ -345,12 +345,12 @@ export default {
             "photos": this.photos
           })
       var bodydata = new FormData();
-      
+
       const rawdata = JSON.stringify({
             caption: this.fields[0].value,
             progressReflection: this.fields[1].value,
             focusReflection: this.fields[2].value,
-            photos: (this.photos.length == 0)? []: this.photos
+            //photos: (this.photos.length == 0)? []: this.photos
           })
       bodydata.append("json", JSON.stringify(rawdata));
       console.log(bodydata)

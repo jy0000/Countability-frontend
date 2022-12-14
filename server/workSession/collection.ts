@@ -87,11 +87,11 @@ class WorkSessionCollection {
    * @param {string} workSessionId - The WorkSessionId of WorkSession to end
    * @return {Promise<HydratedDocument<WorkSession>>} - updated workSession
    */
-  static async endOne(workSessionId: Types.ObjectId | string): Promise<HydratedDocument<WorkSession>> {
+  static async endOne(workSessionId: Types.ObjectId | string, caption: string, progressReflection: string, focusReflection: string, photo: string): Promise<HydratedDocument<WorkSession>> {
     const workSession = await WorkSessionModel.findOne({_id: workSessionId});
     const endDate = new Date();
     workSession.endDate = endDate;
-    await PostCollection.addOne(workSession.sessionOwnerId, workSession.checks.length > 0 ? workSession.checks[0] : 'blank', 'I finished my session!', '', '');
+    await PostCollection.addOne(workSession.sessionOwnerId, photo, caption, focusReflection, progressReflection);
     await workSession.save();
     return workSession.populate('sessionOwnerId');
   }
@@ -102,13 +102,13 @@ class WorkSessionCollection {
    * @param {string} userId - The owner id of WorkSession to end
    * @return {Promise<HydratedDocument<WorkSession>>} - updated workSession
    */
-  static async endOneByUser(userId: Types.ObjectId | string, caption: string, progressReflection: string, focusReflection: string, photos: string[]): Promise<HydratedDocument<WorkSession>> {
+  static async endOneByUser(userId: Types.ObjectId | string): Promise<HydratedDocument<WorkSession>> {
     console.log('IN ENDONEBYUSER 1');
     const workSession = await WorkSessionModel.findOne({sessionOwnerId: userId, endDate: undefined});
     const endDate = new Date();
     workSession.endDate = endDate;
     console.log("IN ENDONEBYUSER ", caption, progressReflection, focusReflection);
-    await PostCollection.addOneSession(workSession.sessionOwnerId, caption, progressReflection, focusReflection, photos);
+    //await PostCollection.addOneSession(workSession.sessionOwnerId, caption, progressReflection, focusReflection, photos);
     await workSession.save();
     return workSession.populate('sessionOwnerId');
   }
