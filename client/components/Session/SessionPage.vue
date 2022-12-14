@@ -137,9 +137,11 @@
               v-for="field in fields"
               :key="field.id"
             >
-              <label :for="field.id">{{ field.label }}:</label>
+              <h3 :for="field.id">
+                {{ field.label }}:
+              </h3>
             
-              <div 
+              <!-- <div 
                 v-if="field.id === 'focusReflection'"
               >
                 <input
@@ -153,14 +155,14 @@
                 <p id="rangeValue">
                   5
                 </p>
-              </div>
+              </div> -->
               <input
-                v-else 
                 :type="text"
                 :name="field.id"
                 :value="field.value"
                 @input="field.value = $event.target.value"
               >
+              <!-- </div> -->
             </div>
           </article>
         </form>
@@ -202,9 +204,7 @@ export default {
       closingSession: false,
       alerts: {},
       fields: [
-      {id: 'caption', label: 'Your work in one sentence', value:'', placeholder: ""},
-        {id: 'progressReflection', label: 'Reflection', value: ''},
-        {id: 'focusReflection', label: 'Focus', value: ''},
+      {id: 'caption', label: 'Reflect on your work', value:'', placeholder: ""},
       ],
     }
   },

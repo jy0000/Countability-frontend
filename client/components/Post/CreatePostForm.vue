@@ -12,7 +12,7 @@ export default {
       method: 'POST',
       hasBody: true,
       fields: [
-      {id: 'caption', label: 'Your work in one sentence', value:'', placeholder: ""},
+        {id: 'caption', label: 'Reflect on your work', value:'', placeholder: ""},
         {id: 'content', label: 'Reflection', value: ''},
         {id: 'photo', label: 'Photo', value: ''},
       ],

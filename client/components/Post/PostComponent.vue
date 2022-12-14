@@ -7,15 +7,16 @@
   >
     <header>
       <!-- Header and features (endorse, for example)-->
-      <h3 class="author">
-        @{{ post.author }}
-      </h3>
+      <div>
+        <h3 class="author">
+          @{{ post.author }}
+        </h3>
+      </div>
+      
       <h3 class="sessionTitle">
-        Session: {{ post.caption }}
+        {{ post.caption }}
       </h3>
-      <div
-        
-      >
+      <div>
         <img
           v-if="post.photo != 'blank'"
           id="base64image"
@@ -25,8 +26,8 @@
           height="200"
         >
         <img
-          v-if="post.photos"
           v-for="photo_ in post.photos"
+          v-if="post.photos"
           id="base64image"
           class="photo"
           :src="photo_"
@@ -39,11 +40,9 @@
           No picture was taken in this work session
         </h3>
       </div>
-      <h3 class="reflection">
-        Reflection: {{ post.progressReflection }} 
-        <br>
+      <!-- <h3 class="reflection">
         Focus: {{ post.focusReflection }}
-      </h3>
+      </h3> -->
       <!-- If the user signs in, they get to see this-->
       <div
         v-if="$store.state.username === post.author"
@@ -200,23 +199,21 @@ export default {
 }
 
 .sessionTitle{
-  font-size: 16px;
-  letter-spacing: 2px;
-  text-decoration: none;
+  font-size: 18px;
   color: #000;
-  cursor: pointer;
-  background-color: #ddf1ae;
+  display: inline-block;
+  background-color: #f1efae;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-  padding: 0.25em 0.5em;
-  margin-bottom: 15px;
+  padding: 0.5em 0.5em;
+  margin-top: -15px;
 }
 
 .reflection{
-  font-size: 16px;
+  font-size: 18px;
+  display: inline-block;
   letter-spacing: 2px;
   text-decoration: none;
   color: #000;
-  cursor: pointer;
   background-color:  #f1fff1;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   padding: 0.25em 0.5em;
