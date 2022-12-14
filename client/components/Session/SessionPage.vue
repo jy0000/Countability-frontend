@@ -149,7 +149,6 @@
               </div>
               <input
                 v-else 
-                :type="text"
                 :name="field.id"
                 :value="field.value"
                 @input="field.value = $event.target.value"
@@ -345,20 +344,29 @@ export default {
             "focusReflection": this.fields[2].value,
             "photos": this.photos
           })
+      var bodydata = new FormData();
+      
+      const rawdata = JSON.stringify({
+            caption: this.fields[0].value,
+            progressReflection: this.fields[1].value,
+            focusReflection: this.fields[2].value,
+            photos: (this.photos.length == 0)? []: this.photos
+          })
+      bodydata.append("json", JSON.stringify(rawdata));
+      console.log(bodydata)
       const options = {
           method: params.method, 
-          body: JSON.stringify({
-            "caption": this.fields[0].value,
-            "progressReflection": this.fields[1].value,
-            "focusReflection": this.fields[2].value,
-            "photos": this.photos
-          }),
-          headers: {'Content-Type': 'application/json'}
+          // mode: 'cors',
+          headers: {'Accept': 'application/json',
+                    'Content-Type': 'application/json', 
+                    },
+          body: bodydata
       };
       try {
           const r = await fetch(url, options);
           if (!r.ok) {
               const res = await r.json();
+              console.log(res);
               throw new Error(res.error);
           }
           console.log(await r.json());

@@ -158,6 +158,7 @@ router.post(
     sessionValidator.isNotInSession
   ],
   async (req: Request, res: Response) => {
+    console.log('INENDSESSION', req);
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
     const session = await WorkSessionCollection.endOneByUser(userId, req.body.caption, req.body.progressReflection, req.body.focusReflection, req.body.photos);
     res.status(200).json({

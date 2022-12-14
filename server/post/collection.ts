@@ -67,18 +67,21 @@ class PostCollection {
     caption: string,
     progressReflection: string,
     focusReflection: string,
-    photos: string[],
+    photos: string[]
   ): Promise<HydratedDocument<Post>> {
     const date = new Date();
+    console.log('addOneSessionPOST');
     const post = new PostModel({
       authorId,
       dateCreated: date,
+      photo: '',
       photos,
       dateModified: date,
       caption,
       focusReflection,
       progressReflection
     });
+    console.log('addOneSessionPOST', post);
     await post.save(); // Saves post to MongoDB
     return post.populate('authorId');
   }

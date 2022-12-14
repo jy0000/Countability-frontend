@@ -44,7 +44,7 @@ const constructPostResponse = (post: HydratedDocument<Post>): PostResponse => {
     author: username,
     dateCreated: formatDate(post.dateCreated),
     dateModified: formatDate(post.dateModified),
-    photo: postCopy.photo,
+    photo: postCopy.photo ? postCopy.photo : 'No Photo',
     photos: postCopy.photos ? postCopy.photos : [],
     caption: postCopy.caption,
     // Defaults to empty string if the post type does not have this property.

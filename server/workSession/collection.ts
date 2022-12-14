@@ -103,9 +103,11 @@ class WorkSessionCollection {
    * @return {Promise<HydratedDocument<WorkSession>>} - updated workSession
    */
   static async endOneByUser(userId: Types.ObjectId | string, caption: string, progressReflection: string, focusReflection: string, photos: string[]): Promise<HydratedDocument<WorkSession>> {
+    console.log('IN ENDONEBYUSER 1');
     const workSession = await WorkSessionModel.findOne({sessionOwnerId: userId, endDate: undefined});
     const endDate = new Date();
     workSession.endDate = endDate;
+    console.log("IN ENDONEBYUSER ", caption, progressReflection, focusReflection);
     await PostCollection.addOneSession(workSession.sessionOwnerId, caption, progressReflection, focusReflection, photos);
     await workSession.save();
     return workSession.populate('sessionOwnerId');
