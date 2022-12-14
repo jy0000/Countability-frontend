@@ -67,14 +67,14 @@
             <input
           
               type="range"
-              min="10"
+              min="5"
               max="60"
-              value="10"
+              value="15"
               oninput="checkFreqMinutes.innerText = this.value"
               @change="setFreq"
             >
             <p id="checkFreqMinutes">
-              10
+              15
             </p>
           </div>
         </section>
