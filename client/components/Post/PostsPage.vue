@@ -37,7 +37,7 @@
       <header>
         <div class="left">
           <h2 class="box">
-            📚 Work from the community
+            👨‍💻🧑🏽‍💻👩🏻‍💻 Work from the community
             <span v-if="$store.state.filter">
               : posts by @{{ $store.state.filter }}
             </span>
@@ -145,7 +145,7 @@ section .scrollbox {
   text-decoration: none;
   align-self: center;
   border-style: solid;
-  background-color: white;
+  background-color: rgb(195, 219, 234);
   border-width: 2px;
   box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
   box-sizing: border-box;
