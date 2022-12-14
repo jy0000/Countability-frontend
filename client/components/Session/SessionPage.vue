@@ -44,6 +44,9 @@
             After starting a session, every so often, you'll be prompted to take a picture of your workspace as a productivity check.
             <br>
             Complete these checks to earn points toward your drawings, and show your friends just how productive you can be.
+            <br>
+            Be sure to click on the timer slider to have alerts.
+          </br>
           </small>
         </div>
         <button
