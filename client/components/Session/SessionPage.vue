@@ -27,7 +27,7 @@
       <article>
         <h3>
           <router-link
-            class="button-sign-in"
+            class="uniform-button"
             to="/login"
           >
             Sign in
@@ -281,7 +281,7 @@ export default {
       const url = `/api/sessions`;
       const params = {
           method: 'POST',
-          message: 'Success!',
+          message: 'Successfully started a work session!',
           callback: () => {
           this.timeElapsed = "00:00:00";
           this.$set(this.alerts, params.message, 'success');
@@ -325,7 +325,7 @@ export default {
       const url = `/api/sessions/end`;
       const params = {
           method: 'POST',
-          message: 'Success!',
+          message: 'Successfully finished a work session!',
           callback: () => {
           this.$set(this.alerts, params.message, 'success');
           setTimeout(() => this.$delete(this.alerts, params.message), 1000);
@@ -415,6 +415,9 @@ export default {
     },
     async submitImage() {
       if (!this.previewImage) {
+        const imageError = new Error('No image uploaded!');
+        this.$set(this.alerts, imageError, 'error');
+        setTimeout(() => this.$delete(this.alerts, imageError), 1000);
         return;
       }
       this.photos.push(this.previewImage) //DO WE NEED TO JSON STRINGIFY?
@@ -551,31 +554,6 @@ section .scrollbox {
   border-top-left-radius: 255px 15px;
   border-top-right-radius: 15px 225px;
 }
-.uniform-button {
-  align-self: center;
-  background-color: rgb(199, 193, 193, 0.45);
-  background-image: none;
-  background-position: 0 90%;
-  background-repeat: repeat no-repeat;
-  background-size: 4px 3px;
-  border-radius: 15px 225px 255px 15px 15px 255px 225px 15px;
-  border-style: solid;
-  border-width: 2px;
-  box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
-  box-sizing: border-box;
-  color: #41403e;
-  display: inline-block;
-  font-family: Neucha, sans-serif;
-  font-size: 1.5rem;
-  line-height: 23px;
-  outline: none;
-  padding: .75rem;
-  text-decoration: none;
-  border-bottom-left-radius: 15px 255px;
-  border-bottom-right-radius: 225px 15px;
-  border-top-left-radius: 255px 15px;
-  border-top-right-radius: 15px 225px;
-}
 
 body {
   background: linear-gradient(to right, red, yellow);
@@ -674,6 +652,33 @@ textarea {
    font-size: inherit;
 }
 /* CSS */
+
+.uniform-button {
+  text-decoration: none;
+  align-self: center;
+  border-style: solid;
+  background-color: white;
+  border-width: 2px;
+  box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
+  box-sizing: border-box;
+  color:#41403e;
+  cursor: pointer;
+  display: inline-block;
+  font-family: Neucha, sans-serif;
+  font-size: 1.5rem;
+  line-height: 23px;
+  padding: .75rem;
+  margin-right: 0.35rem;
+}
+
+.uniform-button:hover {
+  box-shadow: rgba(0, 0, 0, .3) 2px 8px 8px -5px;
+  transform: translate3d(0, 2px, 0);
+}
+
+.uniform-button:focus {
+  box-shadow: rgba(0, 0, 0, .3) 2px 8px 4px -6px;
+}
 .input-form-box {
   --b: 3px;   /* border thickness */
   --s: .45em; /* size of the corner */

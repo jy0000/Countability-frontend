@@ -113,16 +113,15 @@ export default {
         // USER
         // Refresh stale state at setUsername (new login session)
         if (this.setUsername) {
-          console.log('1')
           const text = await r.text();
           const res = text ? JSON.parse(text) : {user: null};
           this.$store.commit('setUsername', res.user ? res.user.username : null);
-          if (res.user) {
-            this.$store.commit('refreshOutFriendRequest');
-            this.$store.commit('refreshInFriendRequest');
-            this.$store.commit('refreshFriends');
-            this.$store.commit('refreshPoint');
-          }
+          // if (res.user) {
+          //   this.$store.commit('refreshOutFriendRequest');
+          //   this.$store.commit('refreshInFriendRequest');
+          //   this.$store.commit('refreshFriends');
+          //   this.$store.commit('refreshPoint');
+          // }
         }
 
         if (this.setPoint) {
