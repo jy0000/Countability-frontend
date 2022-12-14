@@ -5,7 +5,7 @@
     <section v-if="$store.state.username">
       <header>
         <h2 class="box">
-          Let's get to work, @{{ $store.state.username }}
+          🛠️ Let's get to work, @{{ $store.state.username }}
         </h2>
       </header>
       <section class="alerts">
@@ -57,20 +57,27 @@
         <p v-if="(disableStart && !closingSession)">
           Loading...
         </p>
-        <div class="slider">
-          How often to check in (seconds)?
-          <input
-            type="range"
-            min="5"
-            max="60"
-            value="15"
-            oninput="checkFreqMinutes.innerText = this.value"
-            @change="setFreq"
-          >
-          <p id="checkFreqMinutes">
-            15
-          </p>
-        </div>
+        <section>
+          <div class="slider">
+            <div class="text">
+              Check-in frequency 
+              <br>
+              (second)
+            </div>
+            <input
+          
+              type="range"
+              min="10"
+              max="60"
+              value="10"
+              oninput="checkFreqMinutes.innerText = this.value"
+              @change="setFreq"
+            >
+            <p id="checkFreqMinutes">
+              10
+            </p>
+          </div>
+        </section>
       </article>
       <article v-else>
         <h4 v-if="!closingSession">
@@ -504,6 +511,8 @@ section .scrollbox {
   margin-bottom: 10px;
 }
 
+.text {  margin-bottom: 10px;}
+
 
 /** Cross box */
 .input-form-box {
@@ -557,13 +566,11 @@ body {
   
   
   .slider {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%,-50%);
+  position: fixed;
+  margin-top: 20px;
   width: 500px;
-  height: 60px;
-  padding: 30px;
+  height: 30px;
+  padding: 50px;
   padding-left: 40px;
   background: #fcfcfc;
   border-radius: 20px;
@@ -573,7 +580,7 @@ body {
   }
   .slider p {
   font-size: 26px;
-  font-weight: 600;
+  font-weight: 100;
   font-family: Open Sans;
   padding-left: 30px;
   color: black;
@@ -585,11 +592,13 @@ body {
   background: black;
   border: none;
   outline: none;
+  margin-bottom: 10px;
   }
   .slider input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none !important;
-  width: 30px;
-  height:30px;
+  width: 20px;
+  height:20px;
+  padding-top: 5px;
   background: black;
   border: 2px solid black;
   border-radius: 50%;
