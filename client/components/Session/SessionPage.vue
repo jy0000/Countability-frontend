@@ -338,12 +338,18 @@ export default {
             this.$store.commit('refreshPoint');
           }
       };
+      console.log("SESSION", {
+            "caption": this.fields[0].value,
+            "progressReflection": this.fields[1].value,
+            "focusReflection": this.fields[2].value,
+            "photos": this.photos
+          })
       const options = {
           method: params.method, 
           body: JSON.stringify({
             "caption": this.fields[0].value,
-            "progressReflection": this.fields[0].value,
-            "focusReflection": this.fields[0].value,
+            "progressReflection": this.fields[1].value,
+            "focusReflection": this.fields[2].value,
             "photos": this.photos
           }),
           headers: {'Content-Type': 'application/json'}
