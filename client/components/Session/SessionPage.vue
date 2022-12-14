@@ -172,7 +172,7 @@
 
 <script>
 import moment from 'moment';
-import CreatePostForm from '../Post/CreatePostForm.vue';
+// import CreatePostForm from '../Post/CreatePostForm.vue';
 
 export default {
   name: 'SessionPage',
@@ -199,7 +199,8 @@ export default {
         {id: 'progressReflection', label: 'Reflection', value: ''},
         {id: 'focusReflection', label: 'Focus', value: ''},
       ],
-      photos: []
+      photos: [],
+      title: "Session Reflection",
     }
   },
   async mounted() {

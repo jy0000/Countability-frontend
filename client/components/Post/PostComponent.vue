@@ -24,15 +24,19 @@
           width="200"
           height="200"
         >
-        <img
-          v-if="post.photos"
-          v-for="photo_ in post.photos"
-          id="base64image"
-          class="photo"
-          :src="photo_"
-          width="200"
-          height="200"
+        <div
+          v-if="post.photos!=[] && post.photos !== undefined"
         >
+          <img
+            v-for="photo_ in post.photos"
+            id="base64image"
+            :key="photo_"
+            class="photo"
+            :src="photo_"
+            width="200"
+            height="200"
+          >
+        </div>
         <h3
           v-else
         >

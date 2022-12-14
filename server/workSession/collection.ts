@@ -96,20 +96,20 @@ class WorkSessionCollection {
     return workSession.populate('sessionOwnerId');
   }
 
-    /**
+  /**
    * End a work session for a specific owner.
    *
    * @param {string} userId - The owner id of WorkSession to end
    * @return {Promise<HydratedDocument<WorkSession>>} - updated workSession
    */
-    static async endOneByUser(userId: Types.ObjectId | string, caption: string, progressReflection: string, focusReflection: string, photos: string[]): Promise<HydratedDocument<WorkSession>> {
-      const workSession = await WorkSessionModel.findOne({sessionOwnerId: userId, endDate: undefined});
-      const endDate = new Date();
-      workSession.endDate = endDate;
-      await PostCollection.addOneSession(workSession.sessionOwnerId, caption, progressReflection, focusReflection, photos);
-      await workSession.save();
-      return workSession.populate('sessionOwnerId');
-    }
+  static async endOneByUser(userId: Types.ObjectId | string, caption: string, progressReflection: string, focusReflection: string, photos: string[]): Promise<HydratedDocument<WorkSession>> {
+    const workSession = await WorkSessionModel.findOne({sessionOwnerId: userId, endDate: undefined});
+    const endDate = new Date();
+    workSession.endDate = endDate;
+    await PostCollection.addOneSession(workSession.sessionOwnerId, caption, progressReflection, focusReflection, photos);
+    await workSession.save();
+    return workSession.populate('sessionOwnerId');
+  }
 
   /**
    * Add a check to a work session with the given WorkSessionId.

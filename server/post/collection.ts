@@ -55,6 +55,35 @@ class PostCollection {
   }
 
   /**
+   * Add a post to the collection
+   *
+   * @param {string} authorId - The id of the author of the post
+   * @param {string} photo - The id of the photo of the post
+   * @return {Promise<HydratedDocument<Post>>} - The newly created post
+   */
+  // eslint-disable-next-line max-params
+  static async addOneSession(
+    authorId: Types.ObjectId | string,
+    caption: string,
+    progressReflection: string,
+    focusReflection: string,
+    photos: string[],
+  ): Promise<HydratedDocument<Post>> {
+    const date = new Date();
+    const post = new PostModel({
+      authorId,
+      dateCreated: date,
+      photos,
+      dateModified: date,
+      caption,
+      focusReflection,
+      progressReflection
+    });
+    await post.save(); // Saves post to MongoDB
+    return post.populate('authorId');
+  }
+
+  /**
    * Find a post by postId
    *
    * @param {string} postId - The id of the post to find
